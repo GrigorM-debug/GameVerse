@@ -32,7 +32,8 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    background: #eee; /*@If you want you change the background*/
 }
 
 .hero-section {
