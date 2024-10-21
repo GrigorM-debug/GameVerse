@@ -27,13 +27,93 @@
         </div><!-- / column -->
 
         <div class="col-md-7">
-            <img src="https://www.bootdey.com/image/400x300/FFB6C1/000000" alt="project-image" class="rounded">
+            <img src="https://www.bootdey.com/image/400x300/FFB6C1/000000" alt="project-image" class="rounded game-details-img">
             <div class="project-info-box">
                 <p><b>Categories:</b> Design, Illustration</p>
                 <p><b>Skills:</b> Illustrator</p>
             </div><!-- / project-info-box -->
         </div><!-- / column -->
     </div>
+</div>
+
+@* Game reviews section. Think about making it in partial view *@
+<div class="d-flex justify-content-between">
+    <h2 class="text-start mt-5 mb-3">Game Reviews</h2>
+    <a class="btn btn-primary" href="#" role="button">Link</a>
+</div>
+<hr />
+<div class="mb-4"></div>
+<div id="userReviewsCarousel" class="carousel slide" data-bs-ride="carousel">
+    @* <div class="carousel-indicators">
+        <button type="button" data-bs-target="#userReviewsCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#userReviewsCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#userReviewsCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div> *@
+
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <div class="row text-center justify-content-center">
+                <div class="col-md-4 mb-5 mb-md-0">
+                    <div class="d-flex justify-content-center mb-4">
+                        <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(1).webp"
+                             class="rounded-circle shadow-1-strong" width="100" height="100" /> <!-- Smaller Image -->
+                    </div>
+                    <h5 class="mb-3">Maria Smantha</h5>
+                    <h6 class="text-primary mb-3">Web Developer</h6>
+                    <p class="px-xl-3">
+                        <i class="fas fa-quote-left pe-2"></i>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                    </p>
+                    <ul class="list-unstyled d-flex justify-content-center mb-0">
+                        <li><i class="fas fa-star fa-sm text-warning"></i></li>
+                        <li><i class="fas fa-star fa-sm text-warning"></i></li>
+                        <li><i class="fas fa-star fa-sm text-warning"></i></li>
+                        <li><i class="fas fa-star fa-sm text-warning"></i></li>
+                        <li><i class="fas fa-star-half-alt fa-sm text-warning"></i></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="carousel-item">
+            <div class="row text-center justify-content-center">
+                <div class="col-md-4 mb-5 mb-md-0">
+                    <div class="d-flex justify-content-center mb-4">
+                        <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(2).webp"
+                             class="rounded-circle shadow-1-strong" width="100" height="100" /> <!-- Smaller Image -->
+                    </div>
+                    <h5 class="mb-3">Lisa Cudrow</h5>
+                    <h6 class="text-primary mb-3">Graphic Designer</h6>
+                    <p class="px-xl-3">
+                        <i class="fas fa-quote-left pe-2"></i>Ut enim ad minima veniam, quis nostrum exercitationem ullam.
+                    </p>
+                    <ul class="list-unstyled d-flex justify-content-center mb-0">
+                        <li><i class="fas fa-star fa-sm text-warning"></i></li>
+                        <li><i class="fas fa-star fa-sm text-warning"></i></li>
+                        <li><i class="fas fa-star fa-sm text-warning"></i></li>
+                        <li><i class="fas fa-star fa-sm text-warning"></i></li>
+                        <li><i class="fas fa-star fa-sm text-warning"></i></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#userReviewsCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#userReviewsCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#userReviewsCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+
+    <!-- Carousel controls -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#userReviewsCarousel" data-bs-slide="prev">
+        <span class='carousel-control-prev-icon' aria-hidden='true'></span>
+        <span class='visually-hidden'>Previous</span>
+    </button>
+    <button class='carousel-control-next' type='button' data-bs-target='#userReviewsCarousel' data-bs-slide='next'>
+        <span class='carousel-control-next-icon' aria-hidden='true'></span>
+        <span class='visually-hidden'>Next</span>
+    </button>
+
 </div>
 
 
@@ -95,7 +175,7 @@
         border-bottom: none;
     }
 
-    img {
+    .game-details-img {
         width: 100%;
         max-width: 100%;
         height: auto;
