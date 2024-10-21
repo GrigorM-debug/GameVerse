@@ -1,3 +1,17 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+    width: 100%; /* Ensure body/html are confined to the viewport width */
+}
+
+/* Ensure global box-sizing to prevent width issues with padding/borders */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
 html {
   font-size: 14px;
 }
@@ -19,4 +33,54 @@ html {
 
 body {
   margin-bottom: 60px;
+}
+
+/*Hero Section*/
+.hero-section {
+    position: relative;
+    height: 50vh;
+    overflow: hidden;
+    width: 100%;
+}
+
+/* Video as background */
+.background-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    color: white;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.hero-content h1 {
+    font-size: 4rem;
+    font-weight: bold;
+}
+
+.hero-content p {
+    font-size: 1.5rem;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Dark overlay for text readability */
+    z-index: 0;
 }
