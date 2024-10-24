@@ -50,5 +50,16 @@
             public const int NameMinLength = 3;
             public const int NameMaxlength = 50;
         }
+
+        public static class ReviewConstants
+        {
+            //Rating
+            public const int RatingMinValue = 1;
+            public const int RatingMaxValue = 5;
+
+            //Rating Content
+            public const int ContentMinLength = 5;
+            public const int ContentMaxLength = 200;
+        }
     }
 }
