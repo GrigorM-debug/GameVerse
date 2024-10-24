@@ -43,5 +43,12 @@
             public const int PublishingStudioMaxLength = 30;
 
         }
+
+        public static class GenreConstants
+        {
+            //Name
+            public const int NameMinLength = 3;
+            public const int NameMaxlength = 50;
+        }
     }
 }
