@@ -1,4 +1,6 @@
-﻿namespace GameVerse.Data.Models
+﻿using GameVerse.Data.Models.Games;
+
+namespace GameVerse.Data.Models.GameUserActions
 {
     public class GameUserCurrentlyPlaying
     {

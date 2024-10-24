@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GameVerse.Data.Models.Games;
+using Microsoft.EntityFrameworkCore;
 
-namespace GameVerse.Data.Models
+namespace GameVerse.Data.Models.GameUserActions
 {
     public class GameUserCompleted
     {
@@ -12,6 +13,6 @@ namespace GameVerse.Data.Models
         //Add properties for Application user
 
         [Comment("The date and time when the game is completed")]
-        public DateTime CompletedOnm { get; set; } 
+        public DateTime CompletedOn { get; set; }
     }
 }

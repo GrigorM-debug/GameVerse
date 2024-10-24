@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GameVerse.Common\GameVerse.Common.csproj" />
     <ProjectReference Include="..\GameVerse.Data.Models\GameVerse.Data.Models.csproj" />
   </ItemGroup>
 

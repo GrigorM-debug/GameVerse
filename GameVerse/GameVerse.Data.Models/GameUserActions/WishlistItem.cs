@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using GameVerse.Data.Models.Games;
 
-namespace GameVerse.Data.Models
+namespace GameVerse.Data.Models.GameUserActions
 {
     public class WishlistItem
     {

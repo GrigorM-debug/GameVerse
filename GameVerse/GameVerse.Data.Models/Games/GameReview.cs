@@ -3,9 +3,9 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using static GameVerse.Common.ApplicationConstants;
 
-namespace GameVerse.Data.Models
+namespace GameVerse.Data.Models.Games
 {
-    public class Review
+    public class GameReview
     {
         [Key]
         [Required]

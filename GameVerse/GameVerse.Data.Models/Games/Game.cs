@@ -1,12 +1,10 @@
-﻿using GameVerse.Common;
+﻿using GameVerse.Data.Models.GameUserActions;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using static GameVerse.Common.ApplicationConstants;
 
-namespace GameVerse.Data.Models
+namespace GameVerse.Data.Models.Games
 {
     public class Game
     {
@@ -53,9 +51,11 @@ namespace GameVerse.Data.Models
 
         public ICollection<GamePlatform> GamesPlatforms = new HashSet<GamePlatform>();
 
-        public ICollection<Review> Reviews = new HashSet<Review>();
+        public ICollection<GameReview> Reviews = new HashSet<GameReview>();
 
         public ICollection<WishlistItem> WishlistItems = new HashSet<WishlistItem>();
+
+
         //Add fields for Author which is Application User and Reviews 
     }
 }
