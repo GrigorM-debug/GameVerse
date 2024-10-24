@@ -53,6 +53,9 @@ namespace GameVerse.Data.Models
 
         public ICollection<GamePlatform> GamesPlatforms = new HashSet<GamePlatform>();
 
+        public ICollection<Review> Reviews = new HashSet<Review>();
+
+        public ICollection<WishlistItem> WishlistItems = new HashSet<WishlistItem>();
         //Add fields for Author which is Application User and Reviews 
     }
 }
