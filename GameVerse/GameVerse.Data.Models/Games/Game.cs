@@ -42,6 +42,9 @@ namespace GameVerse.Data.Models.Games
         [Comment("The image url of the game")]
         public string ImageUrl { get; set; } = null!;
 
+        [Comment("Тhe available quantity of the game in the store")]
+        public int QuantityInStock { get; set; }
+
         [Comment("The genre of the Game")]
         public Guid GenreId { get; set; }
 
