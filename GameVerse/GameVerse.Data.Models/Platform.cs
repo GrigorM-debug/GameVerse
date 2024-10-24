@@ -17,9 +17,10 @@ namespace GameVerse.Data.Models
         public Guid Id { get; set; }
 
         [Required]
-        [StringLength(PlatformConstants.NameMaxLength, MinimumLength = PlatformConstants.NameMinLength, ErrorMessage = LengthErrorMessage]
+        [StringLength(PlatformConstants.NameMaxLength, MinimumLength = PlatformConstants.NameMinLength, ErrorMessage = LengthErrorMessage)]
+        [Comment("The name of the platform")]
         public string Name { get; set; } = null!;
 
-        public ICollection<GamePlatform> GamePlatforms { get; set; } = new HashSet<GamePlatform>();
+        public ICollection<GamePlatform> GamesPlatforms { get; set; } = new HashSet<GamePlatform>();
     }
 }
