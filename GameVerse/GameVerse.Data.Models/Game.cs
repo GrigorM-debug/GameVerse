@@ -3,9 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 using static GameVerse.Common.ApplicationConstants;
 
 namespace GameVerse.Data.Models
@@ -49,6 +47,8 @@ namespace GameVerse.Data.Models
         [Comment("The genre of the Game")]
         public Guid GenreId { get; set; }
 
+        [Required]
+        [ForeignKey(nameof(GenreId))]
         public Genre Genre { get; set; } = null!;
 
         public ICollection<GamePlatform> GamesPlatforms = new HashSet<GamePlatform>();
