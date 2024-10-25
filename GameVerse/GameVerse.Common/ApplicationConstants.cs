@@ -61,5 +61,29 @@
             public const int ContentMinLength = 5;
             public const int ContentMaxLength = 200;
         }
+
+        public static class EventConstants
+        {
+            //DateTime Format 
+            public const string EventDateTimeFormat = "dd-MM-yyyy HH:mm";
+
+            //Topic
+            public const int TopicMinLength = 5;
+            public const int TopicMaxLength = 70;
+
+            //Description
+            public const int DescriptionMinLength = 20;
+            public const int DescriptionMaxLength = 500;
+
+            //Ticket Price
+            public const double TicketPriceMinValue = 1.00;
+            public const double TicketPriceMaxValue = 1000.00;
+
+            //Location
+            public const int LocationMinLength = 10;
+            public const int LocationMaxLength = 70;
+
+
+        }
     }
 }
