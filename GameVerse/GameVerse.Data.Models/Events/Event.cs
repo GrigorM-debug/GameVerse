@@ -1,8 +1,8 @@
-﻿
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using static GameVerse.Common.ApplicationConstants;
 
-namespace GameVerse.Data.Models
+namespace GameVerse.Data.Models.Events
 {
     public class Event
     {
@@ -12,10 +12,12 @@ namespace GameVerse.Data.Models
         public Guid Id { get; set; }
 
         [Required]
+        [StringLength(EventConstants.TopicMaxLength, MinimumLength = EventConstants.TopicMinLength, ErrorMessage = LengthErrorMessage)]
         [Comment("The topic of the event")]
         public string Topic { get; set; } = null!;
 
         [Required]
+        [StringLength(EventConstants.DescriptionMaxLength, MinimumLength = EventConstants.DescriptionMinLength, ErrorMessage = LengthErrorMessage)]
         [Comment("The description of the event")]
         public string Description { get; set; } = null!;
 
@@ -26,6 +28,7 @@ namespace GameVerse.Data.Models
         public DateTime EndDate { get; set; }
 
         [Required]
+        [StringLength(EventConstants.LocationMaxLength, MinimumLength = EventConstants.LocationMinLength, ErrorMessage = LengthErrorMessage)]
         [Comment("The event location")]
         public string Location { get; set; } = null!;
 
@@ -39,6 +42,6 @@ namespace GameVerse.Data.Models
         [Comment("The event image url")]
         public string ImageUrl { get; set; } = null!;
 
-        
+
     }
 }
