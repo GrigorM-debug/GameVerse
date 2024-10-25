@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace GameVerse.Data.Models
 {
-    internal class Cart
+    public class Cart
     {
+        public Guid Id { get; set; }
+
+        //Add properties for Application User
+
+        public DateTime OrderDate { get; set; }
+
+        public int TotalAmount { get; set; }
     }
 }
