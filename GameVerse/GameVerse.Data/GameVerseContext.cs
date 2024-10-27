@@ -1,10 +1,11 @@
 ﻿using GameVerse.Data.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace GameVerse.Data
 {
-    public class GameVerseContext : IdentityDbContext<ApplicationUser>
+    public class GameVerseContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
     { 
         public GameVerseContext(DbContextOptions options) : base(options)
         {

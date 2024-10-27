@@ -13,6 +13,21 @@
         public const string invalidDateTimeErrorMessage = $"Date must be in the following format - ${DateTimeFormat}";
         public const string RangeErrorMessage = "{0} must be a number between {1} and {2}!";
 
+        public static class ApplicationUserConstants
+        {
+            //First Name
+            public const int ApplicationUserFirtNameMinLength = 2;
+            public const int ApplicationUserFirstNameMaxLength = 35;
+
+            //Last Name
+            public const int ApplicationUserLastNameMinLength = 2;
+            public const int ApplicationUserLastNameMaxLength = 35;
+
+            //Username
+            public const int ApplicationUserUserNameMinLength = 3;
+            public const int ApplicationUserUserNameMaxLength = 30;
+        }
+
         public static class PlatformConstants
         {
             //Name
