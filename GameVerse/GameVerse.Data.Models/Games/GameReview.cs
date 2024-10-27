@@ -32,5 +32,11 @@ namespace GameVerse.Data.Models.Games
         public Game Game { get; set; } = null!;
 
         //Add properties for Application user
+
+        [Comment("The id of the User who wrote the review for the current game")]
+        public Guid ReviewerId {  get; set; }
+
+        [Required]
+        public ApplicationUser Reviewer { get; set; } = null!;
     }
 }
