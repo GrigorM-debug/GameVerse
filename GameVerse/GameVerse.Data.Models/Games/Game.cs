@@ -8,6 +8,11 @@ namespace GameVerse.Data.Models.Games
 {
     public class Game
     {
+        public Game()
+        {
+            Id = Guid.NewGuid();
+        }
+
         [Key]
         [Required]
         [Comment("The game unique indentifier.")]
@@ -45,20 +50,18 @@ namespace GameVerse.Data.Models.Games
         [Comment("Тhe available quantity of the game in the store")]
         public int QuantityInStock { get; set; }
 
-        [Comment("The genre of the Game")]
-        public Guid GenreId { get; set; }
+        public Guid PublisherId { get; set; }
 
         [Required]
-        [ForeignKey(nameof(GenreId))]
-        public Genre Genre { get; set; } = null!;
+        [ForeignKey(nameof(PublisherId))]
+        public ApplicationUser Publisher { get; set; } = null!;
 
         public ICollection<GamePlatform> GamesPlatforms = new HashSet<GamePlatform>();
 
+        public ICollection<GameGenre> GamesGenres = new HashSet<GameGenre>();
+
         public ICollection<GameReview> Reviews = new HashSet<GameReview>();
 
-        public ICollection<WishlistItem> WishlistItems = new HashSet<WishlistItem>();
-
-
-        //Add fields for Author which is Application User and Reviews 
+        public ICollection<WishlistItem> WishlistItems = new HashSet<WishlistItem>(); 
     }
 }

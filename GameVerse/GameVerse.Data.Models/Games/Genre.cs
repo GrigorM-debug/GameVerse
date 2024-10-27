@@ -16,6 +16,6 @@ namespace GameVerse.Data.Models.Games
         [Comment("The name of the genre")]
         public string Name { get; set; } = null!;
 
-        public ICollection<Game> Games { get; set; } = new HashSet<Game>();
+        public ICollection<GameGenre> GamesGenres { get; set; } = new HashSet<GameGenre>();
     }
 }
