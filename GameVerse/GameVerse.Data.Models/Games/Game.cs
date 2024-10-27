@@ -63,5 +63,7 @@ namespace GameVerse.Data.Models.Games
         public ICollection<GameReview> Reviews = new HashSet<GameReview>();
 
         public ICollection<WishlistItem> WishlistItems = new HashSet<WishlistItem>(); 
+
+        public ICollection<GameCart> GamesCarts = new HashSet<GameCart>();
     }
 }

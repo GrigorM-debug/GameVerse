@@ -42,6 +42,6 @@ namespace GameVerse.Data.Models.Events
         [Comment("The event image url")]
         public string ImageUrl { get; set; } = null!;
 
-
+        public ICollection<EventCart> EventsCarts { get; set; } = new HashSet<EventCart>();
     }
 }
