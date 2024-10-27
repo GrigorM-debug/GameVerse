@@ -8,7 +8,7 @@ namespace GameVerse.Data.Models.GameUserActions
     [PrimaryKey(nameof(GameId), nameof(UserId))]
     public class GameUserCurrentlyPlaying
     {
-        [Comment("The id of the game")]
+        [Comment("The id of the game added in User currently playing games list")]
         public Guid GameId { get; set; }
 
         [Required]

@@ -8,7 +8,7 @@ namespace GameVerse.Data.Models.GameUserActions
     [PrimaryKey(nameof(GameId), nameof(UserId))]
     public class GameUserCompleted
     {
-        [Comment("The id of the Game")]
+        [Comment("The id of the Game added in User completed games list")]
         public Guid GameId { get; set; }
 
         [Required]
