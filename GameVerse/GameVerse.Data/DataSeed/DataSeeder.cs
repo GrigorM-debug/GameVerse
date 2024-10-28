@@ -1,5 +1,6 @@
 ﻿using GameVerse.Data.Models.Games.Genres;
 using GameVerse.Data.Models.Games.Platform;
+using GameVerse.Data.Models.Games.Restrictions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -67,6 +68,28 @@ namespace GameVerse.Data.DataSeed
             };
 
             modelBuilder.Entity<Platform>().HasData(platforms);
+        }
+
+        public static void SeedRestrictions(ModelBuilder modelBuilder)
+        {
+            List<Restriction> restrictions = new List<Restriction>()
+            {
+                new Restriction {Id = Guid.NewGuid(), Name = "PEGI 3"},
+                new Restriction {Id = Guid.NewGuid(), Name = "PEGI 7"},
+                new Restriction {Id = Guid.NewGuid(), Name = "PEGI 12"},
+                new Restriction {Id = Guid.NewGuid(), Name = "PEGI 16 "},
+                new Restriction {Id = Guid.NewGuid(), Name = "PEGI 18"},
+                new Restriction {Id = Guid.NewGuid(), Name = "Bad Language"},
+                new Restriction {Id = Guid.NewGuid(), Name = "Discrimination"},
+                new Restriction {Id = Guid.NewGuid(), Name = "Drugs"},
+                new Restriction {Id = Guid.NewGuid(), Name = "Fear"},
+                new Restriction {Id = Guid.NewGuid(), Name = "Gambling"},
+                new Restriction {Id = Guid.NewGuid(), Name = "Sex"},
+                new Restriction {Id = Guid.NewGuid(), Name = "Violence"},
+                new Restriction {Id = Guid.NewGuid(), Name = "In-Game Purchases"},
+            };
+
+            modelBuilder.Entity<Restriction>().HasData(restrictions);
         }
     }
 }

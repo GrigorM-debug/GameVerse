@@ -17,9 +17,10 @@ namespace GameVerse.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-
+            //Data seeding
             DataSeeder.SeedGenres(builder);
             DataSeeder.SeedPlatforms(builder);
+            DataSeeder.SeedRestrictions(builder);
 
             builder
                 .Entity<Game>()
