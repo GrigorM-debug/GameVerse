@@ -39,7 +39,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
        
-                        <div class="dropdown p-0">
+                        <li class="dropdown p-0">
                             <button class="btn btn-secondary dropdown-toggle bg-white text-dark border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Game Store
                             </button>
@@ -51,7 +51,21 @@
                                     <a class="nav-link text-dark" asp-area="" asp-controller="GameStore" asp-action="Add">Add Game</a>
                                 </li>
                             </ul>
-                        </div>
+                        </li>
+
+                        <li class="dropdown p-0">
+                            <button class="btn btn-secondary dropdown-toggle bg-white text-dark border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Events
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Event" asp-action="Index">All Events</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Event" asp-action="Add">Add Event</a>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                     <partial name="_LoginPartial"/>
                 </div>
