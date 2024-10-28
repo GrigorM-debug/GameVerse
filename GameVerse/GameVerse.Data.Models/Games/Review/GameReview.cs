@@ -37,6 +37,7 @@ namespace GameVerse.Data.Models.Games
         public Guid ReviewerId {  get; set; }
 
         [Required]
+        [ForeignKey(nameof(ReviewerId))]
         public ApplicationUser Reviewer { get; set; } = null!;
     }
 }
