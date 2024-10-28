@@ -57,6 +57,8 @@
             public const int PublishingStudioMinLength = 2;
             public const int PublishingStudioMaxLength = 30;
 
+            //Game Type
+            public const string InvalidGameTypeErrorMessage = "Invalid game type.";
         }
 
         public static class GenreConstants

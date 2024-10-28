@@ -1,4 +1,5 @@
-﻿using GameVerse.Data.Models.Games.Genres;
+﻿using GameVerse.Common.Enums;
+using GameVerse.Data.Models.Games.Genres;
 using GameVerse.Data.Models.Games.Platform;
 using GameVerse.Data.Models.Games.Restrictions;
 using GameVerse.Data.Models.Games.Review;
@@ -53,6 +54,11 @@ namespace GameVerse.Data.Models.Games
 
         [Comment("Тhe available quantity of the game in the store")]
         public int QuantityInStock { get; set; }
+
+        [Required]
+        [EnumDataType(typeof(GameType), ErrorMessage = GameConstants.InvalidGameTypeErrorMessage)]
+        [Comment("The type of the game.")]
+        public GameType Type { get; set; }
 
         public Guid PublisherId { get; set; }
 
