@@ -21,11 +21,6 @@ namespace GameVerse.Data.Models.Games.Restrictions
         [Comment("The name of the restriction")]
         public string Name { get; set; } = null!;
 
-        [Required]
-        [StringLength(RestrictionsConstants.RestrictionDescriptionMaxLendth, MinimumLength = RestrictionsConstants.RestrictionDescriptionMinLength, ErrorMessage = LengthErrorMessage)]
-        [Comment("The short description of the restriction")]
-        public string Description { get; set; } = null!;
-
         public ICollection<GameRestriction> GamesRestrictions { get; set; } = new HashSet<GameRestriction>();
     }
 }
