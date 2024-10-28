@@ -1,5 +1,6 @@
 ﻿using GameVerse.Data.Models.Games.Genres;
 using GameVerse.Data.Models.Games.Platform;
+using GameVerse.Data.Models.Games.Restrictions;
 using GameVerse.Data.Models.Games.Review;
 using GameVerse.Data.Models.GameUserActions;
 using Microsoft.EntityFrameworkCore;
@@ -62,6 +63,8 @@ namespace GameVerse.Data.Models.Games
         public ICollection<GamePlatform> GamesPlatforms = new HashSet<GamePlatform>();
 
         public ICollection<GameGenre> GamesGenres = new HashSet<GameGenre>();
+
+        public ICollection<GameRestriction> GamesRestrictions = new HashSet<GameRestriction>();
 
         public ICollection<GameReview> Reviews = new HashSet<GameReview>();
 

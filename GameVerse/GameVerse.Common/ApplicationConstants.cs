@@ -100,5 +100,16 @@
 
 
         }
+
+        public static class RestrictionsConstants
+        {
+            //Restriction Name 
+            public const int RestrictionNameMinLength = 3;
+            public const int RestrictionNameMaxLength = 50; 
+
+            //Restriction Description
+            public const int RestrictionDescriptionMinLength = 10;
+            public const int RestrictionDescriptionMaxLendth = 50;
+        }
     }
 }
