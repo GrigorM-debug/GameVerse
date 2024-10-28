@@ -33,7 +33,7 @@ html {
 
 body {
     margin-bottom: 60px;
-    background: #eee; /*@If you want you change the background*/
+    background: #eee; 
 }
 
 .hero-section {
@@ -83,3 +83,5 @@ body {
     background: rgba(0, 0, 0, 0.5); 
     z-index: 0;
 }
+
+

@@ -32,6 +32,9 @@ namespace GameVerse.Data.Models.Events
         [Comment("The event location")]
         public string Location { get; set; } = null!;
 
+        public double Latitude { get; set; }  // Width
+        public double Longitude { get; set; } // Length
+
         [Comment("The event's number of seats")]
         public int Seats { get; set; }
 
