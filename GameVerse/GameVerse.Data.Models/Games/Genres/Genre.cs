@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using static GameVerse.Common.ApplicationConstants;
 
-namespace GameVerse.Data.Models.Games
+namespace GameVerse.Data.Models.Games.Genres
 {
     public class Genre
     {

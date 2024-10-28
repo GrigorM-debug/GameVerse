@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace GameVerse.Data.Models.Games
+namespace GameVerse.Data.Models.Games.Platform
 {
     [PrimaryKey(nameof(GameId), nameof(PlatformId))]
     public class GamePlatform

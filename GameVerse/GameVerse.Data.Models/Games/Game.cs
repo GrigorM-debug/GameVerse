@@ -1,4 +1,7 @@
-﻿using GameVerse.Data.Models.GameUserActions;
+﻿using GameVerse.Data.Models.Games.Genres;
+using GameVerse.Data.Models.Games.Platform;
+using GameVerse.Data.Models.Games.Review;
+using GameVerse.Data.Models.GameUserActions;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;

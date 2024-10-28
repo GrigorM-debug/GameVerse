@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameVerse.Data.Models.Games
+namespace GameVerse.Data.Models.Games.Genres
 {
     [PrimaryKey(nameof(GameId), nameof(GenreId))]
     public class GameGenre

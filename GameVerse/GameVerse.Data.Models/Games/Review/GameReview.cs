@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using static GameVerse.Common.ApplicationConstants;
 
-namespace GameVerse.Data.Models.Games
+namespace GameVerse.Data.Models.Games.Review
 {
     public class GameReview
     {
@@ -34,7 +34,7 @@ namespace GameVerse.Data.Models.Games
         //Add properties for Application user
 
         [Comment("The id of the User who wrote the review for the current game")]
-        public Guid ReviewerId {  get; set; }
+        public Guid ReviewerId { get; set; }
 
         [Required]
         [ForeignKey(nameof(ReviewerId))]
