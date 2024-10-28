@@ -42,6 +42,31 @@ namespace GameVerse.Data
                 );
 
             builder
+                .Entity<Genre>()
+                .HasData(
+                    new Genre { Id = Guid.NewGuid(), Name = "Adventure"},
+                    new Genre { Id = Guid.NewGuid(), Name = "Action"},
+                    new Genre { Id = Guid.NewGuid(), Name = "Sports"},
+                    new Genre { Id = Guid.NewGuid(), Name = "Simulation" },
+                    new Genre { Id = Guid.NewGuid(), Name = "Platformer" },
+                    new Genre { Id = Guid.NewGuid(), Name = "RPG" },
+                    new Genre { Id = Guid.NewGuid(), Name = "First-Person Shooter" },
+                    new Genre { Id = Guid.NewGuid(), Name = "Action-adventure" },
+                    new Genre { Id = Guid.NewGuid(), Name = "Fighting" },
+                    new Genre { Id = Guid.NewGuid(), Name = "Real-time strategy" },
+                    new Genre { Id = Guid.NewGuid(), Name = "Racing" },
+                    new Genre { Id = Guid.NewGuid(), Name = "Shooter" },
+                    new Genre { Id = Guid.NewGuid(), Name = "Puzzle" },
+                    new Genre { Id = Guid.NewGuid(), Name = "Casual" },
+                    new Genre { Id = Guid.NewGuid(), Name = "Strategy game" },
+                    new Genre { Id = Guid.NewGuid(), Name = "Stealth" },
+                    new Genre { Id = Guid.NewGuid(), Name = "Party" },
+                    new Genre { Id = Guid.NewGuid(), Name = "Action RPG" },
+                    new Genre { Id = Guid.NewGuid(), Name = "Survival" },
+                    new Genre { Id = Guid.NewGuid(), Name = "Battle Royale" }
+                );
+
+            builder
                 .Entity<Game>()
                 .Property(g => g.Type)
                 .HasConversion<string>(); // Convert Enum to string in the Database. 
