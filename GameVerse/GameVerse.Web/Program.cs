@@ -1,5 +1,7 @@
 using GameVerse.Data;
 using GameVerse.Data.Models.ApplicationUsers;
+using GameVerse.Data.Repositories;
+using GameVerse.Data.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +12,10 @@ var connectionString = builder.Configuration.GetConnectionString("SqlServer") ??
 builder.Services.AddDbContext<GameVerseDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+//Reposity. 
+builder.Services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
+
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => 
 {
