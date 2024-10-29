@@ -4,13 +4,13 @@ namespace GameVerse.Data.Repositories.Interfaces
 {
     public interface IGenericRepository<TType, TId> 
     {
-        TType GetById(TId id);
+        TType? GetById(TId id);
 
-        Task<TType> GetByIdAsync(TId id);
+        Task<TType?> GetByIdAsync(TId id);
 
-        TType FirstOrDefault(Func<TType, bool> predicate);
+        TType? FirstOrDefault(Func<TType, bool> predicate);
 
-        Task<TType> FirstOrDefaultAsync(Expression<Func<TType, bool>> predicate);
+        Task<TType?> FirstOrDefaultAsync(Expression<Func<TType, bool>> predicate);
 
         IEnumerable<TType> GetAllAsReadOnly();
 
