@@ -16,12 +16,6 @@ namespace GameVerse.Data.Models
 
         [PersonalData]
         [Required]
-        [StringLength(ApplicationUserConstants.ApplicationUserUserNameMaxLength, MinimumLength = ApplicationUserConstants.ApplicationUserUserNameMinLength, ErrorMessage = LengthErrorMessage)]
-        [Comment("The username of the ApplicationUser")]
-        public string Username { get; set; } = null!;
-
-        [PersonalData]
-        [Required]
         [StringLength(ApplicationUserConstants.ApplicationUserFirstNameMaxLength, MinimumLength = ApplicationUserConstants.ApplicationUserFirtNameMinLength, ErrorMessage = LengthErrorMessage)]
         [Comment("The FirstName of the ApplicationUser")]
         public string FirstName { get; set; } = null!;
