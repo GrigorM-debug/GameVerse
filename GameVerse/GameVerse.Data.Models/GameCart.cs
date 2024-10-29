@@ -22,6 +22,7 @@ namespace GameVerse.Data.Models
 
         public int Quantity { get; set; }
 
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal TotalPrice { get; set; }
     }
 }

@@ -9,7 +9,7 @@ namespace GameVerse.Data.Models.Games.Genres
         [Key]
         [Required]
         [Comment("The genre unique indetifier")]
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
         [StringLength(GenreConstants.NameMaxlength, MinimumLength = GenreConstants.NameMinLength, ErrorMessage = LengthErrorMessage)]

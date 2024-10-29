@@ -13,19 +13,14 @@ namespace GameVerse.Data.Models.Games
 {
     public class Game
     {
-        public Game()
-        {
-            Id = Guid.NewGuid();
-        }
-
         [Key]
         [Required]
         [Comment("The game unique indentifier.")]
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
         [StringLength(GameConstants.TitleMaxLength, MinimumLength = GameConstants.TitleMinLength, ErrorMessage = LengthErrorMessage)]
-        [Comment("The name of the Game.")]
+        [Comment("The title of the Game.")]
         public string Title { get; set; } = null!;
 
         [Required]
@@ -42,15 +37,16 @@ namespace GameVerse.Data.Models.Games
         [Comment("The Year on which the Game was published")]
         public int YearPublished { get; set; }
 
-        [Comment("The Date and Time when the Game is added")]
+        [Comment("The Date when the Game is added")]
         public DateTime CreatedOn { get; set; }
 
+        [Column(TypeName = "decimal(18, 2)")]
         [Range(GameConstants.PriceMinValue, GameConstants.PriceMaxValue, ErrorMessage = RangeErrorMessage)]
         [Comment("The price of the Game")]
         public decimal Price { get; set; }
 
         [Comment("The image url of the game")]
-        public string ImageUrl { get; set; } = null!;
+        public string Image { get; set; } = null!;
 
         [Comment("Тhe available quantity of the game in the store")]
         public int QuantityInStock { get; set; }

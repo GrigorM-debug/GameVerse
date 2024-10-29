@@ -9,7 +9,7 @@ namespace GameVerse.Data.Models.Games.Platform
         [Key]
         [Required]
         [Comment("The platform unique identifier.")]
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
         [StringLength(PlatformConstants.NameMaxLength, MinimumLength = PlatformConstants.NameMinLength, ErrorMessage = LengthErrorMessage)]

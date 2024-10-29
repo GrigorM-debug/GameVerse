@@ -95,12 +95,6 @@
             //Ticket Price
             public const double TicketPriceMinValue = 1.00;
             public const double TicketPriceMaxValue = 1000.00;
-
-            //Location
-            public const int LocationMinLength = 10;
-            public const int LocationMaxLength = 70;
-
-
         }
 
         public static class RestrictionsConstants

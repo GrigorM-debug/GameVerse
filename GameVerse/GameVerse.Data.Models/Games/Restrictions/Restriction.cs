@@ -1,10 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static GameVerse.Common.ApplicationConstants;
 
 namespace GameVerse.Data.Models.Games.Restrictions
@@ -14,7 +9,7 @@ namespace GameVerse.Data.Models.Games.Restrictions
         [Key]
         [Required]
         [Comment("The restriction unique indentifier")]
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
         [StringLength(RestrictionsConstants.RestrictionNameMaxLength, MinimumLength = RestrictionsConstants.RestrictionNameMinLength, ErrorMessage = LengthErrorMessage)]

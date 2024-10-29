@@ -10,7 +10,7 @@ namespace GameVerse.Data.Models.Games.Review
         [Key]
         [Required]
         [Comment("The review unique identifier")]
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
         [StringLength(ReviewConstants.ContentMaxLength, MinimumLength = ReviewConstants.ContentMinLength, ErrorMessage = LengthErrorMessage)]
@@ -30,8 +30,6 @@ namespace GameVerse.Data.Models.Games.Review
         [Required]
         [ForeignKey(nameof(GameId))]
         public Game Game { get; set; } = null!;
-
-        //Add properties for Application user
 
         [Comment("The id of the User who wrote the review for the current game")]
         public Guid ReviewerId { get; set; }

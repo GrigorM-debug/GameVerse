@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using static GameVerse.Common.ApplicationConstants;
 
 namespace GameVerse.Data.Models.Events
@@ -9,7 +10,7 @@ namespace GameVerse.Data.Models.Events
         [Key]
         [Required]
         [Comment("The event unique identifier")]
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
         [StringLength(EventConstants.TopicMaxLength, MinimumLength = EventConstants.TopicMinLength, ErrorMessage = LengthErrorMessage)]
@@ -27,23 +28,20 @@ namespace GameVerse.Data.Models.Events
         [Comment("The event end date and time")]
         public DateTime EndDate { get; set; }
 
-        [Required]
-        [StringLength(EventConstants.LocationMaxLength, MinimumLength = EventConstants.LocationMinLength, ErrorMessage = LengthErrorMessage)]
-        [Comment("The event location")]
-        public string Location { get; set; } = null!;
-
         public double Latitude { get; set; }  // Width
         public double Longitude { get; set; } // Length
 
         [Comment("The event's number of seats")]
         public int Seats { get; set; }
 
+        [Column(TypeName = "decimal(18, 2)")]
+        [Range(EventConstants.TicketPriceMinValue, EventConstants.TicketPriceMaxValue, ErrorMessage = RangeErrorMessage)]
         [Comment("The price for ticket")]
         public decimal TicketPrice { get; set; }
 
         [Required]
         [Comment("The event image url")]
-        public string ImageUrl { get; set; } = null!;
+        public string Image { get; set; } = null!;
 
         public ICollection<EventCart> EventsCarts { get; set; } = new HashSet<EventCart>();
     }
