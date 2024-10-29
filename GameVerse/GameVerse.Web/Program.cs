@@ -15,7 +15,6 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
 })
-    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<GameVerseDbContext>();
 builder.Services.AddControllersWithViews();
 

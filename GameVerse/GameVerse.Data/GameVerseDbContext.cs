@@ -16,7 +16,7 @@ namespace GameVerse.Data
 {
     public class GameVerseDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
     { 
-        public GameVerseDbContext(DbContextOptions options) : base(options)
+        public GameVerseDbContext(DbContextOptions<GameVerseDbContext> options) : base(options)
         {
         }
 
