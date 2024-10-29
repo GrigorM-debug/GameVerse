@@ -70,11 +70,7 @@ namespace GameVerse.Web.Areas.Identity.Pages.Account
             /// 
             [Required]
             [StringLength(ApplicationUserConstants.ApplicationUserUserNameMaxLength, MinimumLength = ApplicationUserConstants.ApplicationUserUserNameMinLength, ErrorMessage = LengthErrorMessage)]
-            public string Username { get; set; }
-
-            [Required]
-            [EmailAddress]
-            public string Email { get; set; }
+            public string UserName { get; set; }
 
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -119,7 +115,7 @@ namespace GameVerse.Web.Areas.Identity.Pages.Account
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                var result = await _signInManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
