@@ -80,8 +80,8 @@ namespace GameVerse.Web.Areas.Identity.Pages.Account
 
             [Required]
             [StringLength(ApplicationUserConstants.ApplicationUserUserNameMaxLength, MinimumLength = ApplicationUserConstants.ApplicationUserUserNameMinLength, ErrorMessage = LengthErrorMessage)]
-            [Display(Name = "Username")]
-            public string Username { get; set; }
+            [Display(Name = "UserName")]
+            public string UserName { get; set; }
 
             [Required]
             [EmailAddress]
@@ -133,8 +133,12 @@ namespace GameVerse.Web.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
 
-                await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
+                await _userStore.SetUserNameAsync(user, Input.UserName, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+                user.UserName = Input.UserName;
+                user.Email = Input.Email;
+                user.FirstName = Input.FirstName;
+                user.LastName = Input.LastName;
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
