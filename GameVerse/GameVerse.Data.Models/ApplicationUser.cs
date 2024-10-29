@@ -31,9 +31,5 @@ namespace GameVerse.Data.Models
         [StringLength(ApplicationUserConstants.ApplicationUserLastNameMaxLength, MinimumLength = ApplicationUserConstants.ApplicationUserLastNameMinLength, ErrorMessage = LengthErrorMessage)]
         [Comment("The LastName of the ApplicationUser")]
         public string LastName { get; set; } = null!;
-
-        [PersonalData]
-        [Comment("The ApplicationUser profile image")]
-        public string? Image {  get; set; }
     }
 }
