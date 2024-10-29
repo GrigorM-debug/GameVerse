@@ -1,5 +1,4 @@
-﻿
-namespace GameVerse.Web.ViewModels.Game.Restrictions
+﻿namespace GameVerse.Web.ViewModels.Game.Details.Restrictions
 {
     public class GameRestrictionsIndexViewModel
     {

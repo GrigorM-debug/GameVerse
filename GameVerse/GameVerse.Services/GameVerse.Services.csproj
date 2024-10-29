@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GameVerse.Data.Models\GameVerse.Data.Models.csproj" />
+    <ProjectReference Include="..\GameVerse.Data\GameVerse.Data.csproj" />
+  </ItemGroup>
+
 </Project>

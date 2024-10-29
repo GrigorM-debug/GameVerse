@@ -1,4 +1,4 @@
-﻿namespace GameVerse.Web.ViewModels.Game.Platforms
+﻿namespace GameVerse.Web.ViewModels.Game.Details.Platforms
 {
     public class GamePlatformsIndexViewModel
     {

@@ -1,13 +1,12 @@
-﻿
-using GameVerse.Web.ViewModels.Game.Platforms;
-using GameVerse.Web.ViewModels.Game.Restrictions;
-using GameVerse.Web.ViewModels.Game.Reviews;
+﻿using GameVerse.Web.ViewModels.Game.Details.Platforms;
+using GameVerse.Web.ViewModels.Game.Details.Restrictions;
+using GameVerse.Web.ViewModels.Game.Details.Reviews;
 
-namespace GameVerse.Web.ViewModels.Game
+namespace GameVerse.Web.ViewModels.Game.Details
 {
     public class GameDetailsViewModel
     {
-        public string Id { get; set; } = null!; 
+        public string Id { get; set; } = null!;
 
         public string Title { get; set; } = null!;
 
@@ -30,7 +29,7 @@ namespace GameVerse.Web.ViewModels.Game
         public string Publisher { get; set; } = null!;
 
         public IEnumerable<GamePlatformsIndexViewModel> Platforms = new HashSet<GamePlatformsIndexViewModel>();
-        
+
         public IEnumerable<GameRestrictionsIndexViewModel> Restrictions = new HashSet<GameRestrictionsIndexViewModel>();
 
         public IEnumerable<GameReviewsIndexViewModel> Reviews = new HashSet<GameReviewsIndexViewModel>();

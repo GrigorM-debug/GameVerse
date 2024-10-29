@@ -24,6 +24,7 @@
   <ItemGroup>
     <ProjectReference Include="..\GameVerse.Common\GameVerse.Common.csproj" />
     <ProjectReference Include="..\GameVerse.Data\GameVerse.Data.csproj" />
+    <ProjectReference Include="..\GameVerse.Services\GameVerse.Services.csproj" />
     <ProjectReference Include="..\GameVerse.Web.ViewModels\GameVerse.Web.ViewModels.csproj" />
   </ItemGroup>
 

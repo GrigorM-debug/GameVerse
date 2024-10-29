@@ -1,5 +1,4 @@
-﻿
-namespace GameVerse.Web.ViewModels.Game.Reviews
+﻿namespace GameVerse.Web.ViewModels.Game.Details.Reviews
 {
     public class GameReviewsIndexViewModel
     {
