@@ -1,8 +1,9 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using GameVerse.Data.Models.ApplicationUsers;
 
-namespace GameVerse.Data.Models
+namespace GameVerse.Data.Models.Carts
 {
     public class Cart
     {

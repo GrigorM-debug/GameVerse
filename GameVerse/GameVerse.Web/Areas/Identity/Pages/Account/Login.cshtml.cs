@@ -14,9 +14,9 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using GameVerse.Data.Models;
 
 using static GameVerse.Common.ApplicationConstants;
+using GameVerse.Data.Models.ApplicationUsers;
 
 namespace GameVerse.Web.Areas.Identity.Pages.Account
 {

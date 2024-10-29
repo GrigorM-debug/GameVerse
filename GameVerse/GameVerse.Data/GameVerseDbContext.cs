@@ -1,5 +1,6 @@
 ﻿using GameVerse.Data.DataSeed;
-using GameVerse.Data.Models;
+using GameVerse.Data.Models.ApplicationUsers;
+using GameVerse.Data.Models.Carts;
 using GameVerse.Data.Models.Events;
 using GameVerse.Data.Models.Games;
 using GameVerse.Data.Models.Games.Genres;

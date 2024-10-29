@@ -7,15 +7,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("SqlServer") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-builder.Services.AddDbContext<GameVerseContext>(options =>
+builder.Services.AddDbContext<GameVerseDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => 
 {
-    options.SignIn.RequireConfirmedAccount = true;
+    options.SignIn.RequireConfirmedAccount = false;
 })
-    .AddEntityFrameworkStores<GameVerseContext>();
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<GameVerseDbContext>();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();

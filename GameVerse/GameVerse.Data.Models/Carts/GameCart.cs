@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace GameVerse.Data.Models
+namespace GameVerse.Data.Models.Carts
 {
     [PrimaryKey(nameof(GameId), nameof(CartId))]
     public class GameCart

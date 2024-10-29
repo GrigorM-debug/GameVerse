@@ -2,11 +2,12 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using GameVerse.Data.Models.Games;
+using GameVerse.Data.Models.ApplicationUsers;
 
 namespace GameVerse.Data.Models.GameUserActions
 {
     [PrimaryKey(nameof(GameId), nameof(UserId))]
-    public class WishlistItem
+    public class GameUserWishlist
     {
         [Comment("The id of the game added in the Wishlist")]
         public Guid GameId { get; set; }

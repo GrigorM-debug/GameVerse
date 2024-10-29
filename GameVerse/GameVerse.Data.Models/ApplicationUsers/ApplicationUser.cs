@@ -1,11 +1,10 @@
-﻿
-using GameVerse.Common;
+﻿using GameVerse.Common;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using static GameVerse.Common.ApplicationConstants;
 
-namespace GameVerse.Data.Models
+namespace GameVerse.Data.Models.ApplicationUsers
 {
     public class ApplicationUser : IdentityUser<Guid>
     {

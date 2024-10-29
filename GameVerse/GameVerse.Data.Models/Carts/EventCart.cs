@@ -1,10 +1,9 @@
-﻿
-using GameVerse.Data.Models.Events;
+﻿using GameVerse.Data.Models.Events;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace GameVerse.Data.Models
+namespace GameVerse.Data.Models.Carts
 {
     [PrimaryKey(nameof(EventId), nameof(CartId))]
     public class EventCart

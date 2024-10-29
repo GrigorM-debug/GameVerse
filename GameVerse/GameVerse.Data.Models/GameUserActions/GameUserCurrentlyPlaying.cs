@@ -1,4 +1,5 @@
-﻿using GameVerse.Data.Models.Games;
+﻿using GameVerse.Data.Models.ApplicationUsers;
+using GameVerse.Data.Models.Games;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;

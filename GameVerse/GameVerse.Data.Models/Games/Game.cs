@@ -1,4 +1,6 @@
 ﻿using GameVerse.Common.Enums;
+using GameVerse.Data.Models.ApplicationUsers;
+using GameVerse.Data.Models.Carts;
 using GameVerse.Data.Models.Games.Genres;
 using GameVerse.Data.Models.Games.Platform;
 using GameVerse.Data.Models.Games.Restrictions;
@@ -70,7 +72,7 @@ namespace GameVerse.Data.Models.Games
 
         public ICollection<GameReview> Reviews = new HashSet<GameReview>();
 
-        public ICollection<WishlistItem> WishlistItems = new HashSet<WishlistItem>(); 
+        public ICollection<GameUserWishlist> WishlistItems = new HashSet<GameUserWishlist>(); 
 
         public ICollection<GameCart> GamesCarts = new HashSet<GameCart>();
     }
