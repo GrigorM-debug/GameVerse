@@ -1,5 +1,5 @@
 using GameVerse.Data;
-using GameVerse.Data.Models;
+using GameVerse.Data.Models.ApplicationUsers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
