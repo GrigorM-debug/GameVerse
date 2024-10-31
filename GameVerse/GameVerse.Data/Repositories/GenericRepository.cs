@@ -118,7 +118,7 @@ namespace GameVerse.Data.Repositories
             return entity;
         }
 
-        public Task<IEnumerable<TType>> GetWithIncludeAsync(params Expression<Func<TType, object>>[] includes)
+        public async Task<IEnumerable<TType>> GetWithIncludeAsync(params Expression<Func<TType, object>>[] includes)
         {
             IQueryable<TType> query = _dbSet;
 

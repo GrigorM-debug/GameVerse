@@ -73,6 +73,11 @@ namespace GameVerse.Services.Events
             return model;
         }
 
+        public Task<bool> DeleteEventPostAsync(Guid eventId, Guid userId)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<EventInputViewModel?> EditEventGetAsync(Guid eventId, Guid userId)
         {
             Event? e = await _eventRepository
