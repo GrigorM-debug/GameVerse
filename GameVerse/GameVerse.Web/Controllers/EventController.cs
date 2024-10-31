@@ -1,12 +1,20 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using GameVerse.Services.Events;
+using GameVerse.Services.Interfaces.Events;
+using GameVerse.Web.ViewModels.Event;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GameVerse.Web.Controllers
 {
-    public class EventController : BaseController
+    public class EventController(EventService eventService) : BaseController
     {
-        public IActionResult Index()
+        private readonly IEventService _eventService = eventService;
+
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
-            return View();
+            IEnumerable<EventIndexViewModel> events = await _eventService.GetAllEventsAsync();
+
+            return View(events);
         }
     }
 }
