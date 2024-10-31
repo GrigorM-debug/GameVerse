@@ -15,7 +15,7 @@ namespace GameVerse.Services.Interfaces.Events
 
         Task<EventDeleteViewModel?> DeleteEventGetAsync(string eventId, string useId);
 
-        Task<bool> DeleteEventPostAsync(Guid eventId, Guid userId);
+        Task DeleteEventPostAsync(string eventId, string userId);
 
         Task<EventDetailsViewModel> GetEventDetailsByIdAsync(Guid id);
 
