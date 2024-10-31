@@ -161,5 +161,15 @@ namespace GameVerse.Data.Repositories
                 return false;
             }
         }
+
+        public void SaveChanges()
+        {
+            _context.SaveChanges();
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
     }
 }

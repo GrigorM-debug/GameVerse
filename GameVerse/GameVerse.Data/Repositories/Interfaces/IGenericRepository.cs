@@ -37,5 +37,9 @@ namespace GameVerse.Data.Repositories.Interfaces
         Task<bool> UpdateAsync(TType entity);
 
         IQueryable<TType> AllAsReadOnly();
+
+        void SaveChanges();
+
+        Task SaveChangesAsync();
     }
 }
