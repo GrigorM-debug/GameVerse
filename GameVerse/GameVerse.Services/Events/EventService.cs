@@ -23,13 +23,13 @@ namespace GameVerse.Services.Events
             _eventRepository = eventRepository;
         }
 
-        public async Task<bool> AddEventAsync(EventInputViewModel inputModel, Guid userId)
+        public async Task<string> AddEventAsync(EventInputViewModel inputModel, string userId)
         {
             bool isEventAlreadyExist = await EventExistByTitle(inputModel.Topic);
 
             if(isEventAlreadyExist)
             {
-                return false;
+                return null;
             }
 
             Event newEvent = new Event()
@@ -43,12 +43,13 @@ namespace GameVerse.Services.Events
                 Seats = inputModel.Seats,
                 TicketPrice = inputModel.TicketPrice,
                 Image = inputModel.Image,
-                PublisherId = userId
+                PublisherId = Guid.Parse(userId)
             };
 
             await _eventRepository.AddAsync(newEvent);
+            await _eventRepository.SaveChangesAsync();
 
-            return true;
+            return newEvent.Id.ToString();
         }
 
         public async Task<EventDeleteViewModel?> DeleteEventGetAsync(Guid eventId, Guid useId)
