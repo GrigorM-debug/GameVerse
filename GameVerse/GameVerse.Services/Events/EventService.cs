@@ -143,6 +143,18 @@ namespace GameVerse.Services.Events
             return true;
         }
 
+        public async Task<bool> EventExistById(string id)
+        {
+            Event? result = await _eventRepository.GetByIdAsync(Guid.Parse(id));
+
+
+            if(result == null) 
+                return false;
+
+
+            return true;
+        }
+
         public async Task<bool> EventExistByTitle(string topic)
         {
             Event? isExisting = await _eventRepository.AllAsReadOnly().FirstOrDefaultAsync(e => e.Topic == topic);

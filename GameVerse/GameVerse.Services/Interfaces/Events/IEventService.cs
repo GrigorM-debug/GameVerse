@@ -20,5 +20,7 @@ namespace GameVerse.Services.Interfaces.Events
         Task<EventDetailsViewModel> GetEventDetailsByIdAsync(Guid id);
 
         Task<bool> EventExistByTitle(string Title);
+
+        Task<bool> EventExistById(string id);
     }
 }
