@@ -51,7 +51,34 @@ namespace GameVerse.Services.Events
             return true;
         }
 
-        public async Task<bool> EditEventAsync(EventInputViewModel inputModel, Guid eventId, Guid userId)
+        public async Task<EventInputViewModel?> EditEventGetAsync(Guid eventId, Guid userId)
+        {
+            Event? e = await _eventRepository
+                .AllAsReadOnly()
+                .FirstOrDefaultAsync(e => e.Id == eventId && e.PublisherId == userId);
+
+            if(e == null)
+            {
+                return null;
+            }
+
+            EventInputViewModel model = new EventInputViewModel()
+            {
+                Topic = e.Topic,
+                Description = e.Description,
+                StartDate = e.StartDate,
+                EndDate = e.EndDate,
+                Latitude = e.Latitude,
+                Longitude = e.Longitude,
+                Seats = e.Seats,
+                TicketPrice = e.TicketPrice,
+                Image = e.Image,
+            };
+
+            return model;
+        }
+
+        public async Task<bool> EditEventPostAsync(EventInputViewModel inputModel, Guid eventId, Guid userId)
         {
             Event? e = await _eventRepository.FirstOrDefaultAsync(e => e.Id == eventId && e.PublisherId == userId);
 
