@@ -39,6 +39,11 @@ namespace GameVerse.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public IQueryable<TType> AllAsReadOnly()
+        {
+            return _dbSet.AsNoTracking();
+        }
+
         public bool Delete(TId id)
         {
             TType? entity = GetById(id);
