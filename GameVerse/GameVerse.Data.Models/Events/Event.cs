@@ -1,4 +1,5 @@
-﻿using GameVerse.Data.Models.Carts;
+﻿using GameVerse.Data.Models.ApplicationUsers;
+using GameVerse.Data.Models.Carts;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -43,6 +44,13 @@ namespace GameVerse.Data.Models.Events
         [Required]
         [Comment("The event image url")]
         public string Image { get; set; } = null!;
+
+        [Comment("The event's publisher unique id")]
+        public Guid PublisherId { get; set; }
+
+        [Required]
+        [ForeignKey(nameof(PublisherId))]
+        public ApplicationUser Publisher { get; set; } = null!;
 
         public ICollection<EventCart> EventsCarts { get; set; } = new HashSet<EventCart>();
     }
