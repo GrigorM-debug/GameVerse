@@ -23,25 +23,27 @@ namespace GameVerse.Services.Events
             _eventRepository = eventRepository;
         }
 
-        public async Task<bool> AddEventAsync(EventInputViewModel inputModel)
+        public async Task<bool> AddEventAsync(EventInputViewModel inputModel, Guid userId)
         {
-            if(DateTime.TryParseExact(inputModel.StartDate, EventConstants.EventDateTimeFormat , CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime startDate) == false)
-            {
-                return false;
-            }
-
-            if (DateTime.TryParseExact(inputModel.EndDate, EventConstants.EventDateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime endDate) == false)
-            {
-                return false;
-            }
-
             Event newEvent = new Event()
             {
-
+                Topic = inputModel.Topic,
+                Description = inputModel.Description,
+                StartDate = inputModel.StartDate,
+                EndDate = inputModel.EndDate,
+                Latitude = inputModel.Latitude,
+                Longitude = inputModel.Longitude,
+                Seats = inputModel.Seats,
+                TicketPrice = inputModel.TicketPrice,
+                Image = inputModel.Image,
+                PublisherId = userId
             };
+
+            await _eventRepository.AddAsync(newEvent);
 
             return true;
         }
+
 
         public async Task<bool> EventExist(Guid id)
         {
