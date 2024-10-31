@@ -51,6 +51,28 @@ namespace GameVerse.Services.Events
             return true;
         }
 
+        public async Task<EventDeleteViewModel?> DeleteEventGetAsync(Guid eventId, Guid useId)
+        {
+            IEnumerable<Event> events = await _eventRepository.GetWithIncludeAsync(e => e.Publisher);
+
+            Event? e = events.FirstOrDefault(e => e.Id == eventId && e.PublisherId == useId);
+
+            if (e == null)
+            {
+                return null;
+            }
+
+            EventDeleteViewModel model = new EventDeleteViewModel()
+            {
+                Id = e.Id.ToString(),
+                Topic = e.Topic,
+                PublisherName = e.Publisher.UserName,
+                PublisherId = e.PublisherId.ToString(),
+            };
+
+            return model;
+        }
+
         public async Task<EventInputViewModel?> EditEventGetAsync(Guid eventId, Guid userId)
         {
             Event? e = await _eventRepository
