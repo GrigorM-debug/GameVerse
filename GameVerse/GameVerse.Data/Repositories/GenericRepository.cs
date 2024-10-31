@@ -118,6 +118,18 @@ namespace GameVerse.Data.Repositories
             return entity;
         }
 
+        public Task<IEnumerable<TType>> GetWithIncludeAsync(params Expression<Func<TType, object>>[] includes)
+        {
+            IQueryable<TType> query = _dbSet;
+
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+
+            return await query.ToListAsync();
+        }
+
         public bool Update(TType entity)
         {
             try

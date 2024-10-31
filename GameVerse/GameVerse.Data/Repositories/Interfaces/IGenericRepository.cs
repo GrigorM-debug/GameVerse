@@ -8,6 +8,8 @@ namespace GameVerse.Data.Repositories.Interfaces
 
         Task<TType?> GetByIdAsync(TId id);
 
+        Task<IEnumerable<TType>> GetWithIncludeAsync(
+    params Expression<Func<TType, object>>[] includes);
         TType? FirstOrDefault(Func<TType, bool> predicate);
 
         Task<TType?> FirstOrDefaultAsync(Expression<Func<TType, bool>> predicate);
