@@ -51,6 +51,28 @@ namespace GameVerse.Services.Events
             return true;
         }
 
+        public async Task<bool> EditEventAsync(EventInputViewModel inputModel, Guid eventId, Guid userId)
+        {
+            Event? e = await _eventRepository.FirstOrDefaultAsync(e => e.Id == eventId && e.PublisherId == userId);
+
+            if (e == null)
+            {
+                return false;
+            }
+
+            e.Topic = inputModel.Topic;
+            e.Description = inputModel.Description;
+            e.StartDate = inputModel.StartDate;
+            e.EndDate = inputModel.EndDate;
+            e.Latitude = inputModel.Latitude;
+            e.Longitude = inputModel.Longitude;
+            e.Seats = inputModel.Seats;
+            e.TicketPrice = inputModel.TicketPrice;
+            e.Image = inputModel.Image;
+            e.PublisherId = userId;
+
+            return true;
+        }
 
         public async Task<bool> EventExistByTitle(string topic)
         {
