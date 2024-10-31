@@ -95,6 +95,10 @@
             //Ticket Price
             public const double TicketPriceMinValue = 1.00;
             public const double TicketPriceMaxValue = 1000.00;
+
+            //Seats
+            public const int SeatsMinValue = 1;
+            public const int SeatsMaxValue = 1000;
         }
 
         public static class RestrictionsConstants
