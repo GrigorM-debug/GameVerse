@@ -13,9 +13,9 @@ namespace GameVerse.Web.ViewModels.Event
         [StringLength(EventConstants.DescriptionMaxLength, MinimumLength = EventConstants.DescriptionMinLength, ErrorMessage = LengthErrorMessage)]
         public string Description {  get; set; } = string.Empty;
 
-        public string StartDate { get; set; } = DateTime.Now.ToString(EventConstants.EventDateTimeFormat);
+        public DateTime StartDate { get; set; } = DateTime.Now;
 
-        public string EndDate { get; set; } = DateTime.Now.ToString(EventConstants.EventDateTimeFormat);
+        public DateTime EndDate { get; set; } = DateTime.Now;
 
         public double Latitude { get; set; }    
 
