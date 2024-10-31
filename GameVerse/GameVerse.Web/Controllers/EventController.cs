@@ -20,6 +20,21 @@ namespace GameVerse.Web.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> Details(string id)
+        {
+            bool isEventExist = await _eventService.EventExistById(id);
+
+            if (!isEventExist)
+            {
+                //Display some message or go to 404 page
+            }
+
+            EventDetailsViewModel model = await _eventService.GetEventDetailsByIdAsync(id);
+
+            return View(model);
+        }
+
+        [HttpGet]
         public IActionResult Add()
         {
             EventInputViewModel model = new EventInputViewModel();
