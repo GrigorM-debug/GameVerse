@@ -7,9 +7,15 @@ namespace GameVerse.Web.ViewModels.Event
 
         public string Topic { get; set; } = null!;
 
+        public string Description { get; set; } = null!;
+
         public string StartDate { get; set; } = null!;
 
         public string EndDate { get; set; } = null!;
+
+        public double Latitude { get; set; }
+
+        public double Longitude { get; set; }
 
         public int Seats { get; set; }
 

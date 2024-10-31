@@ -1,14 +1,16 @@
 ﻿
 using GameVerse.Web.ViewModels.Event;
 
-namespace GameVerse.Services.Interfaces.Event
+namespace GameVerse.Services.Interfaces.Events
 {
     public interface IEventService
     {
         Task<IEnumerable<EventIndexViewModel>> GetAllEventsAsync();
 
-        Task<bool> AddEventAsync(EventIndexViewModel inputModel);
+        Task<bool> AddEventAsync(EventInputViewModel inputModel);
 
         Task<EventDetailsViewModel> GetEventDetailsByIdAsync(Guid id);
+
+        Task<bool> EventExist(Guid id);
     }
 }
