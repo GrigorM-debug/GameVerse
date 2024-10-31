@@ -42,5 +42,39 @@ namespace GameVerse.Web.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(string id)
+        {
+            bool isEventExist = await _eventService.EventExistById(id);
+
+            if(!isEventExist)
+            {
+                //Display some message or go to 404 page
+            }
+
+            string? userId = User.GetId();
+
+            EventInputViewModel? model = await _eventService.EditEventGetAsync(id, userId);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(EventInputViewModel inputModel, string id)
+        {
+            bool isEventExist = await _eventService.EventExistById(id);
+
+            if (!isEventExist)
+            {
+                //Display some message or go to 404 page
+            }
+
+            string? userId = User.GetId();
+
+            await _eventService.EditEventPostAsync(inputModel, id, userId);
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
