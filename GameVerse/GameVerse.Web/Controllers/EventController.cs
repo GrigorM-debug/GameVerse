@@ -47,13 +47,16 @@ namespace GameVerse.Web.Controllers
         {
             string? userId = User.GetId();
 
-            string eventId = await _eventService.AddEventAsync(inputModel, userId!);
+            bool isEventExisting = await _eventService.EventExistByTitle(inputModel.Topic);
 
-            if(eventId == null)
+
+            if(isEventExisting)
             {
                 //If the id ios null it means that the event already exist
                 //Dind a way to display message
             }
+
+            string eventId = await _eventService.AddEventAsync(inputModel, userId);
 
             return RedirectToAction(nameof(Index));
         }
