@@ -163,9 +163,9 @@ namespace GameVerse.Services.Events
             return eventIndexViewModels;
         }
 
-        public async Task<EventDetailsViewModel> GetEventDetailsByIdAsync(Guid id)
+        public async Task<EventDetailsViewModel> GetEventDetailsByIdAsync(string id)
         {
-            Event? e = await _eventRepository.GetByIdAsync(id);
+            Event? e = await _eventRepository.GetByIdAsync(Guid.Parse(id));
 
             EventDetailsViewModel eventDetailsViewModel = new EventDetailsViewModel()
             {
