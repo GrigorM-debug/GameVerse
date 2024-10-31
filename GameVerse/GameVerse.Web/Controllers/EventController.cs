@@ -1,7 +1,9 @@
 ﻿using GameVerse.Services.Events;
 using GameVerse.Services.Interfaces.Events;
+using GameVerse.Web.Extensions;
 using GameVerse.Web.ViewModels.Event;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace GameVerse.Web.Controllers
 {
@@ -15,6 +17,30 @@ namespace GameVerse.Web.Controllers
             IEnumerable<EventIndexViewModel> events = await _eventService.GetAllEventsAsync();
 
             return View(events);
+        }
+
+        [HttpGet]
+        public IActionResult Add()
+        {
+            EventInputViewModel model = new EventInputViewModel();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Add(EventInputViewModel inputModel)
+        {
+            string? userId = User.GetId();
+
+            string eventId = await _eventService.AddEventAsync(inputModel, userId!);
+
+            if(eventId == null)
+            {
+                //If the id ios null it means that the event already exist
+                //Dind a way to display message
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
