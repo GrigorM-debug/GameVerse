@@ -137,6 +137,8 @@ namespace GameVerse.Services.Events
             e.Image = inputModel.Image;
             e.PublisherId = userId;
 
+            await _eventRepository.SaveChangesAsync();
+
             return true;
         }
 
