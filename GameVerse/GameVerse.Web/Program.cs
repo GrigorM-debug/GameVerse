@@ -3,8 +3,8 @@ using GameVerse.Data.Models.ApplicationUsers;
 using GameVerse.Data.Repositories;
 using GameVerse.Data.Repositories.Interfaces;
 using GameVerse.Web.ModelBinders;
-using GameVerse.Web.ModelBinders.DateTime;
-using GameVerse.Web.ModelBinders.Decimal;
+using GameVerse.Web.ModelBinders.DateTimeModelBinder;
+using GameVerse.Web.ModelBinders.DecimalModelBinder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

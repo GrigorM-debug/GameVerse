@@ -3,7 +3,7 @@ using System;
 using System.Globalization;
 using System.Threading.Tasks;
 
-namespace GameVerse.Web.ModelBinders.DateTime
+namespace GameVerse.Web.ModelBinders.DateTimeModelBinder
 {
     public class DateTimeModelBinder(string[] dateFormats, CultureInfo? culture = null) : IModelBinder
     {

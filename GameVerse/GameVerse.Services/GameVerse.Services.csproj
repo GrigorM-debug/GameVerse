@@ -7,8 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GameVerse.Common\GameVerse.Common.csproj" />
     <ProjectReference Include="..\GameVerse.Data.Models\GameVerse.Data.Models.csproj" />
     <ProjectReference Include="..\GameVerse.Data\GameVerse.Data.csproj" />
+    <ProjectReference Include="..\GameVerse.Web.ViewModels\GameVerse.Web.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>

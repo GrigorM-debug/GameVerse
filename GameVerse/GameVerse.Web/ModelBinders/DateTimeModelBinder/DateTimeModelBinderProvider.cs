@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 
-namespace GameVerse.Web.ModelBinders.DateTime
+namespace GameVerse.Web.ModelBinders.DateTimeModelBinder
 {
     public class DateTimeModelBinderProvider(string[] dateFormats) : IModelBinderProvider
     {

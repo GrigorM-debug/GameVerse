@@ -1,18 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Globalization;
 
-namespace GameVerse.Web.ModelBinders
+namespace GameVerse.Web.ModelBinders.DecimalModelBinder
 {
-    public class DecimalModelBinder : IModelBinder
+    public class DecimalModelBinder(NumberStyles numberStyles = NumberStyles.Number, CultureInfo? culture = null) : IModelBinder
     {
-        private readonly NumberStyles _numberStyles;
-        private readonly CultureInfo _culture;
-
-        public DecimalModelBinder(NumberStyles numberStyles = NumberStyles.Number, CultureInfo? culture = null)
-        {
-            _numberStyles = numberStyles;
-            _culture = culture ?? CultureInfo.CurrentCulture;
-        }
+        private readonly NumberStyles _numberStyles = numberStyles;
+        private readonly CultureInfo _culture = culture ?? CultureInfo.CurrentCulture;
 
         public Task BindModelAsync(ModelBindingContext bindingContext)
         {

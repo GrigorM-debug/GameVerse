@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 
-namespace GameVerse.Web.ModelBinders
+namespace GameVerse.Web.ModelBinders.DecimalModelBinder
 {
     public class DecimalModelBinderProvider : IModelBinderProvider
     {

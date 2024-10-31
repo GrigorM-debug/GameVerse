@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GameVerse.Common\GameVerse.Common.csproj" />
+  </ItemGroup>
+
 </Project>
