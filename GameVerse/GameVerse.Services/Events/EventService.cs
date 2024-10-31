@@ -25,6 +25,13 @@ namespace GameVerse.Services.Events
 
         public async Task<bool> AddEventAsync(EventInputViewModel inputModel, Guid userId)
         {
+            bool isEventAlreadyExist = await EventExistByTitle(inputModel.Topic);
+
+            if(isEventAlreadyExist)
+            {
+                return false;
+            }
+
             Event newEvent = new Event()
             {
                 Topic = inputModel.Topic,
@@ -45,9 +52,9 @@ namespace GameVerse.Services.Events
         }
 
 
-        public async Task<bool> EventExist(Guid id)
+        public async Task<bool> EventExistByTitle(string topic)
         {
-            Event? isExisting = await _eventRepository.AllAsReadOnly().FirstOrDefaultAsync(e => e.Id == id);
+            Event? isExisting = await _eventRepository.AllAsReadOnly().FirstOrDefaultAsync(e => e.Topic == topic);
 
             if (isExisting == null)
             {
