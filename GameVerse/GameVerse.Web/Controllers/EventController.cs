@@ -2,7 +2,7 @@
 
 namespace GameVerse.Web.Controllers
 {
-    public class EventController : Controller
+    public class EventController : BaseController
     {
         public IActionResult Index()
         {
