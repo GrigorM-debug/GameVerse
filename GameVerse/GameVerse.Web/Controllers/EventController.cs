@@ -76,5 +76,39 @@ namespace GameVerse.Web.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(string id)
+        {
+            bool isEventExist = await _eventService.EventExistById(id);
+
+            if (!isEventExist)
+            {
+                //Display some message or go to 404 page
+            }
+
+            string? userId = User.GetId();
+
+            EventDeleteViewModel model = await _eventService.DeleteEventGetAsync(id, userId);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteConfirm(string id)
+        {
+            bool isEventExist = await _eventService.EventExistById(id);
+
+            if (!isEventExist)
+            {
+                //Display some message or go to 404 page
+            }
+
+            string? userId = User.GetId();
+
+            await _eventService.DeleteEventPostAsync(id, userId);
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
