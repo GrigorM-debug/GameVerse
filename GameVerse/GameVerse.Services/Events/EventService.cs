@@ -58,11 +58,6 @@ namespace GameVerse.Services.Events
 
             Event? e = events.FirstOrDefault(e => e.Id == eventId && e.PublisherId == useId);
 
-            if (e == null)
-            {
-                return null;
-            }
-
             EventDeleteViewModel model = new EventDeleteViewModel()
             {
                 Id = e.Id.ToString(),
@@ -91,16 +86,11 @@ namespace GameVerse.Services.Events
             return true;
         }
 
-        public async Task<EventInputViewModel?> EditEventGetAsync(Guid eventId, Guid userId)
+        public async Task<EventInputViewModel?> EditEventGetAsync(string eventId, string userId)
         {
             Event? e = await _eventRepository
                 .AllAsReadOnly()
-                .FirstOrDefaultAsync(e => e.Id == eventId && e.PublisherId == userId);
-
-            if(e == null)
-            {
-                return null;
-            }
+                .FirstOrDefaultAsync(e => e.Id.ToString() == eventId && e.PublisherId.ToString() == userId);
 
             EventInputViewModel model = new EventInputViewModel()
             {
@@ -118,14 +108,9 @@ namespace GameVerse.Services.Events
             return model;
         }
 
-        public async Task<bool> EditEventPostAsync(EventInputViewModel inputModel, Guid eventId, Guid userId)
+        public async Task EditEventPostAsync(EventInputViewModel inputModel, string eventId, string userId)
         {
-            Event? e = await _eventRepository.FirstOrDefaultAsync(e => e.Id == eventId && e.PublisherId == userId);
-
-            if (e == null)
-            {
-                return false;
-            }
+            Event? e = await _eventRepository.FirstOrDefaultAsync(e => e.Id.ToString() == eventId && e.PublisherId.ToString() == userId);
 
             e.Topic = inputModel.Topic;
             e.Description = inputModel.Description;
@@ -136,11 +121,9 @@ namespace GameVerse.Services.Events
             e.Seats = inputModel.Seats;
             e.TicketPrice = inputModel.TicketPrice;
             e.Image = inputModel.Image;
-            e.PublisherId = userId;
+            e.PublisherId = Guid.Parse(userId);
 
             await _eventRepository.SaveChangesAsync();
-
-            return true;
         }
 
         public async Task<bool> EventExistById(string id)
