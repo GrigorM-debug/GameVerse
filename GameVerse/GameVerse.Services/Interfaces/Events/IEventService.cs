@@ -13,7 +13,7 @@ namespace GameVerse.Services.Interfaces.Events
 
         Task EditEventPostAsync(EventInputViewModel inputModel, string eventId, string userId);
 
-        Task<EventDeleteViewModel?> DeleteEventGetAsync(Guid eventId, Guid useId);
+        Task<EventDeleteViewModel?> DeleteEventGetAsync(string eventId, string useId);
 
         Task<bool> DeleteEventPostAsync(Guid eventId, Guid userId);
 

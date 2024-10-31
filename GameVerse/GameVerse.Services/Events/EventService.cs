@@ -52,11 +52,11 @@ namespace GameVerse.Services.Events
             return newEvent.Id.ToString();
         }
 
-        public async Task<EventDeleteViewModel?> DeleteEventGetAsync(Guid eventId, Guid useId)
+        public async Task<EventDeleteViewModel?> DeleteEventGetAsync(string eventId, string useId)
         {
             IEnumerable<Event> events = await _eventRepository.GetWithIncludeAsync(e => e.Publisher);
 
-            Event? e = events.FirstOrDefault(e => e.Id == eventId && e.PublisherId == useId);
+            Event? e = events.FirstOrDefault(e => e.Id.ToString() == eventId && e.PublisherId.ToString() == useId);
 
             EventDeleteViewModel model = new EventDeleteViewModel()
             {
