@@ -113,7 +113,8 @@ namespace GameVerse.Data.Repositories
 
         public async Task<TType?> GetByIdAsync(TId id)
         {
-            TType? entity = await _dbSet.FindAsync(id);
+            TType? entity = await _dbSet.
+                FindAsync(id);
 
             return entity;
         }

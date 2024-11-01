@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 using static GameVerse.Common.ApplicationConstants;
 
-namespace GameVerse.Services.Events
+namespace GameVerse.Services
 {
     public class EventService : BaseService, IEventService
     {
@@ -24,7 +24,7 @@ namespace GameVerse.Services.Events
         }
 
         public async Task<string> AddEventAsync(EventInputViewModel inputModel, string userId)
-        { 
+        {
             Event newEvent = new Event()
             {
                 Topic = inputModel.Topic,
@@ -55,7 +55,7 @@ namespace GameVerse.Services.Events
             {
                 Id = e.Id.ToString(),
                 Topic = e.Topic,
-                PublisherName = e.Publisher.UserName,
+                PublisherName = e.Publisher.User.UserName,
                 PublisherId = e.PublisherId.ToString(),
             };
 
@@ -69,7 +69,7 @@ namespace GameVerse.Services.Events
                 .FirstOrDefaultAsync(e => e.Id.ToString() == eventId && e.PublisherId.ToString() == userId);
 
             e.IsDeleted = true;
-           
+
             await _eventRepository.SaveChangesAsync();
         }
 
@@ -118,7 +118,7 @@ namespace GameVerse.Services.Events
             Event? result = await _eventRepository.GetByIdAsync(Guid.Parse(id));
 
 
-            if(result == null) 
+            if (result == null)
                 return false;
 
 
@@ -143,7 +143,7 @@ namespace GameVerse.Services.Events
 
             IEnumerable<EventIndexViewModel> eventIndexViewModels = events
                 .Select(e => new EventIndexViewModel
-            {
+                {
                     Id = e.Id.ToString(),
                     Topic = e.Topic,
                     StartDate = e.StartDate.ToString(EventConstants.EventDateTimeFormat),
@@ -151,7 +151,7 @@ namespace GameVerse.Services.Events
                     Seats = e.Seats,
                     TicketPrice = e.TicketPrice.ToString("C"),
                     Image = e.Image,
-            });
+                });
 
             return eventIndexViewModels;
         }
@@ -166,7 +166,7 @@ namespace GameVerse.Services.Events
                 Topic = e.Topic,
                 Description = e.Description,
                 StartDate = e.StartDate.ToString(EventConstants.EventDateTimeFormat),
-                EndDate = e.EndDate.ToString( EventConstants.EventDateTimeFormat),
+                EndDate = e.EndDate.ToString(EventConstants.EventDateTimeFormat),
                 Latitude = e.Latitude,
                 Longitude = e.Longitude,
                 Seats = e.Seats,
