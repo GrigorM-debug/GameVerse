@@ -119,7 +119,7 @@ namespace GameVerse.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Carts");
+                    b.ToTable("Carts", (string)null);
                 });
 
             modelBuilder.Entity("GameVerse.Data.Models.Carts.EventCart", b =>
@@ -140,7 +140,7 @@ namespace GameVerse.Data.Migrations
 
                     b.HasIndex("CartId");
 
-                    b.ToTable("EventsCarts");
+                    b.ToTable("EventsCarts", (string)null);
                 });
 
             modelBuilder.Entity("GameVerse.Data.Models.Carts.GameCart", b =>
@@ -161,7 +161,7 @@ namespace GameVerse.Data.Migrations
 
                     b.HasIndex("CartId");
 
-                    b.ToTable("GamesCarts");
+                    b.ToTable("GamesCarts", (string)null);
                 });
 
             modelBuilder.Entity("GameVerse.Data.Models.Events.Event", b =>
@@ -223,7 +223,7 @@ namespace GameVerse.Data.Migrations
 
                     b.HasIndex("PublisherId");
 
-                    b.ToTable("Events");
+                    b.ToTable("Events", (string)null);
                 });
 
             modelBuilder.Entity("GameVerse.Data.Models.Events.EventRegistration", b =>
@@ -241,7 +241,7 @@ namespace GameVerse.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("EventsRegistrations");
+                    b.ToTable("EventsRegistrations", (string)null);
                 });
 
             modelBuilder.Entity("GameVerse.Data.Models.GameUserActions.GameUserCompleted", b =>
@@ -262,7 +262,7 @@ namespace GameVerse.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("GamesUsersCompleted");
+                    b.ToTable("GamesUsersCompleted", (string)null);
                 });
 
             modelBuilder.Entity("GameVerse.Data.Models.GameUserActions.GameUserCurrentlyPlaying", b =>
@@ -282,7 +282,7 @@ namespace GameVerse.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("GamesUsersCurrentlyPlaying");
+                    b.ToTable("GamesUsersCurrentlyPlaying", (string)null);
                 });
 
             modelBuilder.Entity("GameVerse.Data.Models.GameUserActions.GameUserWishlist", b =>
@@ -303,7 +303,7 @@ namespace GameVerse.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("GameUserWishlists");
+                    b.ToTable("GameUserWishlists", (string)null);
                 });
 
             modelBuilder.Entity("GameVerse.Data.Models.Games.Game", b =>
@@ -364,7 +364,7 @@ namespace GameVerse.Data.Migrations
 
                     b.HasIndex("PublisherId");
 
-                    b.ToTable("Games");
+                    b.ToTable("Games", (string)null);
                 });
 
             modelBuilder.Entity("GameVerse.Data.Models.Games.Genres.GameGenre", b =>
@@ -379,7 +379,7 @@ namespace GameVerse.Data.Migrations
 
                     b.HasIndex("GenreId");
 
-                    b.ToTable("GamesGenres");
+                    b.ToTable("GamesGenres", (string)null);
                 });
 
             modelBuilder.Entity("GameVerse.Data.Models.Games.Genres.Genre", b =>
@@ -397,7 +397,7 @@ namespace GameVerse.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Genres");
+                    b.ToTable("Genres", (string)null);
 
                     b.HasData(
                         new
@@ -514,7 +514,7 @@ namespace GameVerse.Data.Migrations
 
                     b.HasIndex("PlatformId");
 
-                    b.ToTable("GamesPlatforms");
+                    b.ToTable("GamesPlatforms", (string)null);
                 });
 
             modelBuilder.Entity("GameVerse.Data.Models.Games.Platform.Platform", b =>
@@ -532,7 +532,7 @@ namespace GameVerse.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Platforms");
+                    b.ToTable("Platforms", (string)null);
 
                     b.HasData(
                         new
@@ -649,7 +649,7 @@ namespace GameVerse.Data.Migrations
 
                     b.HasIndex("RestrictionId");
 
-                    b.ToTable("GamesRestrictions");
+                    b.ToTable("GamesRestrictions", (string)null);
                 });
 
             modelBuilder.Entity("GameVerse.Data.Models.Games.Restrictions.Restriction", b =>
@@ -667,7 +667,7 @@ namespace GameVerse.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Restrictions");
+                    b.ToTable("Restrictions", (string)null);
 
                     b.HasData(
                         new
@@ -772,7 +772,7 @@ namespace GameVerse.Data.Migrations
 
                     b.HasIndex("ReviewerId");
 
-                    b.ToTable("GameReviews");
+                    b.ToTable("GameReviews", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>

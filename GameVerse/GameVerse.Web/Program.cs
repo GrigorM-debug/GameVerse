@@ -22,12 +22,12 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
 
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options => 
+builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
 })
-    .AddEntityFrameworkStores<GameVerseDbContext>()
-    .AddDefaultTokenProviders();
+    .AddRoles<IdentityRole<Guid>>()
+    .AddEntityFrameworkStores<GameVerseDbContext>();
 
 builder.Services.AddControllersWithViews(options =>
 {
