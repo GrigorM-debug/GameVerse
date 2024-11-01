@@ -11,6 +11,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using AspNetCoreHero.ToastNotification;
 using AspNetCoreHero.ToastNotification.Extensions;
+using GameVerse.Services;
+using GameVerse.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +24,10 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 //Reposity. 
 builder.Services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
+
+//Services
+builder.Services.AddScoped<IEventService, EventService>();
+builder.Services.AddScoped<IModeratorService, ModeratorService>();
 
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
