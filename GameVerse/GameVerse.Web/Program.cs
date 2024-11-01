@@ -1,4 +1,5 @@
 using GameVerse.Data;
+using GameVerse.Data.DataSeed;
 using GameVerse.Data.Models.ApplicationUsers;
 using GameVerse.Data.Repositories;
 using GameVerse.Data.Repositories.Interfaces;
@@ -7,6 +8,7 @@ using GameVerse.Web.ModelBinders.DateTimeModelBinder;
 using GameVerse.Web.ModelBinders.DecimalModelBinder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,11 +22,12 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
 
 
-builder.Services.AddDefaultIdentity<ApplicationUser>(options => 
+builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options => 
 {
     options.SignIn.RequireConfirmedAccount = false;
 })
-    .AddEntityFrameworkStores<GameVerseDbContext>();
+    .AddEntityFrameworkStores<GameVerseDbContext>()
+    .AddDefaultTokenProviders();
 
 builder.Services.AddControllersWithViews(options =>
 {
@@ -33,6 +36,16 @@ builder.Services.AddControllersWithViews(options =>
 });
 
 var app = builder.Build();
+
+//Adding data for Roles, Admin and Moderator
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+
+    await DataSeeder.SeedUsersAndRolesAsync(userManager, roleManager);
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -51,6 +64,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
