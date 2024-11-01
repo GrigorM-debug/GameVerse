@@ -1,11 +1,13 @@
-﻿using GameVerse.Data.Models.Games.Genres;
+﻿using GameVerse.Data.Models.ApplicationUsers;
+using GameVerse.Data.Models.Games.Genres;
 using GameVerse.Data.Models.Games.Platform;
 using GameVerse.Data.Models.Games.Restrictions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace GameVerse.Data.DataSeed
 {
-    internal static class DataSeeder
+    public static class DataSeeder
     {
         public static void SeedGenres(ModelBuilder modelBuilder)
         {
@@ -85,6 +87,61 @@ namespace GameVerse.Data.DataSeed
             };
 
             modelBuilder.Entity<Restriction>().HasData(restrictions);
+        }
+
+        public static async Task SeedUsersAndRolesAsync(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole<Guid>> roleManager)
+        {
+            //Passwords Hash
+            PasswordHasher<ApplicationUser> passwordHasher = new PasswordHasher<ApplicationUser>();
+
+            //Creating the Roles
+            string[] roles = { "Admin", "Moderator" };
+
+            foreach (string role in roles)
+            {
+                if (!await roleManager.RoleExistsAsync(role))
+                {
+                    await roleManager.CreateAsync(new IdentityRole<Guid>(role));
+                }
+            }
+
+            //Creating Admin
+            ApplicationUser adminUser = new ApplicationUser()
+            {
+                UserName = "AdminAdminov6740",
+                NormalizedUserName = "ADMINADMINOV6740",
+                Email = "admin@gmail.com",
+                NormalizedEmail = "ADMIN@GMAIL.COM",
+                FirstName = "Admin",
+                LastName = "Adminov"
+            };
+
+            if (await userManager.FindByEmailAsync(adminUser.Email) == null)
+            {
+                adminUser.PasswordHash = passwordHasher.HashPassword(adminUser, "AdminPassword123!");
+
+                await userManager.CreateAsync(adminUser);
+                await userManager.AddToRoleAsync(adminUser, "Admin");
+            }
+
+            //Creating Moderator
+            ApplicationUser moderatorUser = new ApplicationUser()
+            {
+                UserName = "TheModerator",
+                NormalizedUserName = "THEMODERATOR",
+                Email = "moderator@gmail.com",
+                NormalizedEmail = "MODERATOR@GMAIL.COM",
+                FirstName = "Moderator",
+                LastName = "Moderatorov"
+            };
+
+            if(await userManager.FindByEmailAsync(moderatorUser.Email) == null)
+            {
+                moderatorUser.PasswordHash = passwordHasher.HashPassword(moderatorUser, "ModeratorPassword123!");
+
+                await userManager.CreateAsync(moderatorUser);
+                await userManager.AddToRoleAsync(moderatorUser, "Moderator");
+            }
         }
     }
 }
