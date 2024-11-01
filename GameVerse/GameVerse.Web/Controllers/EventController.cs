@@ -1,16 +1,25 @@
-﻿using GameVerse.Services.Events;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using GameVerse.Services;
+using GameVerse.Services.Interfaces;
 using GameVerse.Services.Interfaces.Events;
 using GameVerse.Web.Extensions;
 using GameVerse.Web.ViewModels.Event;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
+using static GameVerse.Common.ApplicationConstants.NotificationMessages;
+
 namespace GameVerse.Web.Controllers
 {
-    public class EventController(EventService eventService) : BaseController
+    [Authorize]
+    public class EventController(EventService eventService, IModeratorService moderatorService, INotyfService notyf) : BaseController
     {
         private readonly IEventService _eventService = eventService;
+        private readonly IModeratorService _moderatorService = moderatorService;
+        private readonly INotyfService _notyf = notyf;
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -19,6 +28,7 @@ namespace GameVerse.Web.Controllers
             return View(events);
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> Details(string id)
         {
@@ -35,8 +45,17 @@ namespace GameVerse.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Add()
+        public async Task<IActionResult> Add()
         {
+            bool isModerator = await _moderatorService.ModeratorExistByUserIdAsync(User.GetId()!);
+
+            if (!isModerator)
+            {
+                _notyf.Error("You don't have the permission to do this!");
+
+                return Unauthorized();
+            }
+
             EventInputViewModel model = new EventInputViewModel();
 
             return View(model);

@@ -9,6 +9,8 @@ using GameVerse.Web.ModelBinders.DecimalModelBinder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using AspNetCoreHero.ToastNotification;
+using AspNetCoreHero.ToastNotification.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +36,14 @@ builder.Services.AddControllersWithViews(options =>
     options.ModelBinderProviders.Insert(0, new DecimalModelBinderProvider());
     options.ModelBinderProviders.Insert(1, new DateTimeModelBinderProvider(new[] { GameVerse.Common.ApplicationConstants.DateTimeFormat, GameVerse.Common.ApplicationConstants.EventConstants.EventDateTimeFormat }));
 });
+
+builder.Services.AddNotyf(config =>
+{
+    config.DurationInSeconds = 10;
+    config.IsDismissable = true;
+    config.Position = NotyfPosition.TopRight;
+});
+
 
 var app = builder.Build();
 
@@ -66,6 +76,8 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseNotyf();
 
 app.MapControllerRoute(
     name: "default",

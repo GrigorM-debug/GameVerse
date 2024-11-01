@@ -107,13 +107,5 @@
             public const int RestrictionNameMinLength = 3;
             public const int RestrictionNameMaxLength = 50; 
         }
-
-        public static class NotificationMessages
-        {
-            public const string ErrorMessage = "Error Message";
-            public const string WarningMessage = "Warning Message";
-            public const string InformationMessage = "Information Message";
-            public const string SuccessMessage = "Success Message";
-        }
     }
 }
