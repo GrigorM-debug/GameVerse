@@ -50,9 +50,16 @@ namespace GameVerse.Data.Models.Events
 
         [Required]
         [ForeignKey(nameof(PublisherId))]
-        public ApplicationUser Publisher { get; set; } = null!;
+        public Moderator Publisher { get; set; } = null!;
+
+        public Guid? ParticipantId { get; set; }
+
+        [Required]
+        [ForeignKey(nameof(ParticipantId))]
+        public ApplicationUser? Participant { get; set; } = null!;
 
         public bool IsDeleted { get; set; }
+
 
         public ICollection<EventCart> EventsCarts { get; set; } = new HashSet<EventCart>();
     }

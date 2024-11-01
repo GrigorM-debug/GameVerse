@@ -55,6 +55,8 @@ namespace GameVerse.Data
         //Games that users would like to buy and play. 
         public DbSet<GameUserWishlist> GameUserWishlists { get; set; } = null!;
 
+        public DbSet<Moderator> Moderators { get; set; } = null!;
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             //Data seeding
