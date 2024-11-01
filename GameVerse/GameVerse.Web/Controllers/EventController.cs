@@ -11,8 +11,9 @@ using System.Security.Claims;
 namespace GameVerse.Web.Controllers
 {
     [Authorize]
-    public class EventController(IEventService eventService, IModeratorService moderatorService, INotyfService notyf) : BaseController
+    public class EventController(ILogger<EventController> logger, IEventService eventService, IModeratorService moderatorService, INotyfService notyf) : BaseController
     {
+        private readonly ILogger<EventController> _logger = logger;
         private readonly IEventService _eventService = eventService;
         private readonly IModeratorService _moderatorService = moderatorService;
         private readonly INotyfService _notyf = notyf;
