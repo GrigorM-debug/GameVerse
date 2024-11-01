@@ -1,6 +1,6 @@
 ﻿using GameVerse.Data.Models.Events;
 using GameVerse.Data.Repositories.Interfaces;
-using GameVerse.Services.Interfaces.Events;
+using GameVerse.Services.Interfaces;
 using GameVerse.Web.ViewModels.Event;
 using Microsoft.EntityFrameworkCore;
 using System;

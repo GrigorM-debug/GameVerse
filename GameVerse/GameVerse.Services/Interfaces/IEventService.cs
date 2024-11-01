@@ -1,7 +1,7 @@
 ﻿
 using GameVerse.Web.ViewModels.Event;
 
-namespace GameVerse.Services.Interfaces.Events
+namespace GameVerse.Services.Interfaces
 {
     public interface IEventService
     {
