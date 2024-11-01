@@ -13,7 +13,7 @@ namespace GameVerse.Services
         public async Task<string?> GetModeratorIdByUserIdAsync(string? userId)
         {
             Moderator? moderator = await _moderatorRepository
-                .GetByIdAsync(Guid.Parse(userId));
+               .FirstOrDefaultAsync(m => m.UserId.ToString() == userId);
 
             if (moderator == null)
             {
@@ -25,7 +25,8 @@ namespace GameVerse.Services
 
         public async Task<bool> HasEventWithIdAync(string userId, string eventId)
         {
-            var moderator = await _moderatorRepository.GetByIdAsync(Guid.Parse(userId));
+            var moderator = await _moderatorRepository
+                .FirstOrDefaultAsync(m => m.UserId.ToString() == userId);
 
             if (moderator == null)
             {
@@ -47,7 +48,8 @@ namespace GameVerse.Services
 
         public async Task<bool> ModeratorExistByUserIdAsync(string userId)
         {
-            Moderator? moderator = await _moderatorRepository.GetByIdAsync(Guid.Parse(userId));
+            Moderator? moderator = await _moderatorRepository
+                .FirstOrDefaultAsync(m => m.UserId.ToString() == userId);
 
             if (moderator == null)
             {
