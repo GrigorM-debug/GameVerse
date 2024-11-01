@@ -1,19 +1,17 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using GameVerse.Services;
 using GameVerse.Services.Interfaces;
-using GameVerse.Services.Interfaces.Events;
 using GameVerse.Web.Extensions;
 using GameVerse.Web.ViewModels.Event;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-using static GameVerse.Common.ApplicationConstants.NotificationMessages;
 
 namespace GameVerse.Web.Controllers
 {
     [Authorize]
-    public class EventController(EventService eventService, IModeratorService moderatorService, INotyfService notyf) : BaseController
+    public class EventController(IEventService eventService, IModeratorService moderatorService, INotyfService notyf) : BaseController
     {
         private readonly IEventService _eventService = eventService;
         private readonly IModeratorService _moderatorService = moderatorService;
@@ -53,7 +51,7 @@ namespace GameVerse.Web.Controllers
             {
                 _notyf.Error("You don't have the permission to do this!");
 
-                return Unauthorized();
+                //return Unauthorized();
             }
 
             EventInputViewModel model = new EventInputViewModel();
@@ -64,20 +62,37 @@ namespace GameVerse.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(EventInputViewModel inputModel)
         {
-            string? userId = User.GetId();
+            bool isModerator = await _moderatorService.ModeratorExistByUserIdAsync(User.GetId()!);
+
+            if (!isModerator)
+            {
+                _notyf.Error("You don't have the permission to do this!");
+
+                //return Unauthorized();
+            }
 
             bool isEventExisting = await _eventService.EventExistByTitle(inputModel.Topic);
 
 
             if(isEventExisting)
             {
-                //If the id ios null it means that the event already exist
-                //Dind a way to display message
+                _notyf.Warning("Event with this Topic already exist !");
+
+                return View(inputModel);
             }
 
-            string eventId = await _eventService.AddEventAsync(inputModel, userId);
+            if (!ModelState.IsValid)
+            {
+                return View(inputModel);
+            }
 
-            return RedirectToAction(nameof(Index));
+            string? moderatorId = await _moderatorService.GetModeratorIdByUserIdAsync(User.GetId());
+
+            string eventId = await _eventService.AddEventAsync(inputModel, moderatorId!);
+
+            _notyf.Success("Event was added successfully!");
+
+            return RedirectToAction(nameof(Details), new {id = eventId});
         }
 
         [HttpGet]
