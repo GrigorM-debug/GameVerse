@@ -4,6 +4,7 @@ using GameVerse.Data.Models.Games.Platform;
 using GameVerse.Data.Models.Games.Restrictions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace GameVerse.Data.DataSeed
 {
@@ -142,6 +143,26 @@ namespace GameVerse.Data.DataSeed
                 await userManager.CreateAsync(moderatorUser);
                 await userManager.AddToRoleAsync(moderatorUser, "Moderator");
             }
+
+        }
+
+        public static async Task SeedModerators(GameVerseDbContext context, UserManager<ApplicationUser> userManager)
+        {
+            var moderators = await userManager.GetUsersInRoleAsync("Moderator");
+
+            foreach (var user in moderators)
+            {
+                var moderator = new Moderator
+                {
+                    Id = Guid.NewGuid(), 
+                    UserId = user.Id, 
+                    User = user,
+                };
+
+                context.Moderators.Add(moderator);
+            }
+
+            await context.SaveChangesAsync(); 
         }
     }
 }

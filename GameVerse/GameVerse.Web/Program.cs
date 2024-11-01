@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using AspNetCoreHero.ToastNotification;
 using AspNetCoreHero.ToastNotification.Extensions;
-using GameVerse.Services;
 using GameVerse.Services.Interfaces;
+using GameVerse.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -57,10 +57,12 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
+    var context = scope.ServiceProvider.GetRequiredService<GameVerseDbContext>();
     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
 
     await DataSeeder.SeedUsersAndRolesAsync(userManager, roleManager);
+    await context.SeedModeratorsAndAdminsDataAsync(userManager, roleManager, context);
 }
 
 // Configure the HTTP request pipeline.

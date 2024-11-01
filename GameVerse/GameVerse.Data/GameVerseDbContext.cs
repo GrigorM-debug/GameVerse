@@ -11,6 +11,7 @@ using GameVerse.Data.Models.GameUserActions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace GameVerse.Data
 {
@@ -75,6 +76,15 @@ namespace GameVerse.Data
                 .HasDefaultValue(false);
 
             base.OnModelCreating(builder);
+        }
+
+        public async Task SeedModeratorsAndAdminsDataAsync(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole<Guid>> roleManager, GameVerseDbContext context)
+        {
+            // Seed users and roles
+            await DataSeeder.SeedUsersAndRolesAsync(userManager, roleManager);
+
+            // Seed moderators
+            await DataSeeder.SeedModerators(context, userManager);
         }
     }
 }
