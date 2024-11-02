@@ -19,14 +19,14 @@
                 <p><b>Start Date:</b> @Model.StartDate</p>
                 <p><b>End Date:</b> @Model.EndDate</p>
                 <p><b>Seats:</b> @Model.Seats</p>
-                <p class="mb-0"><b>Budget:</b> €@Model.TicketPrice</p>
+                <p class="mb-0"><b>Budget: </b>@Model.TicketPrice</p>
             </div>
 
             <div class="project-info-box mt-0 mb-0">
                 <button type="button" class="btn btn-light btn-lg m-2 w-auto" asp-area="" asp-controller="Event" asp-action="Index">Back</button>
 
                 @* For logged user *@
-                @if(User?.Identity?.IsAuthenticated == true)
+                @if (User?.Identity?.IsAuthenticated == true && !User.IsInRole("Moderator") && !User.IsInRole("Admin"))
                 {
                     <button type="button" class="btn btn-success btn-lg w-50" asp-area="" asp-controller="" asp-action="">Buy</button>
                 }

@@ -3,7 +3,6 @@ using GameVerse.Data.Repositories.Interfaces;
 using GameVerse.Services.Interfaces;
 using GameVerse.Web.ViewModels.Event;
 using Microsoft.EntityFrameworkCore;
-
 using static GameVerse.Common.ApplicationConstants;
 
 namespace GameVerse.Services
@@ -152,7 +151,9 @@ namespace GameVerse.Services
 
         public async Task<EventDetailsViewModel> GetEventDetailsByIdAsync(string id)
         {
-            Event? e = await _eventRepository.AllAsReadOnly().FirstOrDefaultAsync(e => e.Id.ToString() == id);
+            var events = await _eventRepository.GetWithIncludeAsync(e => e.Publisher.User);
+
+            Event? e = events.FirstOrDefault(x => x.Id.ToString() == id);
 
             EventDetailsViewModel eventDetailsViewModel = new EventDetailsViewModel()
             {
@@ -166,6 +167,7 @@ namespace GameVerse.Services
                 Seats = e.Seats,
                 TicketPrice = e.TicketPrice.ToString("C"),
                 Image = e.Image,
+                PublisherName = e.Publisher.User.UserName
             };
 
             return eventDetailsViewModel;
