@@ -39,8 +39,8 @@
                 @*For Admin or Moderator who is creator of the Event*@
                 @if ((User.IsInRole("Moderator") && User?.Identity?.Name == Model.PublisherName) || User.IsInRole("Admin"))
                 {
-                    <button type="button" class="btn btn-warning btn-lg w-25" asp-area="" asp-controller="" asp-action="">Edit</button>
-                    <button type="button" class="btn btn-danger btn-lg w-25" asp-area="" asp-controller="" asp-action="">Delete</button>
+                    <a type="button" class="btn btn-warning btn-lg w-25" asp-area="" asp-controller="Event" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+                    <a type="button" class="btn btn-danger btn-lg w-25" asp-area="" asp-controller="Event" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
                 }
             </div>
         </div>
