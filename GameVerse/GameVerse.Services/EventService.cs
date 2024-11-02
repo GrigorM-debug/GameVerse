@@ -29,8 +29,8 @@ namespace GameVerse.Services
             {
                 Topic = inputModel.Topic,
                 Description = inputModel.Description,
-                StartDate = inputModel.StartDate,
-                EndDate = inputModel.EndDate,
+                StartDate = DateTime.Parse(inputModel.StartDate),
+                EndDate = DateTime.Parse(inputModel.EndDate),
                 Latitude = inputModel.Latitude,
                 Longitude = inputModel.Longitude,
                 Seats = inputModel.Seats,
@@ -83,8 +83,8 @@ namespace GameVerse.Services
             {
                 Topic = e.Topic,
                 Description = e.Description,
-                StartDate = e.StartDate,
-                EndDate = e.EndDate,
+                StartDate = e.StartDate.ToString(EventConstants.EventDateTimeFormat),
+                EndDate = e.EndDate.ToString(EventConstants.EventDateTimeFormat),
                 Latitude = e.Latitude,
                 Longitude = e.Longitude,
                 Seats = e.Seats,
@@ -101,8 +101,8 @@ namespace GameVerse.Services
 
             e.Topic = inputModel.Topic;
             e.Description = inputModel.Description;
-            e.StartDate = inputModel.StartDate;
-            e.EndDate = inputModel.EndDate;
+            e.StartDate = DateTime.Parse(inputModel.StartDate);
+            e.EndDate = DateTime.Parse(inputModel.EndDate);
             e.Latitude = inputModel.Latitude;
             e.Longitude = inputModel.Longitude;
             e.Seats = inputModel.Seats;
