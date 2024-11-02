@@ -28,7 +28,7 @@
             </div>
 
             <div class="project-info-box mt-0 mb-0">
-                <button type="button" class="btn btn-light btn-lg m-2 w-auto" asp-area="" asp-controller="Event" asp-action="Index">Back</button>
+                <a type="button" class="btn btn-light btn-lg m-2 w-auto" asp-area="" asp-controller="Event" asp-action="Index">Back</a>
 
                 @* For logged user *@
                 @if (User?.Identity?.IsAuthenticated == true && !User.IsInRole("Moderator") && !User.IsInRole("Admin"))
