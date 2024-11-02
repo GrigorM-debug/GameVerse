@@ -10,15 +10,16 @@
 <hr />
 
 <div class="container">
-    @foreach(var e in Model) 
-    {
-        <div class="row mt-n5">
+    
+    <div class="row mt-n5">
+        @foreach (var e in Model)
+        {
             <div class="col-md-6 col-lg-4 mt-5 wow fadeInUp" data-wow-delay=".2s" style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">
                 <div class="blog-grid">
                     <div class="blog-grid-img position-relative"><img alt="Event Image" src="@e.Image"></div>
                     <div class="blog-grid-text p-4">
-                        <h3 class="h5 mb-3"><a asp-controller="Event" asp-action="Details" asp-route-id="@e.Id">@e.Topic</a></h3>
-                        <p class="display-30">@e.TicketPrice</p>
+                        <h3 class="h5 mb-3"><a asp-controller="Event" asp-action="Details" asp-route-id="@e.Id">Topic: @e.Topic</a></h3>
+                        <p class="display-30">Ticket Price: @e.TicketPrice</p>
                         <div class="meta meta-style2">
                             <ul>
                                 <li><i class="fas fa-calendar-alt"></i>@e.StartDate - @e.EndDate</li>
@@ -30,8 +31,8 @@
                     </div>
                 </div>
             </div>
-        </div>
-    }
+        }
+    </div>
     <partial name="_Pagination"/>
 </div>
 
