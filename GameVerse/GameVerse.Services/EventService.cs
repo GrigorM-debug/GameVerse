@@ -177,5 +177,17 @@ namespace GameVerse.Services
 
             return eventDetailsViewModel;
         }
+
+        public async Task<bool> HasPublisherWithIdAsync(string userId, string eventId)
+        {
+            Event? e = await _eventRepository.AllAsReadOnly().FirstOrDefaultAsync(e => e.Id.ToString() == eventId && e.Publisher.UserId.ToString() == userId);
+
+            if (e == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

@@ -22,5 +22,7 @@ namespace GameVerse.Services.Interfaces
         Task<bool> EventExistByTitle(string Title);
 
         Task<bool> EventExistById(string id);
+
+        Task<bool> HasPublisherWithIdAsync(string userId, string eventId);
     }
 }
