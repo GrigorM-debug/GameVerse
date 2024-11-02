@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using static GameVerse.Common.ApplicationConstants;
 
 namespace GameVerse.Web.ViewModels.Event
@@ -13,12 +14,14 @@ namespace GameVerse.Web.ViewModels.Event
         [StringLength(EventConstants.DescriptionMaxLength, MinimumLength = EventConstants.DescriptionMinLength, ErrorMessage = LengthErrorMessage)]
         public string Description {  get; set; } = string.Empty;
 
-        public DateTime StartDate { get; set; } = DateTime.UtcNow;
+        public string StartDate { get; set; } = DateTime.Now.ToString(EventConstants.EventDateTimeFormat, CultureInfo.InvariantCulture);
 
-        public DateTime EndDate { get; set; } = DateTime.Now.AddHours(2);
+        public string EndDate { get; set; } = DateTime.Now.AddHours(2).ToString(EventConstants.EventDateTimeFormat, CultureInfo.InvariantCulture);
 
+        [Required]
         public double Latitude { get; set; }    
 
+        [Required]
         public double Longitude { get; set; }
 
         [Required]

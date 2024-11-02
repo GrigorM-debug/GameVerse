@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace GameVerse.Web.ModelBinders.DateTimeModelBinder
 {
-    public class DateTimeModelBinder(string[] dateFormats, CultureInfo? culture = null) : IModelBinder
+    public class DateTimeModelBinder(string[] dateFormats) : IModelBinder
     {
         private readonly string[] _dateFormats = dateFormats;
-        private readonly CultureInfo? _culture = culture;
+        //private readonly CultureInfo? _culture = culture;
 
         public Task BindModelAsync(ModelBindingContext bindingContext)
         {
@@ -36,7 +36,7 @@ namespace GameVerse.Web.ModelBinders.DateTimeModelBinder
             // Try parsing the date with each format in the array
             foreach (var format in _dateFormats)
             {
-                if (DateTime.TryParseExact(valueAsString, format, _culture, DateTimeStyles.None, out var result))
+                if (DateTime.TryParseExact(valueAsString, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result))
                 {
                     bindingContext.Result = ModelBindingResult.Success(result);
                     return Task.CompletedTask;
