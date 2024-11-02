@@ -13,14 +13,15 @@ namespace GameVerse.Web.ViewModels.Event
         [StringLength(EventConstants.DescriptionMaxLength, MinimumLength = EventConstants.DescriptionMinLength, ErrorMessage = LengthErrorMessage)]
         public string Description {  get; set; } = string.Empty;
 
-        public DateTime StartDate { get; set; } = DateTime.Now;
+        public DateTime StartDate { get; set; } = DateTime.UtcNow;
 
-        public DateTime EndDate { get; set; } = DateTime.Now;
+        public DateTime EndDate { get; set; } = DateTime.Now.AddHours(2);
 
         public double Latitude { get; set; }    
 
         public double Longitude { get; set; }
 
+        [Required]
         [Range(EventConstants.SeatsMinValue, EventConstants.SeatsMaxValue , ErrorMessage = RangeErrorMessage)]
         public int Seats { get; set; }
 
@@ -28,6 +29,7 @@ namespace GameVerse.Web.ViewModels.Event
         [Range(EventConstants.TicketPriceMinValue, EventConstants.TicketPriceMaxValue, ErrorMessage = RangeErrorMessage)]
         public decimal TicketPrice { get; set; }
 
+        [Required]
         public string Image { get; set; } = string.Empty;
     }
 }

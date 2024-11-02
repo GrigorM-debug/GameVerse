@@ -1,0 +1,141 @@
+﻿@using GameVerse.Web.ViewModels.Event
+@model EventInputViewModel
+
+@{
+    ViewData["Title"] = "Add Event";
+    // var today = DateTime.Now.ToString("dd-MM-yyyy");
+}
+
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<!-- Leaflet JavaScript -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+<div class="d-flex justify-content-between align-items-center mb-3" style="margin-top: 20px;">
+    <h2>@ViewData["Title"]</h2>
+</div>
+<hr />
+
+
+<div class="row">
+    <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+        <form asp-action="Add" method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-sm-6 mb-2">
+                    <label asp-for="@Model.Topic" class="form-label-add-edit">Topic</label>
+                    <input asp-for="@Model.Topic" class="form-control" aria-required="true" />
+                    <span asp-validation-for="@Model.Topic" class="text-danger"></span>
+                </div>
+                <div class="col-sm-6 mb-2">
+                    <label asp-for="@Model.TicketPrice" class="form-label-add-edit">Ticket Price</label>
+                    <div class="input-group">
+                        <span class="input-group-text">€</span>
+                        <input asp-for="@Model.TicketPrice" class="form-control" aria-required="true" type="number" step="0.01" min="1.00" />
+                    </div>
+                    <span asp-validation-for="@Model.TicketPrice" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-2">
+                <label asp-for="@Model.Seats" class="form-label-add-edit">Number of Seats</label>
+                <input asp-for="@Model.Seats" class="form-control" aria-required="true" rows="2"></input>
+                <span asp-validation-for="@Model.Seats" class="text-danger"></span>
+            </div>
+
+            <div class="mb-2">
+                <label asp-for="@Model.Description" class="form-label-add-edit">Description</label>
+                <textarea asp-for="@Model.Description" class="form-control" aria-required="true" rows="2"></textarea>
+                <span asp-validation-for="@Model.Description" class="text-danger"></span>
+            </div>
+
+            <div class="mb-2">
+                <label class="form-label-add-edit">Quantity In Stock</label>
+                <input class="form-control" aria-required="true" rows="2"></input>
+                <span class="text-danger"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6 mb-2">
+                    <label asp-for="@Model.StartDate" class="form-label-add-edit">Start Date</label>
+                    <input asp-for="@Model.StartDate" class="form-control" aria-required="true" value="@Model.StartDate" />
+                    <span asp-validation-for="@Model.StartDate" class="text-danger"></span>
+                </div>
+                <div class="col-sm-6 mb-2">
+                    <label asp-for="@Model.EndDate" class="form-label-add-edit">End Date</label>
+                    <input asp-for="@Model.EndDate" class="form-control" aria-required="true" value="@Model.EndDate" />
+                    <span asp-validation-for="@Model.EndDate" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-2">
+                <label asp-for="@Model.Image" class="form-label-add-edit">Image</label>
+                <div class="d-flex">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         fill="none"
+                         viewBox="0 0 24 24"
+                         stroke-width="1.5"
+                         stroke="currentColor"
+                         class="size-6"
+                         width="10%"
+                         height="10%">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                    </svg>
+                     @* <input type="file" class="form-control" aria-required="false" placeholder="Select image file (optional)" /> *@
+                    <input asp-for="@Model.Image" class="form-control" aria-required="true" value="" />
+                    <span asp-validation-for="@Model.Image" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="form-label-add-edit"> Location Coordinates</label>
+                <div class="col-sm-6 mb-2">
+                    <input type="text" id="latitude" name="Latitude" asp-for="Latitude" readonly />
+                </div>
+                <div class="col-sm-6 mb-2">
+                    <input type="text" id="longitude" name="Longitude" asp-for="Longitude" readonly />
+                </div>
+            </div>
+
+            <div id="map" style="height: 400px; width: 100%;"></div>
+
+            <div class="mb-2">
+                <input class="btn btn-primary btn-dark-white w-100 py-2 fw-bold rounded" type="submit" value="Save" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Initialize the map
+    let map = L.map('map').setView([42.6977, 23.3219], 13); // Starting position (Sofia)
+
+    // Add OpenStreetMap tile layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    let defaultLatitude = 42.6977;
+    let defaultLongitude = 23.3219;
+
+    // Add a marker with drag functionality
+    let marker = L.marker([defaultLatitude, defaultLongitude], { draggable: true }).addTo(map);
+    marker.bindPopup("Event Location!").openPopup();
+
+    document.getElementById('latitude').value = defaultLatitude;
+    document.getElementById('longitude').value = defaultLongitude;
+
+    // Update coordinates when the marker is dragged
+    marker.on('dragend', function (event) {
+        let position = marker.getLatLng();
+        document.getElementById('latitude').value = position.lat;
+        document.getElementById('longitude').value = position.lng;
+    });
+
+    // Allow the user to click on the map to move the marker
+    map.on('click', function (event) {
+        marker.setLatLng(event.latlng);
+        document.getElementById('latitude').value = event.latlng.lat;
+        document.getElementById('longitude').value = event.latlng.lng;
+    });
+</script>
