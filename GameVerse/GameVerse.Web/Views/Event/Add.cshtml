@@ -6,7 +6,7 @@
 @{
     ViewData["Title"] = "Add Event";
     var startDate = DateTime.Now.ToString(EventDateTimeFormat, CultureInfo.InvariantCulture);
-    var endDate = DateTime.Now.ToString(EventDateTimeFormat, CultureInfo.InvariantCulture);
+    var endDate = DateTime.Now.AddHours(2).ToString(EventDateTimeFormat, CultureInfo.InvariantCulture);
 }
 
 <!-- Leaflet CSS -->
