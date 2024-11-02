@@ -140,6 +140,7 @@ namespace GameVerse.Services
             IEnumerable<Event> events = await _eventRepository.GetAllAsyncAsReadOnly();
 
             IEnumerable<EventIndexViewModel> eventIndexViewModels = events
+                .Where(e => e.IsDeleted == false)
                 .Select(e => new EventIndexViewModel
                 {
                     Id = e.Id.ToString(),

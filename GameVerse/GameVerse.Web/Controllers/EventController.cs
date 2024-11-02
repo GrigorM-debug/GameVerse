@@ -111,11 +111,13 @@ namespace GameVerse.Web.Controllers
 
             if(String.IsNullOrEmpty(moderatorId))
             {
+                //You can also redirect to Login Page. 
                 return Unauthorized();
             }
 
             if (await _eventService.HasPublisherWithIdAsync(moderatorId, id) == false && User.IsAdmin() == false)
             {
+                //You can also redirect to Login Page.
                 return Unauthorized();
             }
 
@@ -139,11 +141,13 @@ namespace GameVerse.Web.Controllers
 
             if(String.IsNullOrEmpty(moderatorId))
             {
+                //You can also redirect to Login Page
                 return Unauthorized();
             }
 
             if (await _eventService.HasPublisherWithIdAsync(moderatorId, id) == false && User.IsAdmin() == false)
             {
+                //You can also redirect to Login Page
                 return Unauthorized();
             }
             
@@ -198,11 +202,13 @@ namespace GameVerse.Web.Controllers
 
             if (String.IsNullOrEmpty(moderatorId))
             {
+                //You can also redirect to Login Page
                 return Unauthorized();
             }
 
             if (await _eventService.HasPublisherWithIdAsync(moderatorId, id) == false && User.IsAdmin() == false)
             {
+                //You can also redirect to Login Page
                 return Unauthorized();
             }
 
@@ -226,11 +232,13 @@ namespace GameVerse.Web.Controllers
 
             if (String.IsNullOrEmpty(moderatorId))
             {
+                //You can also redirect to Login Page
                 return Unauthorized();
             }
 
             if (await _eventService.HasPublisherWithIdAsync(moderatorId, id) == false && User.IsAdmin() == false)
             {
+                //You can also redirect to Login Page
                 return Unauthorized();
             }
 
