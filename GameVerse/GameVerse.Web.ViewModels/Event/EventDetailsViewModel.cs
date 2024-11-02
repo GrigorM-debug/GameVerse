@@ -22,5 +22,7 @@ namespace GameVerse.Web.ViewModels.Event
         public string TicketPrice {  get; set; } = null!;
 
         public string Image {  get; set; } = null!;
+
+        public string PublisherName { get; set; } = null!;
     }
 }

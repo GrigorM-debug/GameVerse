@@ -1,0 +1,132 @@
+﻿@using GameVerse.Web.ViewModels.Event;
+@model EventDetailsViewModel
+
+<h2 class="text-start mt-5 mb-3">Event Details</h2>
+<hr />
+<div class="mb-4"></div>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<div class="container">
+    <div class="row">
+        <div class="col-md-5">
+            <div class="project-info-box mt-0">
+                <h2>@Model.Topic</h2>
+                <p class="mb-0">@Model.Description</p>
+            </div>
+
+            <div class="project-info-box">
+                <p><b>Publisher:</b> @Model.PublisherName</p>
+                <p><b>Start Date:</b> @Model.StartDate</p>
+                <p><b>End Date:</b> @Model.EndDate</p>
+                <p><b>Seats:</b> @Model.Seats</p>
+                <p class="mb-0"><b>Budget:</b> €@Model.TicketPrice</p>
+            </div>
+
+            <div class="project-info-box mt-0 mb-0">
+                <button type="button" class="btn btn-light btn-lg m-2 w-auto" asp-area="" asp-controller="Event" asp-action="Index">Back</button>
+
+                @* For logged user *@
+                @if(User?.Identity?.IsAuthenticated == true)
+                {
+                    <button type="button" class="btn btn-success btn-lg w-50" asp-area="" asp-controller="" asp-action="">Buy</button>
+                }
+
+                @*For Admin or Moderator who is creator of the Event*@
+                @if ((User.IsInRole("Moderator") && User?.Identity?.Name == Model.PublisherName) || User.IsInRole("Admin"))
+                {
+                    <button type="button" class="btn btn-warning btn-lg w-25" asp-area="" asp-controller="" asp-action="">Edit</button>
+                    <button type="button" class="btn btn-danger btn-lg w-25" asp-area="" asp-controller="" asp-action="">Delete</button>
+                }
+            </div>
+        </div>
+
+        <div class="col-md-7">
+            <img src="@Model.Image" alt="project-image" class="rounded game-details-img">
+            @* <div class="project-info-box">
+                <p><b>Categories:</b> Design, Illustration</p>
+                <p><b>Skills:</b> Illustrator</p>
+            </div> *@
+        </div>
+    </div>
+</div>
+
+
+
+<style>
+
+    /*------- portfolio -------*/
+    .project {
+        margin: 15px 0;
+    }
+
+    .no-gutter .project {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .has-spacer {
+        margin-left: 30px;
+        margin-right: 30px;
+        margin-bottom: 30px;
+    }
+
+    .has-spacer-extra-space {
+        margin-left: 30px;
+        margin-right: 30px;
+        margin-bottom: 30px;
+    }
+
+    .has-side-spacer {
+        margin-left: 30px;
+        margin-right: 30px;
+    }
+
+    .project-title {
+        font-size: 1.25rem;
+    }
+
+    .project-skill {
+        font-size: 0.9rem;
+        font-weight: 400;
+        letter-spacing: 0.06rem;
+    }
+
+    .project-info-box {
+        margin: 15px 0;
+        background-color: #fff;
+        padding: 30px 40px;
+        border-radius: 5px;
+    }
+
+    .project-info-box p {
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #d5dadb;
+    }
+
+    .project-info-box p:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+
+    .game-details-img {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        -webkit-backface-visibility: hidden;
+    }
+
+    .rounded {
+        border-radius: 5px !important;
+    }
+
+    .btn-xs.btn-icon {
+        width: 34px;
+        height: 34px;
+        max-width: 34px !important;
+        max-height: 34px !important;
+        font-size: 10px;
+        line-height: 34px;
+    }
+</style>
