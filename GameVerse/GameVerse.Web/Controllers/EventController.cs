@@ -47,7 +47,7 @@ namespace GameVerse.Web.Controllers
 
         [MustBeModerator]
         [HttpGet]
-        public async Task<IActionResult> Add()
+        public IActionResult Add()
         {
             EventInputViewModel model = new EventInputViewModel();
 

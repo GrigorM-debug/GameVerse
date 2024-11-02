@@ -109,7 +109,7 @@ namespace GameVerse.Services
 
         public async Task<bool> EventExistById(string id)
         {
-            Event? result = await _eventRepository.GetByIdAsync(Guid.Parse(id));
+            Event? result = await _eventRepository.AllAsReadOnly().FirstOrDefaultAsync(e => e.Id.ToString() == id);
 
 
             if (result == null)
@@ -152,7 +152,7 @@ namespace GameVerse.Services
 
         public async Task<EventDetailsViewModel> GetEventDetailsByIdAsync(string id)
         {
-            Event? e = await _eventRepository.GetByIdAsync(Guid.Parse(id));
+            Event? e = await _eventRepository.AllAsReadOnly().FirstOrDefaultAsync(e => e.Id.ToString() == id);
 
             EventDetailsViewModel eventDetailsViewModel = new EventDetailsViewModel()
             {
