@@ -1,0 +1,30 @@
+﻿@using GameVerse.Web.ViewModels.Event;
+@model EventDeleteViewModel;
+
+<h2 class="text-start mt-5 mb-3">Delete Event</h2>
+<hr />
+<div class="mb-4"></div>
+
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <h5 class="card-header">Featured</h5>
+            <div class="card-body">
+                <h3 class="card-title">Topic: @Model.Topic</h3>
+                <p class="card-text">Added By: @Model.PublisherName</p>
+                <p class="card-text">Are you sure you want to Delete Event with Topic @Model.Topic</p>
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+            </div>
+            <div class="card-footer">
+                <form asp-action="Delete" method="post">
+                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="Topic" />
+                    <input type="hidden" asp-for="PublisherId" />
+                    <button type="submit" class="btn btn-danger">Confirm Delete</button>
+                    <a asp-controller="Event" asp-action="Details" asp-route-id="@Model.Id" class="btn btn-warning">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div> 
