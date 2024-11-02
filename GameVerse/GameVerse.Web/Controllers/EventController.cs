@@ -2,11 +2,13 @@
 using GameVerse.Services;
 using GameVerse.Services.Interfaces;
 using GameVerse.Web.Extensions;
+using GameVerse.Web.Filters;
 using GameVerse.Web.ViewModels.Event;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 using System.Security.Claims;
-
+using static GameVerse.Common.ApplicationConstants.EventConstants;
 
 namespace GameVerse.Web.Controllers
 {
@@ -43,47 +45,45 @@ namespace GameVerse.Web.Controllers
             return View(model);
         }
 
+        [MustBeModerator]
         [HttpGet]
         public async Task<IActionResult> Add()
         {
-            bool isModerator = await _moderatorService.ModeratorExistByUserIdAsync(User.GetId()!);
-
-            if (!isModerator)
-            {
-                _notyf.Error("You don't have the permission to do this!");
-
-                //return Unauthorized();
-            }
-
             EventInputViewModel model = new EventInputViewModel();
 
             return View(model);
         }
 
+        [MustBeModerator]
         [HttpPost]
         public async Task<IActionResult> Add(EventInputViewModel inputModel)
         {
-            bool isModerator = await _moderatorService.ModeratorExistByUserIdAsync(User.GetId()!);
-
-            if (!isModerator)
+            if (!ModelState.IsValid)
             {
-                _notyf.Error("You don't have the permission to do this!");
+                return View(inputModel);
+            }
 
-                //return Unauthorized();
+            DateTime startDate = DateTime.ParseExact(inputModel.StartDate, EventDateTimeFormat, CultureInfo.InvariantCulture);
+            DateTime endDate = DateTime.ParseExact(inputModel.EndDate, EventDateTimeFormat, CultureInfo.InvariantCulture);
+
+            if (startDate > endDate)
+            {
+                ModelState.AddModelError(nameof(inputModel.EndDate), "End date cannot be earlier than Start date.");
+                return View(inputModel);
+            }
+
+            if (startDate == endDate)
+            {
+                ModelState.AddModelError(nameof(inputModel.EndDate), "End date cannot be the same as Start date.");
+                return View(inputModel);
             }
 
             bool isEventExisting = await _eventService.EventExistByTitle(inputModel.Topic);
-
 
             if(isEventExisting)
             {
                 _notyf.Warning("Event with this Topic already exist !");
 
-                return View(inputModel);
-            }
-
-            if (!ModelState.IsValid)
-            {
                 return View(inputModel);
             }
 
