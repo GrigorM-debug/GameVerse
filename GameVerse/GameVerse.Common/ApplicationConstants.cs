@@ -9,7 +9,7 @@
         public const string DateTimeFormat = "dd-MM-yyyy";
 
         //Error Messages
-        public const string LengthErrorMessage = "{0} must be between {1} and {2} characters long!";
+        public const string LengthErrorMessage = "{0} must be between {2} and {1} characters long!";
         public const string invalidDateTimeErrorMessage = $"Date must be in the following format - ${DateTimeFormat}";
         public const string RangeErrorMessage = "{0} must be a number between {1} and {2}!";
 
