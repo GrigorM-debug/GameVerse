@@ -187,7 +187,7 @@ namespace GameVerse.Services
         /// <returns>A collection of <see cref="EventIndexViewModel"/> representing each event.</returns>
         public async Task<IEnumerable<EventIndexViewModel>> GetAllEventsAsync()
         {
-            IEnumerable<Event> events = await _eventRepository.GetAllAsyncAsReadOnly();
+            IEnumerable<Event> events = await _eventRepository.GetWithIncludeAsync(e => e.Publisher.User);
 
             IEnumerable<EventIndexViewModel> eventIndexViewModels = events
                 .Where(e => e.IsDeleted == false)
@@ -200,6 +200,7 @@ namespace GameVerse.Services
                     Seats = e.Seats,
                     TicketPrice = e.TicketPrice.ToString("C"),
                     Image = e.Image,
+                    PublisherName = e.Publisher.User.UserName
                 });
 
             return eventIndexViewModels;
