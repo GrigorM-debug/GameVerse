@@ -3,6 +3,7 @@ using GameVerse.Data.Repositories.Interfaces;
 using GameVerse.Services.Interfaces;
 using GameVerse.Web.ViewModels.Event;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.CodeAnalysis;
 using static GameVerse.Common.ApplicationConstants;
 
 namespace GameVerse.Services
@@ -70,7 +71,7 @@ namespace GameVerse.Services
         {
             Event? e = await _eventRepository
                 .AllAsReadOnly()
-                .FirstOrDefaultAsync(e => e.Id.ToString() == eventId && e.PublisherId.ToString() == userId);
+                .FirstOrDefaultAsync(e => e.Id.ToString() == eventId && e.Publisher.UserId.ToString() == userId);
 
             EventInputViewModel model = new EventInputViewModel()
             {
@@ -88,22 +89,27 @@ namespace GameVerse.Services
             return model;
         }
 
-        public async Task EditEventPostAsync(EventInputViewModel inputModel, string eventId, string userId)
+        public async Task<string> EditEventPostAsync(EventInputViewModel inputModel, string eventId, string userId, DateTime startDate, DateTime endDate)
         {
-            Event? e = await _eventRepository.FirstOrDefaultAsync(e => e.Id.ToString() == eventId && e.PublisherId.ToString() == userId);
+            Event? e = await _eventRepository.FirstOrDefaultAsync(e => e.Id.ToString() == eventId && e.Publisher.UserId.ToString() == userId);
 
-            e.Topic = inputModel.Topic;
-            e.Description = inputModel.Description;
-            e.StartDate = DateTime.Parse(inputModel.StartDate);
-            e.EndDate = DateTime.Parse(inputModel.EndDate);
-            e.Latitude = inputModel.Latitude;
-            e.Longitude = inputModel.Longitude;
-            e.Seats = inputModel.Seats;
-            e.TicketPrice = inputModel.TicketPrice;
-            e.Image = inputModel.Image;
-            e.PublisherId = Guid.Parse(userId);
+            if(e != null)
+            {
+                e.Topic = inputModel.Topic;
+                e.Description = inputModel.Description;
+                e.StartDate = startDate;
+                e.EndDate = endDate;
+                e.Latitude = inputModel.Latitude;
+                e.Longitude = inputModel.Longitude;
+                e.Seats = inputModel.Seats;
+                e.TicketPrice = inputModel.TicketPrice;
+                e.Image = inputModel.Image;
+                e.PublisherId = Guid.Parse(userId);
+            }
 
             await _eventRepository.SaveChangesAsync();
+
+            return e.Id.ToString();
         }
 
         public async Task<bool> EventExistById(string id)

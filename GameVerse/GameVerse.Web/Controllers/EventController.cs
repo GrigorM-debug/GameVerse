@@ -108,6 +108,11 @@ namespace GameVerse.Web.Controllers
 
             string? userId = User.GetId();
 
+            if (await _moderatorService.HasEventWithIdAsync(User.GetId(), id) == false && User.IsAdmin() == false)
+            {
+                //Displat UnAuthorize page
+            }
+
             EventInputViewModel? model = await _eventService.EditEventGetAsync(id, userId);
 
             return View(model);
@@ -123,11 +128,47 @@ namespace GameVerse.Web.Controllers
                 //Display some message or go to 404 page
             }
 
-            string? userId = User.GetId();
+            if (await _moderatorService.HasEventWithIdAsync(User.GetId(), id) == false && User.IsAdmin() == false)
+            {
+                //Displat UnAuthorize page
+            }
+            
+            DateTime startDate = DateTime.ParseExact(inputModel.StartDate, EventDateTimeFormat, CultureInfo.InvariantCulture);
+            DateTime endDate = DateTime.ParseExact(inputModel.EndDate, EventDateTimeFormat, CultureInfo.InvariantCulture);
 
-            await _eventService.EditEventPostAsync(inputModel, id, userId);
+            if (startDate > endDate)
+            {
+                ModelState.AddModelError(nameof(inputModel.EndDate), "End date cannot be earlier than Start date.");
+                return View(inputModel);
+            }
 
-            return RedirectToAction(nameof(Index));
+            if (startDate == endDate)
+            {
+                ModelState.AddModelError(nameof(inputModel.EndDate), "End date cannot be the same as Start date.");
+                return View(inputModel);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(inputModel);
+            }
+
+            bool isEventExisting = await _eventService.EventExistByTitle(inputModel.Topic);
+
+            if (isEventExisting)
+            {
+                _notyf.Warning("Event with this Topic already exist !");
+
+                return View(inputModel);
+            }
+
+            string? moderatorId = await _moderatorService.GetModeratorIdByUserIdAsync(User.GetId());
+
+            string eventId = await _eventService.EditEventPostAsync(inputModel, id, moderatorId, startDate, endDate);
+
+            _notyf.Success("Event was edited successfully!");
+
+            return RedirectToAction(nameof(Details), new { id = eventId });
         }
 
         [HttpGet]

@@ -23,7 +23,7 @@ namespace GameVerse.Services
             return moderator.Id.ToString();
         }
 
-        public async Task<bool> HasEventWithIdAync(string userId, string eventId)
+        public async Task<bool> HasEventWithIdAsync(string userId, string eventId)
         {
             var moderator = await _moderatorRepository
                 .FirstOrDefaultAsync(m => m.UserId.ToString() == userId);

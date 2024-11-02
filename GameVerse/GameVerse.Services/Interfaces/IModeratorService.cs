@@ -6,7 +6,7 @@ namespace GameVerse.Services.Interfaces
     {
         Task<bool> ModeratorExistByUserIdAsync(string userId);
 
-        Task<bool> HasEventWithIdAync(string userId, string eventId);
+        Task<bool> HasEventWithIdAsync(string userId, string eventId);
 
         Task<string?> GetModeratorIdByUserIdAsync(string? userId);
 
