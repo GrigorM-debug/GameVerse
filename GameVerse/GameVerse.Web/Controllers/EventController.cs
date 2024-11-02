@@ -89,7 +89,7 @@ namespace GameVerse.Web.Controllers
 
             string? moderatorId = await _moderatorService.GetModeratorIdByUserIdAsync(User.GetId());
 
-            string eventId = await _eventService.AddEventAsync(inputModel, moderatorId!);
+            string eventId = await _eventService.AddEventAsync(inputModel, moderatorId!, startDate, endDate);
 
             _notyf.Success("Event was added successfully!");
 

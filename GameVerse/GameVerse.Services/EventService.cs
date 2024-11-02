@@ -3,12 +3,6 @@ using GameVerse.Data.Repositories.Interfaces;
 using GameVerse.Services.Interfaces;
 using GameVerse.Web.ViewModels.Event;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using static GameVerse.Common.ApplicationConstants;
 
@@ -23,14 +17,14 @@ namespace GameVerse.Services
             _eventRepository = eventRepository;
         }
 
-        public async Task<string> AddEventAsync(EventInputViewModel inputModel, string userId)
+        public async Task<string> AddEventAsync(EventInputViewModel inputModel, string userId, DateTime startDate, DateTime endDate)
         {
             Event newEvent = new Event()
             {
                 Topic = inputModel.Topic,
                 Description = inputModel.Description,
-                StartDate = DateTime.Parse(inputModel.StartDate),
-                EndDate = DateTime.Parse(inputModel.EndDate),
+                StartDate = startDate,
+                EndDate = endDate,
                 Latitude = inputModel.Latitude,
                 Longitude = inputModel.Longitude,
                 Seats = inputModel.Seats,

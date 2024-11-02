@@ -7,7 +7,7 @@ namespace GameVerse.Services.Interfaces
     {
         Task<IEnumerable<EventIndexViewModel>> GetAllEventsAsync();
 
-        Task<string> AddEventAsync(EventInputViewModel inputModel, string userId);
+        Task<string> AddEventAsync(EventInputViewModel inputModel, string userId, DateTime startDate, DateTime endDate);
 
         Task<EventInputViewModel?> EditEventGetAsync(string eventId, string userId);
 
