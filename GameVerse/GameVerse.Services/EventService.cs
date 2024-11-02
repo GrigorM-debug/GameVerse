@@ -151,7 +151,7 @@ namespace GameVerse.Services
 
         public async Task<EventDetailsViewModel> GetEventDetailsByIdAsync(string id)
         {
-            var events = await _eventRepository.GetWithIncludeAsync(e => e.Publisher.User);
+            IEnumerable<Event> events = await _eventRepository.GetWithIncludeAsync(e => e.Publisher.User);
 
             Event? e = events.FirstOrDefault(x => x.Id.ToString() == id);
 

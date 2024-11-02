@@ -1,6 +1,11 @@
 ﻿@using GameVerse.Web.ViewModels.Event;
 @model EventDetailsViewModel
 
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<!-- Leaflet JavaScript -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
 <h2 class="text-start mt-5 mb-3">Event Details</h2>
 <hr />
 <div class="mb-4"></div>
@@ -19,7 +24,7 @@
                 <p><b>Start Date:</b> @Model.StartDate</p>
                 <p><b>End Date:</b> @Model.EndDate</p>
                 <p><b>Seats:</b> @Model.Seats</p>
-                <p class="mb-0"><b>Budget: </b>@Model.TicketPrice</p>
+                <p class="mb-0"><b>Ticket Price: </b>@Model.TicketPrice</p>
             </div>
 
             <div class="project-info-box mt-0 mb-0">
@@ -41,16 +46,24 @@
         </div>
 
         <div class="col-md-7">
-            <img src="@Model.Image" alt="project-image" class="rounded game-details-img">
-            @* <div class="project-info-box">
-                <p><b>Categories:</b> Design, Illustration</p>
-                <p><b>Skills:</b> Illustrator</p>
-            </div> *@
+            <img src="@Model.Image" alt="project-image" class="rounded game-details-img mb-2">
+
+            <div id="map" style="height: 400px; width: 100%;"></div>
         </div>
     </div>
 </div>
 
+<script>
+    var map = L.map('map').setView([@Model.Latitude, @Model.Longitude], 13);
 
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    var marker = L.marker([@Model.Latitude, @Model.Longitude]).addTo(map);
+    marker.bindPopup("<b>@Model.Topic</b>").openPopup();
+</script>
 
 <style>
 
