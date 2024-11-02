@@ -202,12 +202,20 @@ namespace GameVerse.Web.Controllers
 
             if (!isEventExist)
             {
-                //Display some message or go to 404 page
+                return NotFound();
             }
 
             string? userId = User.GetId();
 
-            await _eventService.DeleteEventPostAsync(id, userId);
+            if (await _eventService.HasPublisherWithIdAsync(userId, id) == false && User.IsAdmin() == false)
+            {
+                return Unauthorized();
+            }
+
+            string? moderatorId = await _moderatorService.GetModeratorIdByUserIdAsync(User.GetId());
+            await _eventService.DeleteEventPostAsync(id, moderatorId);
+
+            _notyf.Success("Event was deleted successfully !");
 
             return RedirectToAction(nameof(Index));
         }
