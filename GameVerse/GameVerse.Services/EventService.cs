@@ -17,7 +17,7 @@ namespace GameVerse.Services
             _eventRepository = eventRepository;
         }
 
-        public async Task<string> AddEventAsync(EventInputViewModel inputModel, string userId, DateTime startDate, DateTime endDate)
+        public async Task<string> AddEventAsync(EventInputViewModel inputModel, string moderatorId, DateTime startDate, DateTime endDate)
         {
             Event newEvent = new Event()
             {
@@ -30,7 +30,7 @@ namespace GameVerse.Services
                 Seats = inputModel.Seats,
                 TicketPrice = inputModel.TicketPrice,
                 Image = inputModel.Image,
-                PublisherId = Guid.Parse(userId)
+                PublisherId = Guid.Parse(moderatorId)
             };
 
             await _eventRepository.AddAsync(newEvent);
@@ -39,11 +39,11 @@ namespace GameVerse.Services
             return newEvent.Id.ToString();
         }
 
-        public async Task<EventDeleteViewModel?> DeleteEventGetAsync(string eventId, string userId)
+        public async Task<EventDeleteViewModel?> DeleteEventGetAsync(string eventId, string moderatorId)
         {
             IEnumerable<Event> events = await _eventRepository.GetWithIncludeAsync(e => e.Publisher.User);
 
-            Event? e = events.FirstOrDefault(e => e.Id.ToString() == eventId && e.Publisher.UserId.ToString() == userId && e.IsDeleted == false);
+            Event? e = events.FirstOrDefault(e => e.Id.ToString() == eventId && e.PublisherId.ToString() == moderatorId && e.IsDeleted == false);
 
             EventDeleteViewModel model = new EventDeleteViewModel()
             {
@@ -68,11 +68,11 @@ namespace GameVerse.Services
 
         }
 
-        public async Task<EventInputViewModel?> EditEventGetAsync(string eventId, string userId)
+        public async Task<EventInputViewModel?> EditEventGetAsync(string eventId, string moderatorId)
         {
             Event? e = await _eventRepository
                 .AllAsReadOnly()
-                .FirstOrDefaultAsync(e => e.Id.ToString() == eventId && e.Publisher.UserId.ToString() == userId && e.IsDeleted == false);
+                .FirstOrDefaultAsync(e => e.Id.ToString() == eventId && e.PublisherId.ToString() == moderatorId && e.IsDeleted == false);
 
             EventInputViewModel model = new EventInputViewModel()
             {
@@ -178,9 +178,9 @@ namespace GameVerse.Services
             return eventDetailsViewModel;
         }
 
-        public async Task<bool> HasPublisherWithIdAsync(string userId, string eventId)
+        public async Task<bool> HasPublisherWithIdAsync(string moderatorId, string eventId)
         {
-            Event? e = await _eventRepository.AllAsReadOnly().FirstOrDefaultAsync(e => e.Id.ToString() == eventId && e.Publisher.UserId.ToString() == userId);
+            Event? e = await _eventRepository.AllAsReadOnly().FirstOrDefaultAsync(e => e.Id.ToString() == eventId && e.PublisherId.ToString() == moderatorId);
 
             if (e == null)
             {

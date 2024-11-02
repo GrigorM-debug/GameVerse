@@ -7,13 +7,13 @@ namespace GameVerse.Services.Interfaces
     {
         Task<IEnumerable<EventIndexViewModel>> GetAllEventsAsync();
 
-        Task<string> AddEventAsync(EventInputViewModel inputModel, string userId, DateTime startDate, DateTime endDate);
+        Task<string> AddEventAsync(EventInputViewModel inputModel, string moderatorId, DateTime startDate, DateTime endDate);
 
-        Task<EventInputViewModel?> EditEventGetAsync(string eventId, string userId);
+        Task<EventInputViewModel?> EditEventGetAsync(string eventId, string moderatorId);
 
         Task<string> EditEventPostAsync(EventInputViewModel inputModel, string eventId, string moderatorId, DateTime startDate, DateTime endDate);
 
-        Task<EventDeleteViewModel?> DeleteEventGetAsync(string eventId, string useId);
+        Task<EventDeleteViewModel?> DeleteEventGetAsync(string eventId, string moderatorId);
 
         Task DeleteEventPostAsync(string eventId, string userId);
 
@@ -23,6 +23,6 @@ namespace GameVerse.Services.Interfaces
 
         Task<bool> EventExistById(string id);
 
-        Task<bool> HasPublisherWithIdAsync(string userId, string eventId);
+        Task<bool> HasPublisherWithIdAsync(string moderatorId, string eventId);
     }
 }
