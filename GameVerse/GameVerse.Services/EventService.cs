@@ -76,8 +76,6 @@ namespace GameVerse.Services
             {
                 Topic = e.Topic,
                 Description = e.Description,
-                StartDate = e.StartDate.ToString(EventConstants.EventDateTimeFormat),
-                EndDate = e.EndDate.ToString(EventConstants.EventDateTimeFormat),
                 Latitude = e.Latitude,
                 Longitude = e.Longitude,
                 Seats = e.Seats,
@@ -88,9 +86,9 @@ namespace GameVerse.Services
             return model;
         }
 
-        public async Task<string> EditEventPostAsync(EventInputViewModel inputModel, string eventId, string userId, DateTime startDate, DateTime endDate)
+        public async Task<string> EditEventPostAsync(EventInputViewModel inputModel, string eventId, string moderatorId, DateTime startDate, DateTime endDate)
         {
-            Event? e = await _eventRepository.FirstOrDefaultAsync(e => e.Id.ToString() == eventId && e.Publisher.UserId.ToString() == userId);
+            Event? e = await _eventRepository.FirstOrDefaultAsync(e => e.Id.ToString() == eventId && e.PublisherId.ToString() == moderatorId);
 
             if(e != null)
             {
@@ -103,7 +101,7 @@ namespace GameVerse.Services
                 e.Seats = inputModel.Seats;
                 e.TicketPrice = inputModel.TicketPrice;
                 e.Image = inputModel.Image;
-                e.PublisherId = Guid.Parse(userId);
+                e.PublisherId = Guid.Parse(moderatorId);
             }
 
             await _eventRepository.SaveChangesAsync();

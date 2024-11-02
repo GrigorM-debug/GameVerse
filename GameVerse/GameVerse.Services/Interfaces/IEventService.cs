@@ -11,7 +11,7 @@ namespace GameVerse.Services.Interfaces
 
         Task<EventInputViewModel?> EditEventGetAsync(string eventId, string userId);
 
-        Task<string> EditEventPostAsync(EventInputViewModel inputModel, string eventId, string userId, DateTime startDate, DateTime endDate);
+        Task<string> EditEventPostAsync(EventInputViewModel inputModel, string eventId, string moderatorId, DateTime startDate, DateTime endDate);
 
         Task<EventDeleteViewModel?> DeleteEventGetAsync(string eventId, string useId);
 
