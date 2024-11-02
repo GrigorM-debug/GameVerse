@@ -37,7 +37,7 @@ namespace GameVerse.Web.Controllers
 
             if (!isEventExist)
             {
-                //Display some message or go to 404 page
+                return NotFound();
             }
 
             EventDetailsViewModel model = await _eventService.GetEventDetailsByIdAsync(id);
@@ -103,14 +103,14 @@ namespace GameVerse.Web.Controllers
 
             if(!isEventExist)
             {
-                //Display some message or go to 404 page
+                return NotFound();
             }
 
             string? userId = User.GetId();
 
             if (await _moderatorService.HasEventWithIdAsync(User.GetId(), id) == false && User.IsAdmin() == false)
             {
-                //Displat UnAuthorize page
+                return Unauthorized();
             }
 
             EventInputViewModel? model = await _eventService.EditEventGetAsync(id, userId);
@@ -125,12 +125,12 @@ namespace GameVerse.Web.Controllers
 
             if (!isEventExist)
             {
-                //Display some message or go to 404 page
+                return NotFound();
             }
 
             if (await _moderatorService.HasEventWithIdAsync(User.GetId(), id) == false && User.IsAdmin() == false)
             {
-                //Displat UnAuthorize page
+                return Unauthorized();
             }
             
             DateTime startDate = DateTime.ParseExact(inputModel.StartDate, EventDateTimeFormat, CultureInfo.InvariantCulture);

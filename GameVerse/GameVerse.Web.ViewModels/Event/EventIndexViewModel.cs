@@ -9,6 +9,7 @@ namespace GameVerse.Web.ViewModels.Event
         public string Topic { get; set; } = null!;
 
         public string StartDate { get; set; } = null!; 
+
         public string EndDate { get; set; } = null!;
 
         public int Seats { get; set; }
