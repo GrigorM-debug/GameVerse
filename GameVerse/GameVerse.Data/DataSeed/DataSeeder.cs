@@ -159,7 +159,10 @@ namespace GameVerse.Data.DataSeed
                     User = user,
                 };
 
-                context.Moderators.Add(moderator);
+                if(await context.Moderators.FirstOrDefaultAsync(m => m.UserId == user.Id)  == null)
+                {
+                    context.Moderators.Add(moderator);
+                }
             }
 
             await context.SaveChangesAsync(); 
