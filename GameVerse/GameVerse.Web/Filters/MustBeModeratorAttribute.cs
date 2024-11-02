@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace GameVerse.Web.Filters
 {
-    public class MustBeModerator : ActionFilterAttribute
+    public class MustBeModeratorAttribute : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {
