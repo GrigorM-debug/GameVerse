@@ -8,15 +8,25 @@ using static GameVerse.Common.ApplicationConstants;
 
 namespace GameVerse.Services
 {
-    public class EventService : BaseService, IEventService
+    /// <summary>
+    /// Provides methods for managing events, including adding, editing, deleting, and retrieving event details.
+    /// </summary>
+    public class EventService(IGenericRepository<Event, Guid> eventRepository) : BaseService, IEventService
     {
-        private readonly IGenericRepository<Event, Guid> _eventRepository;
+        /// <summary>
+        /// Injectiong the Generic Repository using Primary Constructor
+        /// </summary>
+        /// <param name="eventRepository">The repository used for data access operations on <see cref="Event"/> entities.</param>
+        private readonly IGenericRepository<Event, Guid> _eventRepository = eventRepository;
 
-        public EventService(IGenericRepository<Event, Guid> eventRepository)
-        {
-            _eventRepository = eventRepository;
-        }
-
+        /// <summary>
+        /// Adds a new event to the repository.
+        /// </summary>
+        /// <param name="inputModel">The input model containing event details.</param>
+        /// <param name="moderatorId">The ID of the moderator creating the event.</param>
+        /// <param name="startDate">The start date of the event.</param>
+        /// <param name="endDate">The end date of the event.</param>
+        /// <returns>The ID of the newly created event as a string.</returns>
         public async Task<string> AddEventAsync(EventInputViewModel inputModel, string moderatorId, DateTime startDate, DateTime endDate)
         {
             Event newEvent = new Event()
@@ -39,6 +49,12 @@ namespace GameVerse.Services
             return newEvent.Id.ToString();
         }
 
+        /// <summary>
+        /// Retrieves an event for deletion confirmation.
+        /// </summary>
+        /// <param name="eventId">The ID of the event to retrieve.</param>
+        /// <param name="moderatorId">The ID of the moderator requesting deletion.</param>
+        /// <returns>A <see cref="EventDeleteViewModel"/> with event details if found; otherwise, <c>null</c>.</returns>
         public async Task<EventDeleteViewModel?> DeleteEventGetAsync(string eventId, string moderatorId)
         {
             IEnumerable<Event> events = await _eventRepository.GetWithIncludeAsync(e => e.Publisher.User);
@@ -56,6 +72,11 @@ namespace GameVerse.Services
             return model;
         }
 
+         /// <summary>
+        /// Marks an event as deleted in the repository.
+        /// </summary>
+        /// <param name="eventId">The ID of the event to delete.</param>
+        /// <param name="moderatorId">The ID of the moderator performing the deletion.</param>
         public async Task DeleteEventPostAsync(string eventId, string moderatorId)
         {
             Event? e = await _eventRepository
@@ -68,6 +89,12 @@ namespace GameVerse.Services
 
         }
 
+        /// <summary>
+        /// Retrieves an event for editing.
+        /// </summary>
+        /// <param name="eventId">The ID of the event to retrieve for editing.</param>
+        /// <param name="moderatorId">The ID of the moderator requesting to edit.</param>
+        /// <returns>An <see cref="EventInputViewModel"/> with event details if found; otherwise, <c>null</c>.</returns>
         public async Task<EventInputViewModel?> EditEventGetAsync(string eventId, string moderatorId)
         {
             Event? e = await _eventRepository
@@ -88,6 +115,15 @@ namespace GameVerse.Services
             return model;
         }
 
+        /// <summary>
+        /// Updates an event in the repository.
+        /// </summary>
+        /// <param name="inputModel">The input model containing updated event details.</param>
+        /// <param name="eventId">The ID of the event to update.</param>
+        /// <param name="moderatorId">The ID of the moderator performing the update.</param>
+        /// <param name="startDate">The new start date of the event.</param>
+        /// <param name="endDate">The new end date of the event.</param>
+        /// <returns>The ID of the updated event as a string.</returns>
         public async Task<string> EditEventPostAsync(EventInputViewModel inputModel, string eventId, string moderatorId, DateTime startDate, DateTime endDate)
         {
             Event? e = await _eventRepository.FirstOrDefaultAsync(e => e.Id.ToString() == eventId && e.PublisherId.ToString() == moderatorId && e.IsDeleted == false);
@@ -111,6 +147,11 @@ namespace GameVerse.Services
             return e.Id.ToString();
         }
 
+        /// <summary>
+        /// Checks if an event with the specified ID exists.
+        /// </summary>
+        /// <param name="id">The ID of the event to check.</param>
+        /// <returns><c>true</c> if the event exists and is not marked as deleted; otherwise, <c>false</c>.</returns>
         public async Task<bool> EventExistById(string id)
         {
             Event? result = await _eventRepository.AllAsReadOnly().FirstOrDefaultAsync(e => e.Id.ToString() == id && e.IsDeleted == false);
@@ -123,6 +164,11 @@ namespace GameVerse.Services
             return true;
         }
 
+        /// <summary>
+        /// Checks if an event with the specified topic already exists.
+        /// </summary>
+        /// <param name="topic">The topic of the event to check.</param>
+        /// <returns><c>true</c> if an event with the topic exists and is not marked as deleted; otherwise, <c>false</c>.</returns>
         public async Task<bool> EventExistByTitle(string topic)
         {
             Event? isExisting = await _eventRepository.AllAsReadOnly().FirstOrDefaultAsync(e => e.Topic == topic && e.IsDeleted == false);
@@ -135,6 +181,10 @@ namespace GameVerse.Services
             return true;
         }
 
+        /// <summary>
+        /// Retrieves all events that are not marked as deleted.
+        /// </summary>
+        /// <returns>A collection of <see cref="EventIndexViewModel"/> representing each event.</returns>
         public async Task<IEnumerable<EventIndexViewModel>> GetAllEventsAsync()
         {
             IEnumerable<Event> events = await _eventRepository.GetAllAsyncAsReadOnly();
@@ -155,6 +205,11 @@ namespace GameVerse.Services
             return eventIndexViewModels;
         }
 
+        /// <summary>
+        /// Retrieves detailed information for a specific event by its ID.
+        /// </summary>
+        /// <param name="id">The ID of the event to retrieve.</param>
+        /// <returns>An <see cref="EventDetailsViewModel"/> with detailed event information.</returns>
         public async Task<EventDetailsViewModel> GetEventDetailsByIdAsync(string id)
         {
             IEnumerable<Event> events = await _eventRepository.GetWithIncludeAsync(e => e.Publisher.User);
@@ -179,6 +234,12 @@ namespace GameVerse.Services
             return eventDetailsViewModel;
         }
 
+        /// <summary>
+        /// Checks if a specific event has a publisher with the given moderator ID.
+        /// </summary>
+        /// <param name="moderatorId">The ID of the moderator.</param>
+        /// <param name="eventId">The ID of the event to check.</param>
+        /// <returns><c>true</c> if the event is associated with the specified moderator; otherwise, <c>false</c>.</returns>
         public async Task<bool> HasPublisherWithIdAsync(string moderatorId, string eventId)
         {
             Event? e = await _eventRepository.AllAsReadOnly().FirstOrDefaultAsync(e => e.Id.ToString() == eventId && e.PublisherId.ToString() == moderatorId);
