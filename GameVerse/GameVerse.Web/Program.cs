@@ -33,6 +33,11 @@ builder.Services.AddScoped<IModeratorService, ModeratorService>();
 builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
+    options.Password.RequireDigit = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequiredLength = 8;
 })
     .AddRoles<IdentityRole<Guid>>()
     .AddEntityFrameworkStores<GameVerseDbContext>();
