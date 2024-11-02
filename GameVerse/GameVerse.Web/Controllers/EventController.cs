@@ -178,7 +178,7 @@ namespace GameVerse.Web.Controllers
 
             if (!isEventExist)
             {
-                //Display some message or go to 404 page
+                return NotFound();
             }
 
             string? userId = User.GetId();
