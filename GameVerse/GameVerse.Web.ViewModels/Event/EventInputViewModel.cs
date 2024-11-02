@@ -16,7 +16,7 @@ namespace GameVerse.Web.ViewModels.Event
 
         public string StartDate { get; set; } = DateTime.Now.ToString(EventConstants.EventDateTimeFormat, CultureInfo.InvariantCulture);
 
-        public string EndDate { get; set; } = DateTime.Now.ToString(EventConstants.EventDateTimeFormat, CultureInfo.InvariantCulture);
+        public string EndDate { get; set; } = DateTime.Now.AddHours(2).ToString(EventConstants.EventDateTimeFormat, CultureInfo.InvariantCulture);
 
         [Required]
         public double Latitude { get; set; }    
