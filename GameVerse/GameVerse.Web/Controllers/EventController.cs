@@ -108,7 +108,7 @@ namespace GameVerse.Web.Controllers
 
             string? userId = User.GetId();
 
-            if (await _moderatorService.HasEventWithIdAsync(User.GetId(), id) == false && User.IsAdmin() == false)
+            if (await _eventService.HasPublisherWithIdAsync(userId, id) == false && User.IsAdmin() == false)
             {
                 return Unauthorized();
             }
@@ -128,7 +128,8 @@ namespace GameVerse.Web.Controllers
                 return NotFound();
             }
 
-            if (await _moderatorService.HasEventWithIdAsync(User.GetId(), id) == false && User.IsAdmin() == false)
+            string? userId = User.GetId(); 
+            if (await _eventService.HasPublisherWithIdAsync(userId, id) == false && User.IsAdmin() == false)
             {
                 return Unauthorized();
             }
@@ -183,7 +184,13 @@ namespace GameVerse.Web.Controllers
 
             string? userId = User.GetId();
 
-            EventDeleteViewModel model = await _eventService.DeleteEventGetAsync(id, userId);
+            if(await _eventService.HasPublisherWithIdAsync(userId, id) == false && User.IsAdmin() == false)
+            {
+                return Unauthorized();
+            }
+
+
+            EventDeleteViewModel? model = await _eventService.DeleteEventGetAsync(id, userId);
 
             return View(model);
         }
