@@ -16,6 +16,11 @@ using GameVerse.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddLogging(config =>
+{
+    config.AddConsole();
+});
+
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("SqlServer") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<GameVerseDbContext>(options =>
