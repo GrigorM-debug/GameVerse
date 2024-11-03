@@ -9,13 +9,17 @@
 <div class="container"></div>
 <div class="section-heading mb-4">
     <h2 class="h1 mb-0">Our Gaming Events</h2>
-     @* <span class="sub-title">Intructions</span> *@
 </div>
 <hr />
 
 <div class="container">
     
     <div class="row mt-n5">
+        @if (Model.Any() == false)
+        {
+            <h2>No Events Added</h2>
+        }
+
         @foreach (var e in Model)
         {
             <div class="col-md-6 col-lg-4 mt-5 wow fadeInUp" data-wow-delay=".2s" style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">
