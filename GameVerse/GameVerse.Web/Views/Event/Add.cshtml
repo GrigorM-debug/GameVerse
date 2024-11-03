@@ -105,8 +105,11 @@
 </div>
 
 <script>
-    let defaultLatitude = 42.6977;
-    let defaultLongitude = 23.3219;
+    // let defaultLatitude = 42.6977;
+    // let defaultLongitude = 23.3219;
+
+    let defaultLatitude = @Model.Latitude ? @Model.Latitude : 42.6977;
+    let defaultLongitude = @Model.Longitude ? @Model.Longitude : 23.3219;
 
     // Initialize the map
     let map = L.map('map').setView([defaultLatitude, defaultLongitude], 13); // Starting position (Sofia)
