@@ -1,5 +1,4 @@
-﻿@using GameVerse.Web.ViewModels.Event;
-@model IEnumerable<EventIndexViewModel>;
+﻿@model GameVerse.Web.ViewModels.Event.AllEventsQueryModel
 
 @{
     ViewData["Title"] = "Gaming Events";
@@ -15,12 +14,12 @@
 <div class="container">
     
     <div class="row mt-n5">
-        @if (Model.Any() == false)
+        @if (Model.Events.Any() == false)
         {
             <h2>No Events Added</h2>
         }
 
-        @foreach (var e in Model)
+        @foreach (var e in Model.Events)
         {
             <div class="col-md-6 col-lg-4 mt-5 wow fadeInUp" data-wow-delay=".2s" style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">
                 <div class="blog-grid">
@@ -41,8 +40,9 @@
             </div>
         }
     </div>
-    <partial name="_Pagination"/>
+    
 </div>
+<partial name="_EventsPagination" model="Model" />
 
 <style>
     .blog-grid {
