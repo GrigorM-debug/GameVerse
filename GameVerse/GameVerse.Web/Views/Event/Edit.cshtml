@@ -5,8 +5,8 @@
 
 @{
     ViewData["Title"] = "Edit Event";
-    var startDate = DateTime.Now.ToString(EventDateTimeFormat, CultureInfo.InvariantCulture);
-    var endDate = DateTime.Now.AddHours(2).ToString(EventDateTimeFormat, CultureInfo.InvariantCulture);
+    // var startDate = DateTime.Now.ToString(EventDateTimeFormat, CultureInfo.InvariantCulture);
+    // var endDate = DateTime.Now.AddHours(2).ToString(EventDateTimeFormat, CultureInfo.InvariantCulture);
 }
 
 <!-- Leaflet CSS -->
@@ -55,13 +55,13 @@
                 <div class="col-sm-6 mb-2">
                     <label asp-for="@Model.StartDate" class="form-label-add-edit">Start Date</label>
                     <input asp-for="@Model.StartDate" class="form-control" aria-required="true" type="datetime"
-                           value="@(string.IsNullOrEmpty(Model.StartDate) ? startDate : DateTime.ParseExact(Model.StartDate, EventDateTimeFormat, CultureInfo.InvariantCulture).ToString(EventDateTimeFormat))" />
+                           value="@Model.StartDate" />
                     <span asp-validation-for="@Model.StartDate" class="text-danger"></span>
                 </div>
                 <div class="col-sm-6 mb-2">
                     <label asp-for="@Model.EndDate" class="form-label-add-edit">End Date</label>
                     <input asp-for="@Model.EndDate" class="form-control" aria-required="true" type="datetime"
-                           value="@(string.IsNullOrEmpty(Model.EndDate) ? endDate : DateTime.ParseExact(Model.EndDate, EventDateTimeFormat, CultureInfo.InvariantCulture).ToString(EventDateTimeFormat))" />
+                           value="@Model.EndDate" />
                     <span asp-validation-for="@Model.EndDate" class="text-danger"></span>
                 </div>
             </div>

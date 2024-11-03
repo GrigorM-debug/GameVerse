@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
 using System.Security.Claims;
+using static GameVerse.Common.ApplicationConstants;
 using static GameVerse.Common.ApplicationConstants.EventConstants;
 
 namespace GameVerse.Web.Controllers
@@ -71,13 +72,19 @@ namespace GameVerse.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(EventInputViewModel inputModel)
         {
-            if (!ModelState.IsValid)
+            if (DateTime.TryParseExact(inputModel.StartDate, EventDateTimeFormat, CultureInfo.InvariantCulture,
+                    DateTimeStyles.None, out DateTime startDate) == false)
             {
+                ModelState.AddModelError(nameof(inputModel.StartDate), EventDateTimeErrorMessage);
                 return View(inputModel);
             }
 
-            DateTime startDate = DateTime.ParseExact(inputModel.StartDate, EventDateTimeFormat, CultureInfo.InvariantCulture);
-            DateTime endDate = DateTime.ParseExact(inputModel.EndDate, EventDateTimeFormat, CultureInfo.InvariantCulture);
+            if (DateTime.TryParseExact(inputModel.EndDate, EventDateTimeFormat, CultureInfo.InvariantCulture,
+                    DateTimeStyles.None, out DateTime endDate) == false)
+            {
+                ModelState.AddModelError(nameof(inputModel.EndDate), EventDateTimeErrorMessage);
+                return View(inputModel);
+            }
 
             if (startDate > endDate)
             {
@@ -88,6 +95,11 @@ namespace GameVerse.Web.Controllers
             if (startDate == endDate)
             {
                 ModelState.AddModelError(nameof(inputModel.EndDate), "End date cannot be the same as Start date.");
+                return View(inputModel);
+            }
+
+            if (!ModelState.IsValid)
+            {
                 return View(inputModel);
             }
 
@@ -165,9 +177,20 @@ namespace GameVerse.Web.Controllers
                 //You can also redirect to Login Page
                 return Unauthorized();
             }
-            
-            DateTime startDate = DateTime.ParseExact(inputModel.StartDate, EventDateTimeFormat, CultureInfo.InvariantCulture);
-            DateTime endDate = DateTime.ParseExact(inputModel.EndDate, EventDateTimeFormat, CultureInfo.InvariantCulture);
+
+            if (DateTime.TryParseExact(inputModel.StartDate, EventDateTimeFormat, CultureInfo.InvariantCulture,
+                    DateTimeStyles.None, out DateTime startDate) == false)
+            {
+                ModelState.AddModelError(nameof(inputModel.StartDate), EventDateTimeErrorMessage);
+                return View(inputModel);
+            }
+
+            if (DateTime.TryParseExact(inputModel.EndDate, EventDateTimeFormat, CultureInfo.InvariantCulture,
+                    DateTimeStyles.None, out DateTime endDate) == false)
+            {
+                ModelState.AddModelError(nameof(inputModel.EndDate), EventDateTimeErrorMessage);
+                return View(inputModel);
+            }
 
             if (startDate > endDate)
             {
@@ -183,15 +206,6 @@ namespace GameVerse.Web.Controllers
 
             if (!ModelState.IsValid)
             {
-                return View(inputModel);
-            }
-
-            bool isEventExisting = await _eventService.EventExistByTitle(inputModel.Topic);
-
-            if (isEventExisting)
-            {
-                _notyf.Warning("Event with this Topic already exist !");
-
                 return View(inputModel);
             }
 
