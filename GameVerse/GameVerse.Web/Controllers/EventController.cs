@@ -22,11 +22,26 @@ namespace GameVerse.Web.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromQuery] AllEventsQueryModel model)
         {
-            IEnumerable<EventIndexViewModel> events = await _eventService.GetAllEventsAsync();
+            if (model.CurrentPage < 1)
+            {
+                model.CurrentPage = 1;
+            }
 
-            return View(events);
+            int totalEventsCount = await _eventService.GetTotalEventsCountAsync();
+
+            IEnumerable<EventIndexViewModel> events = await _eventService.GetAllEventsAsync(
+                model.CurrentPage,
+                model.EventsPerPage
+                );
+
+            model.TotalEventsCount = totalEventsCount;
+            model.Events = events;
+
+
+
+            return View(model);
         }
 
         [AllowAnonymous]
