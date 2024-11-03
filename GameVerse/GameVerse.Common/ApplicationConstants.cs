@@ -10,7 +10,7 @@
 
         //Error Messages
         public const string LengthErrorMessage = "{0} must be between {2} and {1} characters long!";
-        public const string invalidDateTimeErrorMessage = $"Date must be in the following format - ${DateTimeFormat}";
+        public const string InvalidDateTimeErrorMessage = $"Date must be in the following format - ${DateTimeFormat}";
         public const string RangeErrorMessage = "{0} must be a number between {1} and {2}!";
 
         public static class ApplicationUserConstants
@@ -83,6 +83,7 @@
         {
             //DateTime Format 
             public const string EventDateTimeFormat = "dd-MM-yyyy HH:mm";
+            public const string EventDateTimeErrorMessage = $"Date must be in the following format - ${EventDateTimeFormat}";
 
             //Topic
             public const int TopicMinLength = 5;
