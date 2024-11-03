@@ -210,13 +210,21 @@ namespace GameVerse.Services
         /// <summary>
         /// Retrieves all events that are not marked as deleted.
         /// </summary>
+        /// <param name="currentPage">The current page</param>
+        /// <param name="eventsPerPage">The Events per Page. For example 10</param>
         /// <returns>A collection of <see cref="EventIndexViewModel"/> representing each event.</returns>
-        public async Task<IEnumerable<EventIndexViewModel>> GetAllEventsAsync()
+        public async Task<IEnumerable<EventIndexViewModel>> GetAllEventsAsync(
+            int currentPage,
+            int eventsPerPage
+            )
         {
             IEnumerable<EventIndexViewModel> eventIndexViewModels = await _eventRepository
                 .GetWithIncludeAsync(e => e.Publisher.User)
                 .AsNoTracking()
                 .Where(e => e.IsDeleted == false)
+                .OrderBy(e => e.Id)
+                .Skip((currentPage - 1) * eventsPerPage)
+                .Take(eventsPerPage)
                 .Select(e => new EventIndexViewModel
                 {
                     Id = e.Id.ToString(),
@@ -278,6 +286,19 @@ namespace GameVerse.Services
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Retrieves the total count of the events that are not deleted.
+        /// </summary>
+        /// <returns>A number of <see cref="int"/> representing events count.</returns>
+        public async Task<int> GetTotalEventsCountAsync()
+        {
+            int totalEventsCount = await _eventRepository
+                .AllAsReadOnly()
+                .CountAsync(e => e.IsDeleted == false);
+
+            return totalEventsCount;
         }
     }
 }

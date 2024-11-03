@@ -11,8 +11,16 @@ namespace GameVerse.Services.Interfaces
         /// <summary>
         /// Retrieves all events that are not marked as deleted.
         /// </summary>
+        /// <param name="currentPage">The current page</param>
+        /// <param name="eventsPerPage">The Events per Page. For example 10</param>
         /// <returns>A collection of <see cref="EventIndexViewModel"/> representing each event.</returns>
-        Task<IEnumerable<EventIndexViewModel>> GetAllEventsAsync();
+        Task<IEnumerable<EventIndexViewModel>> GetAllEventsAsync(int currentPage, int eventsPerPage);
+
+        /// <summary>
+        /// Retrieves the total count of the events that are not deleted.
+        /// </summary>
+        /// <returns>A number of <see cref="int"/> representing events count.</returns>
+        Task<int> GetTotalEventsCountAsync();
 
         /// <summary>
         /// Retrieves last 3 added events that are not marked as deleted.
