@@ -1,7 +1,11 @@
 ﻿@using GameVerse.Web.ViewModels.Event;
 @model IEnumerable<EventIndexViewModel>;
 
+@{
+    ViewData["Title"] = "Gaming Events";
+}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css" integrity="sha256-2XFplPlrFClt0bIdPgpz8H7ojnk10H69xRqd9+uTShA=" crossorigin="anonymous" />
+
 <div class="container"></div>
 <div class="section-heading mb-4">
     <h2 class="h1 mb-0">Our Gaming Events</h2>
@@ -24,7 +28,7 @@
                             <ul>
                                 <li><i class="fas fa-calendar-alt"></i>@e.StartDate - @e.EndDate</li>
                                 <li><i class="fas fa-user"></i> @e.PublisherName</li>
-                                <li><i class="fas fa-comments"></i> @e.Seats</li>
+                                <li><i class="fa-solid fa-chair"></i> Empty Seats: @e.Seats</li>
                             </ul>
                         </div>
 
@@ -37,7 +41,6 @@
 </div>
 
 <style>
-    body{margin-top:20px;}
     .blog-grid {
         position: relative;
         box-shadow: 0 1rem 1.75rem 0 rgba(45, 55, 75, 0.1);
