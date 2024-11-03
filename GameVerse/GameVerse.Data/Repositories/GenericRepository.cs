@@ -119,7 +119,7 @@ namespace GameVerse.Data.Repositories
             return entity;
         }
 
-        public async Task<IEnumerable<TType>> GetWithIncludeAsync(params Expression<Func<TType, object>>[] includes)
+        public IQueryable<TType> GetWithIncludeAsync(params Expression<Func<TType, object>>[] includes)
         {
             IQueryable<TType> query = _dbSet;
 
@@ -128,7 +128,7 @@ namespace GameVerse.Data.Repositories
                 query = query.Include(include);
             }
 
-            return await query.ToListAsync();
+            return query;
         }
 
         public bool Update(TType entity)
