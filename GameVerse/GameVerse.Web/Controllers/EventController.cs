@@ -39,8 +39,6 @@ namespace GameVerse.Web.Controllers
             model.TotalEventsCount = totalEventsCount;
             model.Events = events;
 
-
-
             return View(model);
         }
 
