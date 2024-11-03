@@ -1,4 +1,6 @@
-﻿@{
+﻿@model GameVerse.Web.ViewModels.HomeViewModel
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -9,4 +11,6 @@
  
  <partial name="_HeroSectionPartial" />
  
-<partial name="_LatestAddedGamesSlider"/>
+ <partial name="_LatestAddedGamesSlider"/>
+
+ <partial name="_LatestEvents", model="Model.Last3Events"/>
