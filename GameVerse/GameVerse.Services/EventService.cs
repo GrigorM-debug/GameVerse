@@ -14,10 +14,33 @@ namespace GameVerse.Services
     public class EventService(IGenericRepository<Event, Guid> eventRepository) : BaseService, IEventService
     {
         /// <summary>
-        /// Injectiong the Generic Repository using Primary Constructor
+        /// Injection the Generic Repository using Primary Constructor
         /// </summary>
         /// <param name="eventRepository">The repository used for data access operations on <see cref="Event"/> entities.</param>
         private readonly IGenericRepository<Event, Guid> _eventRepository = eventRepository;
+
+        public async Task<IEnumerable<EventIndexViewModel>> GetLatest3EventsAsync()
+        {
+            IEnumerable<Event> events = await _eventRepository.GetWithIncludeAsync(e => e.Publisher.User);
+
+            IEnumerable<EventIndexViewModel> eventIndexViewModels = events
+                .Where(e => e.IsDeleted == false)
+                .OrderBy(e => e.Id)
+                .Take(3)
+                .Select(e => new EventIndexViewModel
+                {
+                    Id = e.Id.ToString(),
+                    Topic = e.Topic,
+                    StartDate = e.StartDate.ToString(EventConstants.EventDateTimeFormat),
+                    EndDate = e.EndDate.ToString(EventConstants.EventDateTimeFormat),
+                    Seats = e.Seats,
+                    TicketPrice = e.TicketPrice.ToString("C"),
+                    Image = e.Image,
+                    PublisherName = e.Publisher.User.UserName
+                });
+
+            return eventIndexViewModels;
+        }
 
         /// <summary>
         /// Adds a new event to the repository.

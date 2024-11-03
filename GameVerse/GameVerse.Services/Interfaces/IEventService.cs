@@ -15,6 +15,12 @@ namespace GameVerse.Services.Interfaces
         Task<IEnumerable<EventIndexViewModel>> GetAllEventsAsync();
 
         /// <summary>
+        /// Retrieves last 3 added events that are not marked as deleted.
+        /// </summary>
+        /// <returns>A collection of <see cref="EventIndexViewModel"/> representing each event.</returns>
+        Task<IEnumerable<EventIndexViewModel>> GetLatest3EventsAsync();
+
+        /// <summary>
         /// Adds a new event.
         /// </summary>
         /// <param name="inputModel">The input model containing event details.</param>
