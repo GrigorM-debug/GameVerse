@@ -4,7 +4,6 @@ using GameVerse.Data.Models.ApplicationUsers;
 using GameVerse.Data.Repositories;
 using GameVerse.Data.Repositories.Interfaces;
 using GameVerse.Web.ModelBinders;
-using GameVerse.Web.ModelBinders.DateTimeModelBinder;
 using GameVerse.Web.ModelBinders.DecimalModelBinder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -50,7 +49,6 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 builder.Services.AddControllersWithViews(options =>
 {
     options.ModelBinderProviders.Insert(0, new DecimalModelBinderProvider());
-    options.ModelBinderProviders.Insert(1, new DateTimeModelBinderProvider(new[] { GameVerse.Common.ApplicationConstants.DateTimeFormat, GameVerse.Common.ApplicationConstants.EventConstants.EventDateTimeFormat }));
 });
 
 builder.Services.AddNotyf(config =>
