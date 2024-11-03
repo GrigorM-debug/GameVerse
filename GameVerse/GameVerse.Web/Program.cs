@@ -66,7 +66,7 @@ using (var scope = app.Services.CreateScope())
     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
 
-    await DataSeeder.SeedUsersAndRolesAsync(userManager, roleManager);
+    //await DataSeeder.SeedUsersAndRolesAsync(userManager, roleManager);
     await context.SeedModeratorsAndAdminsDataAsync(userManager, roleManager, context);
 }
 
