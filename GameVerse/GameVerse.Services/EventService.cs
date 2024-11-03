@@ -1,8 +1,10 @@
-﻿using GameVerse.Data.Models.Events;
+﻿using GameVerse.Data.Models.ApplicationUsers;
+using GameVerse.Data.Models.Events;
 using GameVerse.Data.Repositories.Interfaces;
 using GameVerse.Services.Interfaces;
 using GameVerse.Web.ViewModels.Event;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Diagnostics.CodeAnalysis;
 using static GameVerse.Common.ApplicationConstants;
 
@@ -21,9 +23,9 @@ namespace GameVerse.Services
 
         public async Task<IEnumerable<EventIndexViewModel>> GetLatest3EventsAsync()
         {
-            IEnumerable<Event> events = await _eventRepository.GetWithIncludeAsync(e => e.Publisher.User);
-
-            IEnumerable<EventIndexViewModel> eventIndexViewModels = events
+            IEnumerable<EventIndexViewModel> eventIndexViewModels = await _eventRepository
+                .GetWithIncludeAsync(e => e.Publisher.User)
+                .AsNoTracking()
                 .Where(e => e.IsDeleted == false)
                 .OrderBy(e => e.Id)
                 .Take(3)
@@ -37,7 +39,7 @@ namespace GameVerse.Services
                     TicketPrice = e.TicketPrice.ToString("C"),
                     Image = e.Image,
                     PublisherName = e.Publisher.User.UserName
-                });
+                }).ToListAsync();
 
             return eventIndexViewModels;
         }
@@ -80,9 +82,10 @@ namespace GameVerse.Services
         /// <returns>A <see cref="EventDeleteViewModel"/> with event details if found; otherwise, <c>null</c>.</returns>
         public async Task<EventDeleteViewModel?> DeleteEventGetAsync(string eventId, string moderatorId)
         {
-            IEnumerable<Event> events = await _eventRepository.GetWithIncludeAsync(e => e.Publisher.User);
-
-            Event? e = events.FirstOrDefault(e => e.Id.ToString() == eventId && e.PublisherId.ToString() == moderatorId && e.IsDeleted == false);
+            Event? e = await _eventRepository
+                .GetWithIncludeAsync(e => e.Publisher.User)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(e => e.Id.ToString() == eventId && e.PublisherId.ToString() == moderatorId && e.IsDeleted == false);
 
             EventDeleteViewModel model = new EventDeleteViewModel()
             {
@@ -210,9 +213,9 @@ namespace GameVerse.Services
         /// <returns>A collection of <see cref="EventIndexViewModel"/> representing each event.</returns>
         public async Task<IEnumerable<EventIndexViewModel>> GetAllEventsAsync()
         {
-            IEnumerable<Event> events = await _eventRepository.GetWithIncludeAsync(e => e.Publisher.User);
-
-            IEnumerable<EventIndexViewModel> eventIndexViewModels = events
+            IEnumerable<EventIndexViewModel> eventIndexViewModels = await _eventRepository
+                .GetWithIncludeAsync(e => e.Publisher.User)
+                .AsNoTracking()
                 .Where(e => e.IsDeleted == false)
                 .Select(e => new EventIndexViewModel
                 {
@@ -224,7 +227,7 @@ namespace GameVerse.Services
                     TicketPrice = e.TicketPrice.ToString("C"),
                     Image = e.Image,
                     PublisherName = e.Publisher.User.UserName
-                });
+                }).ToListAsync();
 
             return eventIndexViewModels;
         }
@@ -236,9 +239,10 @@ namespace GameVerse.Services
         /// <returns>An <see cref="EventDetailsViewModel"/> with detailed event information.</returns>
         public async Task<EventDetailsViewModel> GetEventDetailsByIdAsync(string id)
         {
-            IEnumerable<Event> events = await _eventRepository.GetWithIncludeAsync(e => e.Publisher.User);
-
-            Event? e = events.FirstOrDefault(x => x.Id.ToString() == id);
+            Event? e = await _eventRepository
+                .GetWithIncludeAsync(e => e.Publisher.User)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(e => e.Id.ToString() == id && e.IsDeleted == false);
 
             EventDetailsViewModel eventDetailsViewModel = new EventDetailsViewModel()
             {
