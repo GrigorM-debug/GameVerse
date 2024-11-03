@@ -12,13 +12,20 @@ using AspNetCoreHero.ToastNotification;
 using AspNetCoreHero.ToastNotification.Extensions;
 using GameVerse.Services.Interfaces;
 using GameVerse.Services;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddLogging(config =>
-{
-    config.AddConsole();
-});
+//builder.Services.AddLogging(config =>
+//{
+//    config.AddConsole();
+//});
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .WriteTo.Console()
+    .WriteTo.File("logs/GameVerseSystemLogs-.txt", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("SqlServer") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
