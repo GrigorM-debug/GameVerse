@@ -4,6 +4,7 @@ using GameVerse.Data.Models.ApplicationUsers;
 using GameVerse.Data.Models.Events;
 using GameVerse.Data.Repositories.Interfaces;
 using GameVerse.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace GameVerse.Services
 {
@@ -14,7 +15,8 @@ namespace GameVerse.Services
         public async Task<string?> GetModeratorIdByUserIdAsync(string? userId)
         {
             Moderator? moderator = await _moderatorRepository
-               .FirstOrDefaultAsync(m => m.UserId.ToString() == userId);
+                .AllAsReadOnly()
+                .FirstOrDefaultAsync(m => m.UserId.ToString() == userId);
 
             if (moderator == null)
             {
@@ -27,6 +29,7 @@ namespace GameVerse.Services
         public async Task<bool> ModeratorExistByUserIdAsync(string userId)
         {
             Moderator? moderator = await _moderatorRepository
+                .AllAsReadOnly()
                 .FirstOrDefaultAsync(m => m.UserId.ToString() == userId);
 
             if (moderator == null)
