@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
 using System.Security.Claims;
+using Serilog;
 using static GameVerse.Common.ApplicationConstants;
 using static GameVerse.Common.ApplicationConstants.EventConstants;
 
@@ -118,7 +119,7 @@ namespace GameVerse.Web.Controllers
 
             _notyf.Success("Event was added successfully!");
 
-            _logger.LogInformation("Moderator with ID {ModeratorId} perform an {Action} in controller {Controller}", moderatorId, nameof(Add), nameof(EventController));
+            Log.Information("Moderator with ID {ModeratorId} perform an {Action} in controller {Controller}", moderatorId, nameof(Add), nameof(EventController));
 
             return RedirectToAction(nameof(Details), new {id = eventId});
         }
@@ -213,7 +214,7 @@ namespace GameVerse.Web.Controllers
 
             _notyf.Success("Event was edited successfully!");
 
-            _logger.LogInformation("Moderator with ID {ModeratorId} perform an {Action} in controller {Controller}", moderatorId, nameof(Edit), nameof(EventController));
+            Log.Information("Moderator with ID {ModeratorId} perform an {Action} in controller {Controller}", moderatorId, nameof(Edit), nameof(EventController));
 
             return RedirectToAction(nameof(Details), new { id = eventId });
         }
@@ -277,7 +278,7 @@ namespace GameVerse.Web.Controllers
 
             _notyf.Success("Event was deleted successfully !");
 
-            _logger.LogInformation("Moderator with ID {ModeratorId} perform an {Action} in controller {Controller}", moderatorId, nameof(Delete), nameof(EventController));
+            Log.Information("Moderator with ID {ModeratorId} perform an {Action} in controller {Controller}", moderatorId, nameof(Delete), nameof(EventController));
 
             return RedirectToAction(nameof(Index));
         }

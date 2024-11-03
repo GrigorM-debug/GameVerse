@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\GameVerse.Common\GameVerse.Common.csproj" />
     <ProjectReference Include="..\GameVerse.Data.Models\GameVerse.Data.Models.csproj" />
     <ProjectReference Include="..\GameVerse.Data\GameVerse.Data.csproj" />
