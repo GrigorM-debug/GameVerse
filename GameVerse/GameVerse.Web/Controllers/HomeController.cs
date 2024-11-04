@@ -6,6 +6,7 @@ using System.Diagnostics;
 using GameVerse.Services.Interfaces;
 using GameVerse.Web.ViewModels;
 using GameVerse.Web.ViewModels.Event;
+using Serilog;
 
 namespace GameVerse.Web.Controllers
 {
@@ -35,18 +36,34 @@ namespace GameVerse.Web.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error(int statusCode)
         {
+            var requestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
 
-            if(statusCode == 404)
+            switch (statusCode)
             {
-                return View("Error404");
+                case 404:
+                    Log.Error("404 Error occurred. Trace ID: {TraceId}", requestId);
+                    return View("Error404");
+
+                case 401:
+                    Log.Error("401 Unauthorized Error occurred. Trace ID: {TraceId}", requestId);
+                    return View("Error401");
+
+                default:
+                    Log.Error("An unexpected error occurred with status code {StatusCode}. Trace ID: {TraceId}", statusCode, requestId);
+                    break;
             }
 
-            if(statusCode == 401)
-            {
-                return View("Error401");
-            }
+            //if (statusCode == 404)
+            //{
+            //    return View("Error404");
+            //}
 
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            //if(statusCode == 401)
+            //{
+            //    return View("Error401");
+            //}
+
+            return View(new ErrorViewModel { RequestId = requestId });
         }
     }
 }

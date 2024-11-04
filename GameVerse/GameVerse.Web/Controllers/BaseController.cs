@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Globalization;
+using System.Runtime.Serialization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GameVerse.Web.Controllers
 {
-    public class BaseController : Controller
+    public abstract class BaseController : Controller
     {
-        public bool IsGuidValid(string? id, ref Guid guidId)
+        protected bool IsGuidValid(string? id, ref Guid guidId)
         {
             if (String.IsNullOrEmpty(id)) return false;
 
@@ -12,5 +14,7 @@ namespace GameVerse.Web.Controllers
 
             return true;
         }
+
     }
 }
+

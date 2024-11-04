@@ -43,8 +43,8 @@ namespace GameVerse.Web.Filters
 
             string? userId = context.HttpContext.User.GetId();
 
-            //After we get the userId from the Controller Context. Every controller receices Claims Principals
-            //With this claims principals we can check if the currect user is Authernticated for example
+            //After we get the userId from the Controller Context. Every controller receives Claims Principals
+            //With this claims principals we can check if the current user is Authenticated for example
             //I made ClaimPrincipal Extension class and I added GetId() claim principal 
             //If the user Id is null this means we don't have logged in user, we return 401 Unauthorized Page
             if(userId == null)
@@ -62,7 +62,7 @@ namespace GameVerse.Web.Filters
             }
 
             //If you are reading this and want to see the Custom Error Pages don't forget to change the project environment to Production
-            //Because when the project is in Developement Environment I use the Developer Exception Pages.
+            //Because when the project is in Development Environment I use the Developer Exception Pages.
         }
     }
 }
