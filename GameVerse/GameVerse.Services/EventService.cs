@@ -6,6 +6,7 @@ using GameVerse.Web.ViewModels.Event;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics.CodeAnalysis;
+using GameVerse.Common.Enums;
 using static GameVerse.Common.ApplicationConstants;
 
 namespace GameVerse.Services
@@ -215,14 +216,38 @@ namespace GameVerse.Services
         /// <returns>A collection of <see cref="EventIndexViewModel"/> representing each event.</returns>
         public async Task<IEnumerable<EventIndexViewModel>> GetAllEventsAsync(
             int currentPage,
-            int eventsPerPage
+            int eventsPerPage,
+            EventSortOrder sortOrder
             )
         {
-            IEnumerable<EventIndexViewModel> eventIndexViewModels = await _eventRepository
+            //var eventIndexViewModels = await _eventRepository
+            //    .GetWithIncludeAsync(e => e.Publisher.User)
+            //    .AsNoTracking()
+            //    .Where(e => e.IsDeleted == false)
+            //    .Skip((currentPage - 1) * eventsPerPage)
+            //    .Take(eventsPerPage)
+            //    .Select(e => new EventIndexViewModel
+            //    {
+            //        Id = e.Id.ToString(),
+            //        Topic = e.Topic,
+            //        StartDate = e.StartDate.ToString(EventConstants.EventDateTimeFormat),
+            //        EndDate = e.EndDate.ToString(EventConstants.EventDateTimeFormat),
+            //        Seats = e.Seats,
+            //        TicketPrice = e.TicketPrice.ToString("C"),
+            //        Image = e.Image,
+            //        PublisherName = e.Publisher.User.UserName
+            //    }).ToListAsync();
+
+            IQueryable<Event> query = _eventRepository
                 .GetWithIncludeAsync(e => e.Publisher.User)
                 .AsNoTracking()
-                .Where(e => e.IsDeleted == false)
-                .OrderBy(e => e.Id)
+                .Where(e => e.IsDeleted == false);
+
+            query = sortOrder == EventSortOrder.Newest
+                ? query.OrderByDescending(e => e.Id) 
+                : query.OrderBy(e => e.Id);
+
+            var eventIndexViewModels = await query
                 .Skip((currentPage - 1) * eventsPerPage)
                 .Take(eventsPerPage)
                 .Select(e => new EventIndexViewModel
@@ -235,7 +260,8 @@ namespace GameVerse.Services
                     TicketPrice = e.TicketPrice.ToString("C"),
                     Image = e.Image,
                     PublisherName = e.Publisher.User.UserName
-                }).ToListAsync();
+                })
+                .ToListAsync();
 
             return eventIndexViewModels;
         }
