@@ -220,24 +220,6 @@ namespace GameVerse.Services
             EventSortOrder sortOrder
             )
         {
-            //var eventIndexViewModels = await _eventRepository
-            //    .GetWithIncludeAsync(e => e.Publisher.User)
-            //    .AsNoTracking()
-            //    .Where(e => e.IsDeleted == false)
-            //    .Skip((currentPage - 1) * eventsPerPage)
-            //    .Take(eventsPerPage)
-            //    .Select(e => new EventIndexViewModel
-            //    {
-            //        Id = e.Id.ToString(),
-            //        Topic = e.Topic,
-            //        StartDate = e.StartDate.ToString(EventConstants.EventDateTimeFormat),
-            //        EndDate = e.EndDate.ToString(EventConstants.EventDateTimeFormat),
-            //        Seats = e.Seats,
-            //        TicketPrice = e.TicketPrice.ToString("C"),
-            //        Image = e.Image,
-            //        PublisherName = e.Publisher.User.UserName
-            //    }).ToListAsync();
-
             IQueryable<Event> query = _eventRepository
                 .GetWithIncludeAsync(e => e.Publisher.User)
                 .AsNoTracking()
