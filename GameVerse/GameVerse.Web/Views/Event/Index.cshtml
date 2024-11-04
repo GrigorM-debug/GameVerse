@@ -1,4 +1,6 @@
-﻿@model GameVerse.Web.ViewModels.Event.AllEventsQueryModel
+﻿@using GameVerse.Common.Enums
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model GameVerse.Web.ViewModels.Event.AllEventsQueryModel
 
 @{
     ViewData["Title"] = "Gaming Events";
@@ -6,12 +8,21 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css" integrity="sha256-2XFplPlrFClt0bIdPgpz8H7ojnk10H69xRqd9+uTShA=" crossorigin="anonymous" />
 
 <div class="container"></div>
-<div class="section-heading mb-4">
+<div class="section-heading mb-4 d-flex justify-content-between">
     <h2 class="h1 mb-0">Our Gaming Events</h2>
+    <div class="dropdown mt-2">
+        <button class="btn btn-primary dropdown-toggle font-weight-bold p-2" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+            Sort By: @Model.EventSelectedSortOrder
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <li><a asp-controller="Event" asp-action="Index" asp-route-eventSelectedSortOrder="@EventSortOrder.Newest" class="dropdown-item font-weight-bold">Newest</a></li>
+            <li><a asp-controller="Event" asp-action="Index" asp-route-eventSelectedSortOrder="@EventSortOrder.Oldest" class="dropdown-item font-weight-bold">Oldest</a></li>
+        </ul>
+    </div>
 </div>
 <hr />
 
-<div class="container">
+<div class="container d-flex justify-content-around">
     
     <div class="row mt-n5">
         @if (Model.Events.Any() == false)
@@ -41,6 +52,17 @@
         }
     </div>
     
+     @* <aside class="m-sm-2">
+         <div class="dropdown">
+             <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                 Sort By: @Model.EventSelectedSortOrder
+             </button>
+             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                 <li><a asp-controller="Event" asp-action="Index" asp-route-eventSelectedSortOrder="@EventSortOrder.Newest" class="dropdown-item">Newest</a></li>
+                 <li><a asp-controller="Event" asp-action="Index" asp-route-eventSelectedSortOrder="@EventSortOrder.Oldest" class="dropdown-item">Oldest</a></li>
+             </ul>
+         </div>
+     </aside> *@
 </div>
 <partial name="_EventsPagination" model="Model" />
 
