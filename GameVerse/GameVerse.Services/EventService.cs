@@ -213,6 +213,7 @@ namespace GameVerse.Services
         /// </summary>
         /// <param name="currentPage">The current page</param>
         /// <param name="eventsPerPage">The Events per Page. For example 10</param>
+        /// <param name="sortOrder">The Events Sort Order. By default, is set to Newest</param>
         /// <returns>A collection of <see cref="EventIndexViewModel"/> representing each event.</returns>
         public async Task<IEnumerable<EventIndexViewModel>> GetAllEventsAsync(
             int currentPage,
@@ -225,6 +226,8 @@ namespace GameVerse.Services
                 .AsNoTracking()
                 .Where(e => e.IsDeleted == false);
 
+            //If the sortOrder is Newest we Order the Events by Id Descending to get the newest added Events in the Database
+            //If the sortOrder is Oldest we Order the Events by Id Ascending to get the oldest added Events in the Database
             query = sortOrder == EventSortOrder.Newest
                 ? query.OrderByDescending(e => e.Id) 
                 : query.OrderBy(e => e.Id);
