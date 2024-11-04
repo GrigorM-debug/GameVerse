@@ -4,12 +4,18 @@ using GameVerse.Data.Models.Games.Platform;
 using GameVerse.Data.Models.Games.Restrictions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Emit;
 
 namespace GameVerse.Data.DataSeed
 {
+    /// <summary>
+    /// Provides data seeding methods for genres, platforms, restrictions, users, roles, and moderators in the GameVerse database.
+    /// </summary>
     public static class DataSeeder
     {
+        /// <summary>
+        /// Seeds predefined genres into the database.
+        /// </summary>
+        /// <param name="modelBuilder">The model builder used to configure the genre data for seeding.</param>
         public static void SeedGenres(ModelBuilder modelBuilder)
         {
             List<Genre> genres = new List<Genre>()
@@ -39,6 +45,10 @@ namespace GameVerse.Data.DataSeed
             modelBuilder.Entity<Genre>().HasData(genres);
         }
 
+        /// <summary>
+        /// Seeds predefined platforms into the database.
+        /// </summary>
+        /// <param name="modelBuilder">The model builder used to configure the platform data for seeding.</param>
         public static void SeedPlatforms(ModelBuilder modelBuilder)
         {
             List<Platform> platforms = new List<Platform>()
@@ -68,6 +78,10 @@ namespace GameVerse.Data.DataSeed
             modelBuilder.Entity<Platform>().HasData(platforms);
         }
 
+        /// <summary>
+        /// Seeds predefined age and content restrictions into the database.
+        /// </summary>
+        /// <param name="modelBuilder">The model builder used to configure the restriction data for seeding.</param>
         public static void SeedRestrictions(ModelBuilder modelBuilder)
         {
             List<Restriction> restrictions = new List<Restriction>()
@@ -90,6 +104,11 @@ namespace GameVerse.Data.DataSeed
             modelBuilder.Entity<Restriction>().HasData(restrictions);
         }
 
+        /// <summary>
+        /// Seeds initial user roles (Admin, Moderator) and creates predefined admin and moderator users with specified roles.
+        /// </summary>
+        /// <param name="userManager">UserManager used to manage user creation and roles.</param>
+        /// <param name="roleManager">RoleManager used to manage role creation and existence checks.</param>
         public static async Task SeedUsersAndRolesAsync(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole<Guid>> roleManager)
         {
             //Passwords Hash
@@ -146,6 +165,11 @@ namespace GameVerse.Data.DataSeed
 
         }
 
+        /// <summary>
+        /// Seeds moderator data by associating users in the "Moderator" role with Moderator entities in the database.
+        /// </summary>
+        /// <param name="context">The database context to add moderator data to.</param>
+        /// <param name="userManager">UserManager used to retrieve users in the "Moderator" role.</param>
         public static async Task SeedModerators(GameVerseDbContext context, UserManager<ApplicationUser> userManager)
         {
             var moderators = await userManager.GetUsersInRoleAsync("Moderator");
