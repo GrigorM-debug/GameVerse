@@ -35,7 +35,8 @@ namespace GameVerse.Web.Controllers
 
             IEnumerable<EventIndexViewModel> events = await _eventService.GetAllEventsAsync(
                 model.CurrentPage,
-                model.EventsPerPage
+                model.EventsPerPage,
+                model.EventSelectedSortOrder
                 );
 
             model.TotalEventsCount = totalEventsCount;
