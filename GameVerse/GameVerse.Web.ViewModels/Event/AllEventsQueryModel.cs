@@ -14,6 +14,6 @@ namespace GameVerse.Web.ViewModels.Event
 
         public EventSortOrder EventSelectedSortOrder { get; set; } = EventSortOrder.Newest;
 
-        public IEnumerable<EventIndexViewModel> Events { get; set; }
+        public IEnumerable<EventIndexViewModel> Events { get; set; } = new HashSet<EventIndexViewModel>();
     }
 }
