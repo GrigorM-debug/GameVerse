@@ -14,6 +14,7 @@ namespace GameVerse.Services.Interfaces
         /// </summary>
         /// <param name="currentPage">The current page</param>
         /// <param name="eventsPerPage">The Events per Page. For example 10</param>
+        /// <param name="sortOrder">The Events Sort Order. By default, is set to Newest</param>
         /// <returns>A collection of <see cref="EventIndexViewModel"/> representing each event.</returns>
         Task<IEnumerable<EventIndexViewModel>> GetAllEventsAsync(int currentPage, int eventsPerPage, EventSortOrder sortOrder);
 
