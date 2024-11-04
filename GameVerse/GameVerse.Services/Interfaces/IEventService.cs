@@ -1,4 +1,5 @@
 ﻿
+using GameVerse.Common.Enums;
 using GameVerse.Web.ViewModels.Event;
 
 namespace GameVerse.Services.Interfaces
@@ -14,7 +15,7 @@ namespace GameVerse.Services.Interfaces
         /// <param name="currentPage">The current page</param>
         /// <param name="eventsPerPage">The Events per Page. For example 10</param>
         /// <returns>A collection of <see cref="EventIndexViewModel"/> representing each event.</returns>
-        Task<IEnumerable<EventIndexViewModel>> GetAllEventsAsync(int currentPage, int eventsPerPage);
+        Task<IEnumerable<EventIndexViewModel>> GetAllEventsAsync(int currentPage, int eventsPerPage, EventSortOrder sortOrder);
 
         /// <summary>
         /// Retrieves the total count of the events that are not deleted.
