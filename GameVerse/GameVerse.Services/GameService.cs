@@ -151,6 +151,25 @@ namespace GameVerse.Services
             return game.Id.ToString();
         }
 
+        public async Task<GameDeleteViewModel> DeleteGameGetAsync(string gameId, string moderatorId)
+        {
+            Game? game = await _gameRepository
+                .GetWithIncludeAsync(g => g.Publisher.User)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(g => g.Id.ToString() == gameId && g.PublisherId.ToString() == moderatorId &&
+                                          g.IsDeleted == false);
+
+            GameDeleteViewModel model = new GameDeleteViewModel()
+            {
+                Id = game.Id.ToString(),
+                Title = game.Title,
+                PublisherId = game.PublisherId.ToString(),
+                PublisherName = game.Publisher.User.UserName
+            };
+
+            return model;
+        }
+
         public async Task<bool> GameExistByIdAsync(string gameId)
         {
             Game? game = await _gameRepository
