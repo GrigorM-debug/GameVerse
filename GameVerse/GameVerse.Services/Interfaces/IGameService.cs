@@ -15,7 +15,7 @@ namespace GameVerse.Services.Interfaces
     /// </summary>
     public interface IGameService
     {
-        Task<string> AddGameAsync(GameInputViewModel inputModel, DateTime createdOn, string moderatorId);
+        Task<string> AddGamePostAsync(GameInputViewModel inputModel, DateTime createdOn, string moderatorId);
 
         Task<GameDetailsViewModel> GetGameDetailsByIdAsync(string gameId);
 

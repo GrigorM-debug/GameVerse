@@ -37,7 +37,7 @@ namespace GameVerse.Services
             _restrictionRepository = restrictionRepository;
         }
 
-        public async Task<string> AddGameAsync(GameInputViewModel inputModel, DateTime createdOn, string moderatorId)
+        public async Task<string> AddGamePostAsync(GameInputViewModel inputModel, DateTime createdOn, string moderatorId)
         {
             Game game = new Game()
             {
