@@ -14,7 +14,7 @@ namespace GameVerse.Services
     /// <summary>
     /// Provides methods for managing events, including adding, editing, deleting, and retrieving event details.
     /// </summary>
-    public class EventService(IGenericRepository<Event, Guid> eventRepository) : BaseService, IEventService
+    public class EventService(IGenericRepository<Event, Guid> eventRepository, IModeratorService moderatorService) : BaseService, IEventService
     {
         /// <summary>
         /// Injection the Generic Repository using Primary Constructor
@@ -22,12 +22,14 @@ namespace GameVerse.Services
         /// <param name="eventRepository">The repository used for data access operations on <see cref="Event"/> entities.</param>
         private readonly IGenericRepository<Event, Guid> _eventRepository = eventRepository;
 
+        private readonly IModeratorService _moderatorService = moderatorService;
+
         public async Task<IEnumerable<EventIndexViewModel>> GetLatest3EventsAsync()
         {
             IEnumerable<EventIndexViewModel> eventIndexViewModels = await _eventRepository
                 .GetWithIncludeAsync(e => e.Publisher.User)
                 .AsNoTracking()
-                .Where(e => e.IsDeleted == false)
+                .Where(e => e.IsDeleted == false && e.Status == EntityStatus.Approved)
                 .OrderBy(e => e.Id)
                 .Take(3)
                 .Select(e => new EventIndexViewModel
@@ -66,10 +68,12 @@ namespace GameVerse.Services
                 Seats = inputModel.Seats,
                 TicketPrice = inputModel.TicketPrice,
                 Image = inputModel.Image,
-                PublisherId = Guid.Parse(moderatorId)
+                PublisherId = Guid.Parse(moderatorId),
+                Status = EntityStatus.Pending
             };
 
             await _eventRepository.AddAsync(newEvent);
+            await _moderatorService.InCreaseCreatedTotalEventsCount(moderatorId);
             await _eventRepository.SaveChangesAsync();
 
             return newEvent.Id.ToString();
@@ -86,7 +90,7 @@ namespace GameVerse.Services
             Event? e = await _eventRepository
                 .GetWithIncludeAsync(e => e.Publisher.User)
                 .AsNoTracking()
-                .FirstOrDefaultAsync(e => e.Id.ToString() == eventId && e.PublisherId.ToString() == moderatorId && e.IsDeleted == false);
+                .FirstOrDefaultAsync(e => e.Id.ToString() == eventId && e.PublisherId.ToString() == moderatorId && e.IsDeleted == false && e.Status == EntityStatus.Approved);
 
             EventDeleteViewModel model = new EventDeleteViewModel()
             {
@@ -107,7 +111,7 @@ namespace GameVerse.Services
         public async Task DeleteEventPostAsync(string eventId, string moderatorId)
         {
             Event? e = await _eventRepository
-                .FirstOrDefaultAsync(e => e.Id.ToString() == eventId && e.PublisherId.ToString() == moderatorId && e.IsDeleted == false);
+                .FirstOrDefaultAsync(e => e.Id.ToString() == eventId && e.PublisherId.ToString() == moderatorId && e.IsDeleted == false && e.Status == EntityStatus.Approved);
 
             e.IsDeleted = true;
 
@@ -126,7 +130,7 @@ namespace GameVerse.Services
         {
             Event? e = await _eventRepository
                 .AllAsReadOnly()
-                .FirstOrDefaultAsync(e => e.Id.ToString() == eventId && e.PublisherId.ToString() == moderatorId && e.IsDeleted == false);
+                .FirstOrDefaultAsync(e => e.Id.ToString() == eventId && e.PublisherId.ToString() == moderatorId && e.IsDeleted == false && e.Status == EntityStatus.Approved);
 
             EventInputViewModel model = new EventInputViewModel()
             {
@@ -153,7 +157,7 @@ namespace GameVerse.Services
         /// <returns>The ID of the updated event as a string.</returns>
         public async Task<string> EditEventPostAsync(EventInputViewModel inputModel, string eventId, string moderatorId, DateTime startDate, DateTime endDate)
         {
-            Event? e = await _eventRepository.FirstOrDefaultAsync(e => e.Id.ToString() == eventId && e.PublisherId.ToString() == moderatorId && e.IsDeleted == false);
+            Event? e = await _eventRepository.FirstOrDefaultAsync(e => e.Id.ToString() == eventId && e.PublisherId.ToString() == moderatorId && e.IsDeleted == false && e.Status == EntityStatus.Approved);
 
             if(e != null)
             {
@@ -181,7 +185,7 @@ namespace GameVerse.Services
         /// <returns><c>true</c> if the event exists and is not marked as deleted; otherwise, <c>false</c>.</returns>
         public async Task<bool> EventExistById(string id)
         {
-            Event? result = await _eventRepository.AllAsReadOnly().FirstOrDefaultAsync(e => e.Id.ToString() == id && e.IsDeleted == false);
+            Event? result = await _eventRepository.AllAsReadOnly().FirstOrDefaultAsync(e => e.Id.ToString() == id && e.IsDeleted == false && e.Status == EntityStatus.Approved);
 
 
             if (result == null)
@@ -198,7 +202,7 @@ namespace GameVerse.Services
         /// <returns><c>true</c> if an event with the topic exists and is not marked as deleted; otherwise, <c>false</c>.</returns>
         public async Task<bool> EventExistByTitle(string topic)
         {
-            Event? isExisting = await _eventRepository.AllAsReadOnly().FirstOrDefaultAsync(e => e.Topic == topic && e.IsDeleted == false);
+            Event? isExisting = await _eventRepository.AllAsReadOnly().FirstOrDefaultAsync(e => e.Topic == topic && e.IsDeleted == false && e.Status == EntityStatus.Approved);
 
             if (isExisting == null)
             {
@@ -224,7 +228,7 @@ namespace GameVerse.Services
             IQueryable<Event> query = _eventRepository
                 .GetWithIncludeAsync(e => e.Publisher.User)
                 .AsNoTracking()
-                .Where(e => e.IsDeleted == false);
+                .Where(e => e.IsDeleted == false && e.Status == EntityStatus.Approved);
 
             //If the sortOrder is Newest we Order the Events by Id Descending to get the newest added Events in the Database
             //If the sortOrder is Oldest we Order the Events by Id Ascending to get the oldest added Events in the Database
@@ -261,7 +265,7 @@ namespace GameVerse.Services
             Event? e = await _eventRepository
                 .GetWithIncludeAsync(e => e.Publisher.User)
                 .AsNoTracking()
-                .FirstOrDefaultAsync(e => e.Id.ToString() == id && e.IsDeleted == false);
+                .FirstOrDefaultAsync(e => e.Id.ToString() == id && e.IsDeleted == false && e.Status == EntityStatus.Approved);
 
             EventDetailsViewModel eventDetailsViewModel = new EventDetailsViewModel()
             {
@@ -289,7 +293,7 @@ namespace GameVerse.Services
         /// <returns><c>true</c> if the event is associated with the specified moderator; otherwise, <c>false</c>.</returns>
         public async Task<bool> HasPublisherWithIdAsync(string moderatorId, string eventId)
         {
-            Event? e = await _eventRepository.AllAsReadOnly().FirstOrDefaultAsync(e => e.Id.ToString() == eventId && e.PublisherId.ToString() == moderatorId);
+            Event? e = await _eventRepository.AllAsReadOnly().FirstOrDefaultAsync(e => e.Id.ToString() == eventId && e.PublisherId.ToString() == moderatorId && e.Status == EntityStatus.Approved);
 
             if (e == null)
             {
@@ -307,7 +311,7 @@ namespace GameVerse.Services
         {
             int totalEventsCount = await _eventRepository
                 .AllAsReadOnly()
-                .CountAsync(e => e.IsDeleted == false);
+                .CountAsync(e => e.IsDeleted == false && e.Status == EntityStatus.Approved);
 
             return totalEventsCount;
         }
