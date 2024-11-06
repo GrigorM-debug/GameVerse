@@ -68,7 +68,7 @@ namespace GameVerse.Services
                 Price = inputModel.Price,
                 Image = inputModel.Image,
                 QuantityInStock = inputModel.QuantityInStock,
-                Type = inputModel.SelectedType,
+                Type = inputModel.Type,
                 PublisherId = Guid.Parse(moderatorId),
             };
 
@@ -83,6 +83,70 @@ namespace GameVerse.Services
 
             await _gameRepository.AddAsync(game);
             await _gameRepository.SaveChangesAsync();
+
+            return game.Id.ToString();
+        }
+
+        public async Task<GameInputViewModel> EditGameGetAsync(string gameId, string moderatorId)
+        {
+            Game? game = await _gameRepository
+                .AllAsReadOnly()
+                .FirstOrDefaultAsync(g =>
+                    g.Id.ToString() == gameId && g.PublisherId.ToString() == moderatorId && g.IsDeleted == false);
+
+            IEnumerable<GenreSelectList> genres = await GetGenresAsync();
+            IEnumerable<PlatformSelectList> platforms = await GetPlatformsAsync();
+            IEnumerable<RestrictionSelectList> restrictions = await GetRestrictionsAsync();
+            IEnumerable<GameTypeViewModel> gameTypes = GetGameTypes();
+
+            GameInputViewModel model = new GameInputViewModel()
+            {
+                Title = game.Title,
+                Description = game.Description,
+                PublishingStudio = game.PublishingStudio,
+                YearPublished = game.YearPublished,
+                CreatedOn = game.CreatedOn.ToString(DateTimeFormat, CultureInfo.InvariantCulture),
+                Price = game.Price,
+                Image = game.Image,
+                QuantityInStock = game.QuantityInStock,
+                Type = game.Type
+            };
+
+            model.GenreSelectList = genres;
+            model.PlatformSelectList = platforms;
+            model.RestrictionSelectList = restrictions;
+            model.GameTypes = gameTypes;
+
+            return model;
+        }
+
+        public async Task<string> EditGamePostAsync(GameInputViewModel inputModel, DateTime createdOn,string gameId, string moderatorId)
+        {
+            Game? game = await _gameRepository
+                .FirstOrDefaultAsync(g =>
+                    g.Id.ToString() == gameId && g.PublisherId.ToString() == moderatorId && g.IsDeleted == false);
+
+            game.Title = inputModel.Title;
+            game.Description = inputModel.Description;
+            game.PublishingStudio = inputModel.PublishingStudio;
+            game.YearPublished = inputModel.YearPublished;
+            game.CreatedOn = createdOn;
+            game.Price = inputModel.Price;
+            game.Image = inputModel.Image;
+            game.QuantityInStock = inputModel.QuantityInStock;
+            game.Type = inputModel.Type;
+            game.PublisherId = Guid.Parse(moderatorId);
+
+            game.GamesGenres = inputModel.SelectedGenres.Select(genreId => new GameGenre(){GameId = game.Id, GenreId = genreId}).ToList();
+
+            game.GamesPlatforms = inputModel.SelectedPlatforms
+                .Select(platformId => new GamePlatform() { GameId = game.Id, PlatformId = platformId }).ToList();
+
+            game.GamesRestrictions = inputModel.SelectedRestrictions.Select(restrictionId =>
+                new GameRestriction() { GameId = game.Id, RestrictionId = restrictionId }).ToList();
+
+            await _gameRepository.SaveChangesAsync();
+
 
             return game.Id.ToString();
         }

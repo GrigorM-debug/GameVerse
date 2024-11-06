@@ -21,6 +21,9 @@ namespace GameVerse.Services.Interfaces
 
         Task<string> AddGamePostAsync(GameInputViewModel inputModel, DateTime createdOn, string moderatorId);
 
+        Task<GameInputViewModel> EditGameGetAsync(string gameId, string moderatorId);
+
+        Task<string> EditGamePostAsync(GameInputViewModel inputModel, DateTime createdOn,string gameId, string moderatorId);
         Task<GameDetailsViewModel> GetGameDetailsByIdAsync(string gameId);
 
         Task<bool> HasPublisherWithIdAsync(string moderatorId, string gameId);
