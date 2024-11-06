@@ -4,6 +4,7 @@ using GameVerse.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameVerse.Data.Migrations
 {
     [DbContext(typeof(GameVerseDbContext))]
-    partial class GameVerseDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241106165212_AddedNewPropertiesInEventsAndModeratorsTable")]
+    partial class AddedNewPropertiesInEventsAndModeratorsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -360,11 +363,11 @@ namespace GameVerse.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
-                        .HasComment("The game unique identifier.");
+                        .HasComment("The game unique indentifier.");
 
                     b.Property<Guid?>("BuyerId")
                         .HasColumnType("uniqueidentifier")
-                        .HasComment("The game buyer unique identifier");
+                        .HasComment("The game buyer unique identifer");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2")
@@ -381,11 +384,8 @@ namespace GameVerse.Data.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasComment("The image url of the game");
 
-                    b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false)
-                        .HasComment("Soft delete flag");
+                    b.Property<Guid?>("ModeratorId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18, 2)")
@@ -424,6 +424,8 @@ namespace GameVerse.Data.Migrations
 
                     b.HasIndex("BuyerId");
 
+                    b.HasIndex("ModeratorId");
+
                     b.HasIndex("PublisherId");
 
                     b.ToTable("Games", t =>
@@ -436,17 +438,11 @@ namespace GameVerse.Data.Migrations
                 {
                     b.Property<Guid>("GameId")
                         .HasColumnType("uniqueidentifier")
-                        .HasComment("The game unique identifier");
+                        .HasComment("The game unique indentifier");
 
                     b.Property<Guid>("GenreId")
                         .HasColumnType("uniqueidentifier")
-                        .HasComment("The genre unique identifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false)
-                        .HasComment("Soft Delete flag");
+                        .HasComment("The genre unique indentifier");
 
                     b.HasKey("GameId", "GenreId");
 
@@ -463,7 +459,7 @@ namespace GameVerse.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
-                        .HasComment("The genre unique identifier");
+                        .HasComment("The genre unique indetifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -481,102 +477,102 @@ namespace GameVerse.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("24ee5d63-fa9f-476f-a9c8-eb3b66faf577"),
+                            Id = new Guid("2e2d1395-abd4-48dc-8e4c-5b5aa155ed58"),
                             Name = "Adventure"
                         },
                         new
                         {
-                            Id = new Guid("2f01e4d4-8da9-48bd-8c0a-cc8fc2219d99"),
+                            Id = new Guid("e0f2a6c2-5dba-488d-a297-915c17ff69ec"),
                             Name = "Action"
                         },
                         new
                         {
-                            Id = new Guid("7e44d2ea-c861-41d6-b61b-7cce1f17f2b8"),
+                            Id = new Guid("cd345083-d77b-4ced-923f-f5adce8f541c"),
                             Name = "Sports"
                         },
                         new
                         {
-                            Id = new Guid("d76c248e-b442-4040-9b31-f874466442aa"),
+                            Id = new Guid("55475650-bf67-444e-92e4-0d2abdbfefee"),
                             Name = "Simulation"
                         },
                         new
                         {
-                            Id = new Guid("f51d1840-29ec-43e6-88f2-25bc8d96b19c"),
+                            Id = new Guid("8850f64d-c056-4278-afe1-8be07d923b10"),
                             Name = "Platformer"
                         },
                         new
                         {
-                            Id = new Guid("895c7c28-bf25-4bfa-bfe9-31a1b356583d"),
+                            Id = new Guid("49e9844d-3c92-4c95-a80f-658858326ef4"),
                             Name = "RPG"
                         },
                         new
                         {
-                            Id = new Guid("b827f242-1236-4b1e-927f-ac916fded411"),
+                            Id = new Guid("fb96842c-b839-4f67-9acd-0eb147419cd7"),
                             Name = "First-Person Shooter"
                         },
                         new
                         {
-                            Id = new Guid("2252693e-a6ee-432c-9232-43670c6fca56"),
+                            Id = new Guid("fc195f71-de1a-4b99-a2e0-e84fc632a204"),
                             Name = "Action-adventure"
                         },
                         new
                         {
-                            Id = new Guid("c06dc363-dec9-40e6-a4fd-72d45ad90a76"),
+                            Id = new Guid("28f02ce8-f8e3-4ecc-bfcf-328382c1821b"),
                             Name = "Fighting"
                         },
                         new
                         {
-                            Id = new Guid("c528e4d5-51cc-4765-b31e-8b6fb8a5f667"),
+                            Id = new Guid("d9cb0a52-5665-4b26-9b85-1d99449aaf6b"),
                             Name = "Real-time strategy"
                         },
                         new
                         {
-                            Id = new Guid("a2ee69c9-1d55-4c21-aaa6-6fec4def5bdf"),
+                            Id = new Guid("ff6b2af0-c523-45c2-ac3c-8eb904aa6f2d"),
                             Name = "Racing"
                         },
                         new
                         {
-                            Id = new Guid("9a6c0a96-c314-427c-b20c-03db748fe0c1"),
+                            Id = new Guid("38bad3ec-7561-4671-82bd-cf97e4135ffc"),
                             Name = "Shooter"
                         },
                         new
                         {
-                            Id = new Guid("d18cdeab-5ca6-4f03-9cf4-9cdfba32cd75"),
+                            Id = new Guid("2dba9b4e-bc76-4e7f-a290-6df33811af9f"),
                             Name = "Puzzle"
                         },
                         new
                         {
-                            Id = new Guid("0a057827-ba24-4e06-8544-bbeb5379173c"),
+                            Id = new Guid("b317a3a4-2a11-41eb-8a94-2d9d9898c242"),
                             Name = "Casual"
                         },
                         new
                         {
-                            Id = new Guid("5ceed236-1080-4e7d-81f8-f76bb7e40a62"),
+                            Id = new Guid("3e341ebc-d6f0-4684-9347-04885f64424e"),
                             Name = "Strategy game"
                         },
                         new
                         {
-                            Id = new Guid("9184c106-b0af-49a2-930b-3e23fd3345c2"),
+                            Id = new Guid("0c76ce4c-1a92-462b-85f6-84e27056dfb8"),
                             Name = "Stealth"
                         },
                         new
                         {
-                            Id = new Guid("76788d49-1500-4072-8152-dd2ad33d503e"),
+                            Id = new Guid("07c7c969-0cb1-4401-8266-61b59e823fed"),
                             Name = "Party"
                         },
                         new
                         {
-                            Id = new Guid("76eae1ea-182b-4256-aac1-2457accebeef"),
+                            Id = new Guid("738ee4fc-e51d-4149-b273-208e62819d1a"),
                             Name = "Action RPG"
                         },
                         new
                         {
-                            Id = new Guid("471c81fd-eb69-4dbb-9c41-a1b507ca839d"),
+                            Id = new Guid("8176981d-0fa2-461e-bff0-c0b4ae53b1cf"),
                             Name = "Survival"
                         },
                         new
                         {
-                            Id = new Guid("979569e6-9bd0-4f3d-8647-ba93c5cf8b85"),
+                            Id = new Guid("74868dfb-1b41-4c14-b991-3c78d6ef8d58"),
                             Name = "Battle Royale"
                         });
                 });
@@ -585,17 +581,11 @@ namespace GameVerse.Data.Migrations
                 {
                     b.Property<Guid>("GameId")
                         .HasColumnType("uniqueidentifier")
-                        .HasComment("The game unique identifier");
+                        .HasComment("The game unique indentifier");
 
                     b.Property<Guid>("PlatformId")
                         .HasColumnType("uniqueidentifier")
                         .HasComment("The platform unique identifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false)
-                        .HasComment("Soft delete flag");
 
                     b.HasKey("GameId", "PlatformId");
 
@@ -630,102 +620,102 @@ namespace GameVerse.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("2a316e9a-1fa1-4c68-89d2-445a71eb614e"),
+                            Id = new Guid("6ed9e834-8aa5-4e6e-bcab-c7e87cbf7388"),
                             Name = "PC"
                         },
                         new
                         {
-                            Id = new Guid("02e63749-b83c-4bff-b97a-0bdad5664f69"),
+                            Id = new Guid("8055274a-a55f-4aa4-ac71-03a22ea2426d"),
                             Name = "Mac"
                         },
                         new
                         {
-                            Id = new Guid("95c89626-93f7-4df1-b9c4-68b72b5b0121"),
+                            Id = new Guid("3f4f9e1b-6895-4f10-b4e3-45bda184f564"),
                             Name = "PlayStation 1"
                         },
                         new
                         {
-                            Id = new Guid("8366dbaa-7070-47d9-91eb-bb95e87e06b9"),
+                            Id = new Guid("05b5fc78-6a5d-40c2-860a-eaac51d7cc0f"),
                             Name = "PlayStation 2"
                         },
                         new
                         {
-                            Id = new Guid("b72e203f-ad1e-47a8-ba23-060216650f24"),
+                            Id = new Guid("18377657-a5f6-4e07-9f19-a56cffa36378"),
                             Name = "PlayStation 3"
                         },
                         new
                         {
-                            Id = new Guid("f6996c27-14c3-439d-a21c-c15c1439d1dd"),
+                            Id = new Guid("e04de74c-14ec-4f29-a6f4-9e010c405ec1"),
                             Name = "PlayStation 4"
                         },
                         new
                         {
-                            Id = new Guid("ef95d1d5-d375-48b5-ac73-1a8e35c6664d"),
+                            Id = new Guid("f925679c-bce2-4ae3-936f-3612803bb54c"),
                             Name = "PlayStation 5"
                         },
                         new
                         {
-                            Id = new Guid("a9194715-a5a9-46f0-b0aa-523c9c4a7801"),
+                            Id = new Guid("87045936-9026-4768-bdf2-611932e08dca"),
                             Name = "Xbox One"
                         },
                         new
                         {
-                            Id = new Guid("bdbe7bda-07ef-4349-b7c8-b8f6277380dd"),
+                            Id = new Guid("a1235a8c-8a3c-43cc-8fd4-114021c9bec5"),
                             Name = "Linux"
                         },
                         new
                         {
-                            Id = new Guid("7be082f5-52a3-4f79-a028-686fe5ad113f"),
+                            Id = new Guid("da3a5de1-4fa9-4e76-8d10-d66d13c44d46"),
                             Name = "Nintendo Switch"
                         },
                         new
                         {
-                            Id = new Guid("964fcf67-baef-49c1-960c-b3d879b1563a"),
+                            Id = new Guid("6ef6aa92-d2eb-4681-abd8-d86a57cd12af"),
                             Name = "Nintendo Wii"
                         },
                         new
                         {
-                            Id = new Guid("be850f54-3205-4256-9714-7ef8f576861f"),
+                            Id = new Guid("df581f77-1066-4316-9786-5f17581e1f1e"),
                             Name = "Xbox Series X"
                         },
                         new
                         {
-                            Id = new Guid("622d59bc-2dad-46e7-8adc-32b1c5e7e432"),
+                            Id = new Guid("727b83d2-b094-4b99-886e-9892baa44be7"),
                             Name = "Xbox 360"
                         },
                         new
                         {
-                            Id = new Guid("07892f65-2ed2-4475-a9f6-f2c5928e1bd5"),
+                            Id = new Guid("1f206c07-f0a3-44a5-905e-8cef3bf0a110"),
                             Name = "Nintendo DS"
                         },
                         new
                         {
-                            Id = new Guid("7c645af2-3f81-403e-abd0-e00f25386657"),
+                            Id = new Guid("99e26931-da16-42a8-b2d0-f517e1aede37"),
                             Name = "Super Nintendo"
                         },
                         new
                         {
-                            Id = new Guid("84c9a520-c11d-4aa7-a56e-303e637caa01"),
+                            Id = new Guid("ae90a995-a0bf-40c3-9fbe-46e2a7a6ea46"),
                             Name = "PlayStation Portable"
                         },
                         new
                         {
-                            Id = new Guid("e345c0b8-22c9-4615-b3d1-822eead2bda8"),
+                            Id = new Guid("c57c0ab7-bd22-4b89-a80e-0b458a777df9"),
                             Name = "PlayStation Vita"
                         },
                         new
                         {
-                            Id = new Guid("7f03bd4d-875a-4080-887d-db8a3656fc34"),
+                            Id = new Guid("15741f36-c8b1-406e-84c1-5d213a08a262"),
                             Name = "Game Boy"
                         },
                         new
                         {
-                            Id = new Guid("17d5ca00-c933-4d77-be1a-3afffae9beaf"),
+                            Id = new Guid("62f4f067-d795-4620-8212-ef6e254d7383"),
                             Name = "Game Boy Advanced"
                         },
                         new
                         {
-                            Id = new Guid("01ce70a6-c638-4774-b028-c158250c625d"),
+                            Id = new Guid("bfecbdec-44e6-4dec-9d52-0420bac3ffff"),
                             Name = "Sega Mega Drive"
                         });
                 });
@@ -738,13 +728,7 @@ namespace GameVerse.Data.Migrations
 
                     b.Property<Guid>("RestrictionId")
                         .HasColumnType("uniqueidentifier")
-                        .HasComment("The restriction unique identifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false)
-                        .HasComment("Soft delete flag");
+                        .HasComment("The restriction unique indentifier");
 
                     b.HasKey("GameId", "RestrictionId");
 
@@ -761,7 +745,7 @@ namespace GameVerse.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
-                        .HasComment("The restriction unique identifier");
+                        .HasComment("The restriction unique indentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -779,67 +763,67 @@ namespace GameVerse.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("b478806c-f622-4625-bb68-d581b696b8ed"),
+                            Id = new Guid("53cb12f3-62d8-4f6b-b7e7-1df03c4101af"),
                             Name = "PEGI 3"
                         },
                         new
                         {
-                            Id = new Guid("19386f7a-327e-4912-beb9-04154e7f3f0f"),
+                            Id = new Guid("cd6f7d34-06f2-4217-b1af-7ccea8cd67fc"),
                             Name = "PEGI 7"
                         },
                         new
                         {
-                            Id = new Guid("b21b8316-cfd1-4f9c-9d93-0f8e7c2a8531"),
+                            Id = new Guid("9768487f-3c12-4f11-80be-0a81c7b1ecf3"),
                             Name = "PEGI 12"
                         },
                         new
                         {
-                            Id = new Guid("9480a7e7-8af7-48b2-b524-5fbdaec7811c"),
+                            Id = new Guid("97ccc56a-81fa-4e1f-bc65-bd9b2acb5b5a"),
                             Name = "PEGI 16 "
                         },
                         new
                         {
-                            Id = new Guid("0ad83d99-fa0f-460a-8ff5-cc8d9bfcc2fc"),
+                            Id = new Guid("5f1ac6e7-d4e7-48d1-9142-3c9f44fa62ba"),
                             Name = "PEGI 18"
                         },
                         new
                         {
-                            Id = new Guid("a23f81aa-f413-4e20-b9a6-8a61fcba5e56"),
+                            Id = new Guid("0c7928aa-cfe1-4eee-a930-f1d3863e39af"),
                             Name = "Bad Language"
                         },
                         new
                         {
-                            Id = new Guid("d9393601-0201-480c-a3d3-2d5ac62ef5ad"),
+                            Id = new Guid("538cb007-afc8-49a3-9e2e-2091ea62761b"),
                             Name = "Discrimination"
                         },
                         new
                         {
-                            Id = new Guid("631d6565-169b-43bf-a145-1af20d6c17d9"),
+                            Id = new Guid("bec77ec2-200c-4d47-ba20-099819efef09"),
                             Name = "Drugs"
                         },
                         new
                         {
-                            Id = new Guid("2d921dea-e168-4901-8388-8db70ea4b148"),
+                            Id = new Guid("66f4c8a0-546b-46d2-89f4-1643b4ceead6"),
                             Name = "Fear"
                         },
                         new
                         {
-                            Id = new Guid("3e234311-8b19-448b-9bf0-185471428b31"),
+                            Id = new Guid("ff355cf8-ba95-4062-8f07-b4e41cf38614"),
                             Name = "Gambling"
                         },
                         new
                         {
-                            Id = new Guid("65d298fb-e4c5-44e0-9082-77b05c723762"),
+                            Id = new Guid("ad9fecc6-3241-4207-96a2-4d95ef0f73dd"),
                             Name = "Sex"
                         },
                         new
                         {
-                            Id = new Guid("b43b3fc9-afc1-4c24-aaea-238904852576"),
+                            Id = new Guid("9099a73a-294f-4e77-869c-3321392fbbcd"),
                             Name = "Violence"
                         },
                         new
                         {
-                            Id = new Guid("53f94405-7ecc-401b-bca0-f3c18d79dcd8"),
+                            Id = new Guid("97ecfd7d-0ab2-49c7-b352-5278bddd14f6"),
                             Name = "In-Game Purchases"
                         });
                 });
@@ -864,12 +848,6 @@ namespace GameVerse.Data.Migrations
                     b.Property<Guid>("GameId")
                         .HasColumnType("uniqueidentifier")
                         .HasComment("Тhe id of the game the review is about");
-
-                    b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false)
-                        .HasComment("Soft delete flag");
 
                     b.Property<int>("Rating")
                         .HasColumnType("int")
@@ -1185,8 +1163,12 @@ namespace GameVerse.Data.Migrations
                         .WithMany()
                         .HasForeignKey("BuyerId");
 
-                    b.HasOne("GameVerse.Data.Models.ApplicationUsers.Moderator", "Publisher")
+                    b.HasOne("GameVerse.Data.Models.ApplicationUsers.Moderator", null)
                         .WithMany("OwnedGames")
+                        .HasForeignKey("ModeratorId");
+
+                    b.HasOne("GameVerse.Data.Models.ApplicationUsers.ApplicationUser", "Publisher")
+                        .WithMany()
                         .HasForeignKey("PublisherId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

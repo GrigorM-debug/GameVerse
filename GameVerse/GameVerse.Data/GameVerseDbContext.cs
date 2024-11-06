@@ -70,9 +70,38 @@ namespace GameVerse.Data
                 .Property(g => g.Type)
                 .HasConversion<string>(); // Convert Enum to string in the Database. 
 
+            builder.Entity<Event>()
+                .Property(e => e.Status)
+                .HasConversion<string>(); // Convert Enum to string in the Database
+
             builder
                 .Entity<Event>()
                 .Property(e => e.IsDeleted)
+                .HasDefaultValue(false);
+
+            builder
+                .Entity<Game>()
+                .Property(g => g.IsDeleted)
+                .HasDefaultValue(false);
+
+            builder
+                .Entity<GameGenre>()
+                .Property(g => g.IsDeleted)
+                .HasDefaultValue(false);
+
+            builder
+                .Entity<GamePlatform>()
+                .Property(g => g.IsDeleted)
+                .HasDefaultValue(false);
+
+            builder
+                .Entity<GameRestriction>()
+                .Property(g => g.IsDeleted)
+                .HasDefaultValue(false);
+
+            builder
+                .Entity<GameReview>()
+                .Property(g => g.IsDeleted)
                 .HasDefaultValue(false);
 
             base.OnModelCreating(builder);
