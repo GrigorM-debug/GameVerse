@@ -4,6 +4,7 @@ using GameVerse.Data.Models.Games.Platform;
 using GameVerse.Data.Models.Games.Restrictions;
 using GameVerse.Web.ViewModels.Game;
 using GameVerse.Web.ViewModels.Game.Details;
+using GameVerse.Web.ViewModels.Game.Details.Genres;
 
 namespace GameVerse.Services.Interfaces
 {
@@ -28,7 +29,7 @@ namespace GameVerse.Services.Interfaces
 
         IEnumerable<GameTypeViewModel> GetGameTypes();
 
-        Task<IEnumerable<Genre>> GetGenresAsync();
+        Task<IEnumerable<GenreIndexViewModel>> GetGenresAsync();
 
         Task<IEnumerable<Platform>> GetPlatformAsync();
 

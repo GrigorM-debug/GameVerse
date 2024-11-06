@@ -213,9 +213,14 @@ namespace GameVerse.Services
             return gameTypes;
         }
 
-        public async Task<IEnumerable<Genre>> GetGenresAsync()
+        public async Task<IEnumerable<GenreIndexViewModel>> GetGenresAsync()
         {
-            IEnumerable<Genre> genres = await _genreRepository.AllAsReadOnly().ToListAsync();
+            IEnumerable<GenreIndexViewModel> genres = await _genreRepository
+                .AllAsReadOnly()
+                .Select(g => new GenreIndexViewModel()
+                {
+                    Name = g.Name
+                }).ToListAsync();
 
             return genres;
         }
