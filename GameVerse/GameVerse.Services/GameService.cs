@@ -238,9 +238,15 @@ namespace GameVerse.Services
             return platforms;
         }
 
-        public async Task<IEnumerable<Restriction>> GetRestrictionsAsync()
+        public async Task<IEnumerable<GameRestrictionsIndexViewModel>> GetRestrictionsAsync()
         {
-            IEnumerable<Restriction> restrictions = await _restrictionRepository.AllAsReadOnly().ToListAsync();
+            IEnumerable<GameRestrictionsIndexViewModel> restrictions = await _restrictionRepository
+                .AllAsReadOnly()
+                .Select(r => new GameRestrictionsIndexViewModel()
+                {
+                    Name = r.Name
+                })
+                .ToListAsync();
 
             return restrictions;
         }
