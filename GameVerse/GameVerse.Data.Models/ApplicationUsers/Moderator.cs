@@ -30,7 +30,7 @@ namespace GameVerse.Data.Models.ApplicationUsers
         /// This is a required field that links the moderator to a specific user.
         /// </remarks>
         [Required]
-        [Comment("User indetifier")]
+        [Comment("User identifier")]
         public Guid UserId { get; set; }
 
         /// <summary>
@@ -42,6 +42,20 @@ namespace GameVerse.Data.Models.ApplicationUsers
         [Required]
         [ForeignKey(nameof(UserId))]
         public ApplicationUser User { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets total events count, created by the Moderator
+        /// </summary>
+        [Required]
+        [Comment("Total Events created by the Moderator")]
+        public int TotalEventsCreated { get; set; }
+
+        /// <summary>
+        /// Gets or sets total games count, created by the Moderator
+        /// </summary>
+        [Required]
+        [Comment("Total Games Created by the Moderator")]
+        public int TotalGamesCreated { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of events owned by the moderator.
