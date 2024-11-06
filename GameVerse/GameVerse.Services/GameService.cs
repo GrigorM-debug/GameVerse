@@ -225,9 +225,15 @@ namespace GameVerse.Services
             return genres;
         }
 
-        public async Task<IEnumerable<Platform>> GetPlatformAsync()
+        public async Task<IEnumerable<GamePlatformsIndexViewModel>> GetPlatformAsync()
         {
-            IEnumerable<Platform> platforms = await _platformRepository.AllAsReadOnly().ToListAsync();
+            IEnumerable<GamePlatformsIndexViewModel> platforms = await _platformRepository
+                .AllAsReadOnly()
+                .Select(p => new GamePlatformsIndexViewModel()
+                {
+                    Name = p.Name
+                })
+                .ToListAsync();
 
             return platforms;
         }
