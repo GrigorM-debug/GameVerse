@@ -18,7 +18,7 @@ namespace GameVerse.Data.Models.Games.Restrictions
         /// </remarks>
         [Key]
         [Required]
-        [Comment("The restriction unique indentifier")]
+        [Comment("The restriction unique identifier")]
         public Guid Id { get; set; } = Guid.NewGuid();
 
         /// <summary>

@@ -32,7 +32,7 @@ namespace GameVerse.Data.Models.Games.Restrictions
         /// Gets or sets the unique identifier for the restriction in this relationship.
         /// </summary>
         [Required]
-        [Comment("The restriction unique indentifier")]
+        [Comment("The restriction unique identifier")]
         public Guid RestrictionId { get; set; }
 
         /// <summary>
@@ -41,5 +41,9 @@ namespace GameVerse.Data.Models.Games.Restrictions
         [Required]
         [ForeignKey(nameof(RestrictionId))]
         public Restriction Restriction { get; set; } = null!;
+
+        [Required]
+        [Comment("Soft delete flag")]
+        public bool IsDeleted { get; set; }
     }
 }

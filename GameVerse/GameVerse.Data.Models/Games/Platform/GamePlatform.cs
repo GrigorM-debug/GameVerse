@@ -18,7 +18,7 @@ namespace GameVerse.Data.Models.Games.Platform
         /// Gets or sets the unique identifier for the game in this relationship.
         /// </summary>
         [Required]
-        [Comment("The game unique indentifier")]
+        [Comment("The game unique identifier")]
         public Guid GameId { get; set; }
 
         /// <summary>
@@ -41,5 +41,9 @@ namespace GameVerse.Data.Models.Games.Platform
         [Required]
         [ForeignKey(nameof(PlatformId))]
         public Platform Platform { get; set; } = null!;
+
+        [Required]
+        [Comment("Soft delete flag")]
+        public bool IsDeleted { get; set; }
     }
 }
