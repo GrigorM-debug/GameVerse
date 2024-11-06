@@ -1,4 +1,5 @@
-﻿using GameVerse.Web.ViewModels.Game.Details.Platforms;
+﻿using GameVerse.Web.ViewModels.Game.Details.Genres;
+using GameVerse.Web.ViewModels.Game.Details.Platforms;
 using GameVerse.Web.ViewModels.Game.Details.Restrictions;
 using GameVerse.Web.ViewModels.Game.Details.Reviews;
 
@@ -27,6 +28,8 @@ namespace GameVerse.Web.ViewModels.Game.Details
         public string Type { get; set; } = null!;
 
         public string Publisher { get; set; } = null!;
+
+        public IEnumerable<GenreIndexViewModel> Genres { get; set; } = new HashSet<GenreIndexViewModel>();
 
         public IEnumerable<GamePlatformsIndexViewModel> Platforms = new HashSet<GamePlatformsIndexViewModel>();
 
