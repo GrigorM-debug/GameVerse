@@ -27,6 +27,8 @@ namespace GameVerse.Services.Interfaces
 
         Task<GameDeleteViewModel> DeleteGameGetAsync(string gameId, string moderatorId);
 
+        Task<string> DeleteGamePostAsync(string gameId,string moderatorId);
+
         Task<GameDetailsViewModel> GetGameDetailsByIdAsync(string gameId);
 
         Task<bool> HasPublisherWithIdAsync(string moderatorId, string gameId);

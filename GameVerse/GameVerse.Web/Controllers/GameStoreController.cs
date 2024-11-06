@@ -1,27 +1,67 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using GameVerse.Web.Filters;
+using GameVerse.Web.ViewModels.Game;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GameVerse.Web.Controllers
 {
+    [Authorize]
     public class GameStoreController : Controller
     {
+        [AllowAnonymous]
+        [HttpGet]
         public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult Details()
+        [AllowAnonymous]
+        [HttpGet]
+        public IActionResult Details(string id)
         {
             return View();
         }
 
-        public IActionResult AddReview()
+        [MustBeModerator]
+        [HttpGet]
+        public Task<IActionResult> Add()
         {
             return View();
         }
 
-        public IActionResult Add()
+        [MustBeModerator]
+        [HttpPost]
+        public Task<IActionResult> Add(GameInputViewModel inputModel)
         {
-            return View();
+            
+        }
+
+        [MustBeModerator]
+        [HttpGet]
+        public Task<IActionResult> Edit(string id)
+        {
+
+        }
+
+        [MustBeModerator]
+        [HttpPost]
+        public Task<IActionResult> Edit(GameInputViewModel inputModel, string id)
+        {
+
+        }
+
+        [MustBeModerator]
+        [HttpGet]
+        public Task<IActionResult> Delete(string id)
+        {
+
+        }
+
+        [MustBeModerator]
+        [HttpPost]
+        public Task<IActionResult> DeleteConfirm(string id)
+        {
+
         }
     }
 }
