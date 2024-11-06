@@ -37,6 +37,25 @@ namespace GameVerse.Services
             _restrictionRepository = restrictionRepository;
         }
 
+        
+
+        public async Task<GameInputViewModel> AddGameGetAsync()
+        {
+            IEnumerable<GenreSelectList> genres = await GetGenresAsync();
+            IEnumerable<PlatformSelectList> platforms = await GetPlatformsAsync();
+            IEnumerable<RestrictionSelectList> restrictions = await GetRestrictionsAsync();
+            IEnumerable<GameTypeViewModel> gameTypes = GetGameTypes();
+
+            GameInputViewModel model = new GameInputViewModel();
+
+            model.GameTypes = gameTypes;
+            model.GenreSelectList = genres;
+            model.PlatformSelectList = platforms;
+            model.RestrictionSelectList = restrictions;
+
+            return model;
+        }
+
         public async Task<string> AddGamePostAsync(GameInputViewModel inputModel, DateTime createdOn, string moderatorId)
         {
             Game game = new Game()
@@ -66,6 +85,20 @@ namespace GameVerse.Services
             await _gameRepository.SaveChangesAsync();
 
             return game.Id.ToString();
+        }
+
+        public async Task<bool> GameExistByIdAsync(string gameId)
+        {
+            Game? game = await _gameRepository
+                .AllAsReadOnly()
+                .FirstOrDefaultAsync(g => g.Id.ToString() == gameId && g.IsDeleted == false);
+
+            if (game == null)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         public async Task<GameDetailsViewModel> GetGameDetailsByIdAsync(string gameId)
@@ -226,7 +259,7 @@ namespace GameVerse.Services
             return genres;
         }
 
-        public async Task<IEnumerable<PlatformSelectList>> GetPlatformAsync()
+        public async Task<IEnumerable<PlatformSelectList>> GetPlatformsAsync()
         {
             IEnumerable<PlatformSelectList> platforms = await _platformRepository
                 .AllAsReadOnly()

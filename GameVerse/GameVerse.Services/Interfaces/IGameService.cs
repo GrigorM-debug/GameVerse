@@ -15,6 +15,10 @@ namespace GameVerse.Services.Interfaces
     /// </summary>
     public interface IGameService
     {
+        Task<bool> GameExistByIdAsync(string gameId);
+
+        Task<GameInputViewModel> AddGameGetAsync();
+
         Task<string> AddGamePostAsync(GameInputViewModel inputModel, DateTime createdOn, string moderatorId);
 
         Task<GameDetailsViewModel> GetGameDetailsByIdAsync(string gameId);
@@ -33,7 +37,7 @@ namespace GameVerse.Services.Interfaces
 
         Task<IEnumerable<GenreSelectList>> GetGenresAsync();
 
-        Task<IEnumerable<PlatformSelectList>> GetPlatformAsync();
+        Task<IEnumerable<PlatformSelectList>> GetPlatformsAsync();
 
         Task<IEnumerable<RestrictionSelectList>> GetRestrictionsAsync();
     }
