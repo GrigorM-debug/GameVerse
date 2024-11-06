@@ -31,7 +31,7 @@ namespace GameVerse.Web.ViewModels.Game
 
         public int QuantityInStock { get; set; }
 
-        public GameType SelectedType { get; set; }
+        public GameType Type { get; set; }
 
         public IEnumerable<Guid> SelectedGenres { get; set; } = new HashSet<Guid>();
 
