@@ -25,7 +25,7 @@ namespace GameVerse.Data.Models.Games
         /// </summary>
         [Key]
         [Required]
-        [Comment("The game unique indentifier.")]
+        [Comment("The game unique identifier.")]
         public Guid Id { get; set; } = Guid.NewGuid();
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace GameVerse.Data.Models.Games
         /// Gets or sets the date when the game was added to the system.
         /// </summary>
         ///<remarks>
-        /// This is a required field, with format constraintdefined by <see cref="DateTimeFormat"/> 
+        /// This is a required field, with format constraint defined by <see cref="DateTimeFormat"/> 
         /// </remarks>
         [Required]
         [Comment("The Date when the Game is added")]
@@ -113,6 +113,10 @@ namespace GameVerse.Data.Models.Games
         [Comment("The type of the game.")]
         public GameType Type { get; set; }
 
+        [Required]
+        [Comment("Soft delete flag")]
+        public bool IsDeleted { get; set; }
+
         /// <summary>
         /// Gets or sets the unique identifier for the publisher of the game.
         /// </summary>
@@ -125,12 +129,12 @@ namespace GameVerse.Data.Models.Games
         /// </summary>
         [Required]
         [ForeignKey(nameof(PublisherId))]
-        public ApplicationUser Publisher { get; set; } = null!;
+        public Moderator Publisher { get; set; } = null!;
 
         /// <summary>
         /// Gets or sets the unique identifier for the buyer of the game.
         /// </summary>
-        [Comment("The game buyer unique identifer")]
+        [Comment("The game buyer unique identifier")]
         public Guid? BuyerId { get; set; }
 
         /// <summary>
