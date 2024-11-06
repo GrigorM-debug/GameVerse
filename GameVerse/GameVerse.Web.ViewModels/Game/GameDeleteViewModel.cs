@@ -8,7 +8,7 @@ namespace GameVerse.Web.ViewModels.Game
 {
     public class GameDeleteViewModel
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         public string Title { get; set; } = null!;
 
