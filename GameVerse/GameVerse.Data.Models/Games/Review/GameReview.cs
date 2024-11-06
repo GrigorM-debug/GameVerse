@@ -88,5 +88,9 @@ namespace GameVerse.Data.Models.Games.Review
         [Required]
         [ForeignKey(nameof(ReviewerId))]
         public ApplicationUser Reviewer { get; set; } = null!;
+
+        [Required] 
+        [Comment("Soft delete flag")]
+        public bool IsDeleted { get; set; }
     }
 }
