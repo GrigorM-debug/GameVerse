@@ -18,7 +18,7 @@ namespace GameVerse.Data.Models.Games.Genres
         /// </remarks>
         [Key]
         [Required]
-        [Comment("The genre unique indetifier")]
+        [Comment("The genre unique identifier")]
         public Guid Id { get; set; } = Guid.NewGuid();
 
         /// <summary>

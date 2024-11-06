@@ -18,7 +18,7 @@ namespace GameVerse.Data.Models.Games.Genres
         /// Gets or sets the unique identifier for the game in this relationship.
         /// </summary>
         [Required]
-        [Comment("The game unique indentifier")]
+        [Comment("The game unique identifier")]
         public Guid GameId { get; set; }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace GameVerse.Data.Models.Games.Genres
         /// Gets or sets the unique identifier for the genre in this relationship.
         /// </summary>
         [Required]
-        [Comment("The genre unique indentifier")]
+        [Comment("The genre unique identifier")]
         public Guid GenreId { get; set; }
 
         /// <summary>
@@ -41,5 +41,9 @@ namespace GameVerse.Data.Models.Games.Genres
         [Required]
         [ForeignKey(nameof(GenreId))]
         public Genre Genre { get; set; } = null!;
+
+        [Required]
+        [Comment("Soft Delete flag")]
+        public bool IsDeleted { get; set; }
     }
 }
