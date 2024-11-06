@@ -170,6 +170,42 @@ namespace GameVerse.Services
             return model;
         }
 
+        public async Task<string> DeleteGamePostAsync(string gameId, string moderatorId)
+        {
+            Game? game = await _gameRepository
+                .GetWithIncludeAsync(g => 
+                    g.GamesGenres.Where(g => g.IsDeleted == false),
+                    g => g.GamesPlatforms.Where(p => p.IsDeleted == false),
+                    g => g.GamesRestrictions.Where(r => r.IsDeleted == false)
+                    )
+                .FirstOrDefaultAsync(g =>
+                    g.Id.ToString() == gameId && g.PublisherId.ToString() == moderatorId && g.IsDeleted == false);
+
+            if (game != null)
+            {
+                game.IsDeleted = true;
+
+                foreach (var genre in game.GamesGenres)
+                {
+                    genre.IsDeleted = true;
+                }
+
+                foreach (var platform in game.GamesPlatforms)
+                {
+                    platform.IsDeleted = true;
+                }
+
+                foreach (var restriction in game.GamesRestrictions)
+                {
+                    restriction.IsDeleted = true;
+                }
+
+                await _gameRepository.SaveChangesAsync();
+            }
+
+            return game.Id.ToString();
+        }
+
         public async Task<bool> GameExistByIdAsync(string gameId)
         {
             Game? game = await _gameRepository
