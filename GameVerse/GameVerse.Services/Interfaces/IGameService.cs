@@ -31,10 +31,10 @@ namespace GameVerse.Services.Interfaces
 
         IEnumerable<GameTypeViewModel> GetGameTypes();
 
-        Task<IEnumerable<GenreIndexViewModel>> GetGenresAsync();
+        Task<IEnumerable<GenreSelectList>> GetGenresAsync();
 
-        Task<IEnumerable<GamePlatformsIndexViewModel>> GetPlatformAsync();
+        Task<IEnumerable<PlatformSelectList>> GetPlatformAsync();
 
-        Task<IEnumerable<GameRestrictionsIndexViewModel>> GetRestrictionsAsync();
+        Task<IEnumerable<RestrictionSelectList>> GetRestrictionsAsync();
     }
 }

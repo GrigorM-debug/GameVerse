@@ -213,24 +213,26 @@ namespace GameVerse.Services
             return gameTypes;
         }
 
-        public async Task<IEnumerable<GenreIndexViewModel>> GetGenresAsync()
+        public async Task<IEnumerable<GenreSelectList>> GetGenresAsync()
         {
-            IEnumerable<GenreIndexViewModel> genres = await _genreRepository
+            IEnumerable<GenreSelectList> genres = await _genreRepository
                 .AllAsReadOnly()
-                .Select(g => new GenreIndexViewModel()
+                .Select(g => new GenreSelectList()
                 {
+                    Id = g.Id,
                     Name = g.Name
                 }).ToListAsync();
 
             return genres;
         }
 
-        public async Task<IEnumerable<GamePlatformsIndexViewModel>> GetPlatformAsync()
+        public async Task<IEnumerable<PlatformSelectList>> GetPlatformAsync()
         {
-            IEnumerable<GamePlatformsIndexViewModel> platforms = await _platformRepository
+            IEnumerable<PlatformSelectList> platforms = await _platformRepository
                 .AllAsReadOnly()
-                .Select(p => new GamePlatformsIndexViewModel()
+                .Select(p => new PlatformSelectList()
                 {
+                    Id = p.Id,
                     Name = p.Name
                 })
                 .ToListAsync();
@@ -238,12 +240,13 @@ namespace GameVerse.Services
             return platforms;
         }
 
-        public async Task<IEnumerable<GameRestrictionsIndexViewModel>> GetRestrictionsAsync()
+        public async Task<IEnumerable<RestrictionSelectList>> GetRestrictionsAsync()
         {
-            IEnumerable<GameRestrictionsIndexViewModel> restrictions = await _restrictionRepository
+            IEnumerable<RestrictionSelectList> restrictions = await _restrictionRepository
                 .AllAsReadOnly()
-                .Select(r => new GameRestrictionsIndexViewModel()
+                .Select(r => new RestrictionSelectList()
                 {
+                    Id = r.Id,
                     Name = r.Name
                 })
                 .ToListAsync();
