@@ -1,5 +1,8 @@
-﻿using GameVerse.Web.Filters;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using GameVerse.Services.Interfaces;
+using GameVerse.Web.Filters;
 using GameVerse.Web.ViewModels.Game;
+using GameVerse.Web.ViewModels.Game.Details;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,6 +11,19 @@ namespace GameVerse.Web.Controllers
     [Authorize]
     public class GameStoreController : Controller
     {
+        private readonly ILogger<GameStoreController> _logger;
+        private readonly INotyfService _notyf;
+        private readonly IModeratorService _moderatorService;
+        private readonly IGameService _gameService;
+
+        public GameStoreController(ILogger<GameStoreController> logger, INotyfService notyf, IModeratorService moderatorService, IGameService gameService)
+        {
+            _logger = logger;
+            _notyf = notyf;
+            _moderatorService = moderatorService;
+            _gameService = gameService;
+        }
+
         [AllowAnonymous]
         [HttpGet]
         public IActionResult Index()
@@ -17,9 +33,18 @@ namespace GameVerse.Web.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public IActionResult Details(string id)
+        public async Task<IActionResult> Details(string id)
         {
-            return View();
+            bool isGameExisting = await _gameService.GameExistByIdAsync(id);
+
+            if (isGameExisting == false)
+            {
+                return NotFound();
+            }
+
+            GameDetailsViewModel model = await _gameService.GetGameDetailsByIdAsync(id);
+
+            return View(model);
         }
 
         [MustBeModerator]

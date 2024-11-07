@@ -24,13 +24,17 @@ namespace GameVerse.Services
 
         private readonly IModeratorService _moderatorService = moderatorService;
 
+        /// <summary>
+        /// Gets last 3 Events added in the Db, Ordered by Id Descending
+        /// </summary>
+        /// <returns>Collection of events</returns>
         public async Task<IEnumerable<EventIndexViewModel>> GetLatest3EventsAsync()
         {
             IEnumerable<EventIndexViewModel> eventIndexViewModels = await _eventRepository
                 .GetWithIncludeAsync(e => e.Publisher.User)
                 .AsNoTracking()
                 .Where(e => e.IsDeleted == false && e.Status == EntityStatus.Approved)
-                .OrderBy(e => e.Id)
+                .OrderByDescending(e => e.Id)
                 .Take(3)
                 .Select(e => new EventIndexViewModel
                 {
@@ -57,6 +61,7 @@ namespace GameVerse.Services
         /// <returns>The ID of the newly created event as a string.</returns>
         public async Task<string> AddEventAsync(EventInputViewModel inputModel, string moderatorId, DateTime startDate, DateTime endDate)
         {
+            //When you make the areas set the satus to Pending
             Event newEvent = new Event()
             {
                 Topic = inputModel.Topic,
@@ -69,7 +74,7 @@ namespace GameVerse.Services
                 TicketPrice = inputModel.TicketPrice,
                 Image = inputModel.Image,
                 PublisherId = Guid.Parse(moderatorId),
-                Status = EntityStatus.Pending
+                Status = EntityStatus.Approved
             };
 
             await _eventRepository.AddAsync(newEvent);
