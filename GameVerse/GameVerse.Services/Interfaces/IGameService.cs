@@ -1,12 +1,7 @@
 ﻿
-using GameVerse.Data.Models.Games.Genres;
-using GameVerse.Data.Models.Games.Platform;
-using GameVerse.Data.Models.Games.Restrictions;
 using GameVerse.Web.ViewModels.Game;
+using GameVerse.Web.ViewModels.Game.Add;
 using GameVerse.Web.ViewModels.Game.Details;
-using GameVerse.Web.ViewModels.Game.Details.Genres;
-using GameVerse.Web.ViewModels.Game.Details.Platforms;
-using GameVerse.Web.ViewModels.Game.Details.Restrictions;
 
 namespace GameVerse.Services.Interfaces
 {

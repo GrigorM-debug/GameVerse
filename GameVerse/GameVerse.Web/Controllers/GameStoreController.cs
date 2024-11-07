@@ -67,9 +67,33 @@ namespace GameVerse.Web.Controllers
 
         [MustBeModerator]
         [HttpGet]
-        public Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
+            bool isGameExisting = await _gameService.GameExistByIdAsync(id);
 
+            if (isGameExisting == false)
+            {
+                return NotFound();
+            }
+
+            string? userId = User.GetId();
+            string? moderatorId = await _moderatorService.GetModeratorIdByUserIdAsync(userId);
+
+            if (moderatorId == null)
+            {
+                return Unauthorized();
+            }
+
+            bool isModeratorCreatorOfTheGame = await _gameService.HasPublisherWithIdAsync(moderatorId, id);
+
+            if (isModeratorCreatorOfTheGame == false)
+            {
+                return Unauthorized();
+            }
+
+            GameInputViewModel model = await _gameService.EditGameGetAsync(id, moderatorId);
+
+            return View(model);
         }
 
         [MustBeModerator]
