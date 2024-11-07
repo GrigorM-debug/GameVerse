@@ -57,6 +57,11 @@
             public const int PublishingStudioMinLength = 2;
             public const int PublishingStudioMaxLength = 30;
 
+            //Quantity in Stock
+            public const int QuantityInStockMinValue = 1;
+
+            public const int QuantityInStockMaxValue = 100;
+
             //Game Type
             public const string InvalidGameTypeErrorMessage = "Invalid game type.";
         }
