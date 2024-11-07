@@ -129,12 +129,52 @@ namespace GameVerse.Web.Controllers
             return View(model);
         }
 
-        //[MustBeModerator]
-        //[HttpPost]
-        //public Task<IActionResult> Edit(GameInputViewModel inputModel, string id)
-        //{
+        [MustBeModerator]
+        [HttpPost]
+        public async Task<IActionResult> Edit(GameInputViewModel inputModel, string id)
+        {
+            bool isGameExisting = await _gameService.GameExistByIdAsync(id);
 
-        //}
+            if (isGameExisting == false)
+            {
+                return NotFound();
+            }
+
+            if (!DateTime.TryParseExact(inputModel.CreatedOn, DateTimeFormat, CultureInfo.InvariantCulture,
+                    DateTimeStyles.None, out DateTime createdOn))
+            {
+                ModelState.AddModelError(nameof(inputModel.CreatedOn), InvalidDateTimeErrorMessage);
+                return View(inputModel);
+            }
+
+            if (ModelState.IsValid == false)
+            {
+                return View(inputModel);
+            }
+
+            string? userId = User.GetId();
+            string? moderatorId = await _moderatorService.GetModeratorIdByUserIdAsync(userId);
+
+            if (moderatorId == null)
+            {
+                return Unauthorized();
+            }
+
+            bool isModeratorCreatorOfTheGame = await _gameService.HasPublisherWithIdAsync(moderatorId, id);
+
+            if (isModeratorCreatorOfTheGame == false)
+            {
+                return Unauthorized();
+            }
+
+            string? gameId = await _gameService.EditGamePostAsync(inputModel, createdOn,id, moderatorId);
+
+            _notyf.Success("Game was edited successfully!");
+
+            Log.Information("Moderator with ID {ModeratorId} perform an {Action} in controller {Controller}", moderatorId, nameof(Edit), nameof(GameStoreController));
+
+            return RedirectToAction(nameof(Details), new { id = gameId });
+        }
 
         [MustBeModerator]
         [HttpGet]
