@@ -113,9 +113,34 @@ namespace GameVerse.Web.Controllers
 
         [MustBeModerator]
         [HttpPost]
-        public Task<IActionResult> DeleteConfirm(string id)
+        public async Task<IActionResult> DeleteConfirm(string id)
         {
+            bool isGameExiting = await _gameService.GameExistByIdAsync(id);
 
+            if (isGameExiting == false)
+            {
+                return NotFound();
+            }
+
+            string? userId = User.GetId();
+
+            string? moderatorId = await _moderatorService.GetModeratorIdByUserIdAsync(userId);
+
+            if (moderatorId == null)
+            {
+                return Unauthorized();
+            }
+
+            bool isCreatorOfTheGame = await _gameService.HasPublisherWithIdAsync(moderatorId, id);
+
+            if (isCreatorOfTheGame == false)
+            {
+                return Unauthorized();
+            }
+
+            string? gameId = await _gameService.DeleteGamePostAsync(id, moderatorId);
+
+            return RedirectToAction(nameof(Details), new { id = gameId });
         }
     }
 }
