@@ -58,12 +58,12 @@ namespace GameVerse.Web.Controllers
             return View(model);
         }
 
-        [MustBeModerator]
-        [HttpPost]
-        public Task<IActionResult> Add(GameInputViewModel inputModel)
-        {
-            
-        }
+        //[MustBeModerator]
+        //[HttpPost]
+        //public Task<IActionResult> Add(GameInputViewModel inputModel)
+        //{
+        //    return View();
+        //}
 
         [MustBeModerator]
         [HttpGet]
@@ -96,12 +96,12 @@ namespace GameVerse.Web.Controllers
             return View(model);
         }
 
-        [MustBeModerator]
-        [HttpPost]
-        public Task<IActionResult> Edit(GameInputViewModel inputModel, string id)
-        {
+        //[MustBeModerator]
+        //[HttpPost]
+        //public Task<IActionResult> Edit(GameInputViewModel inputModel, string id)
+        //{
 
-        }
+        //}
 
         [MustBeModerator]
         [HttpGet]
