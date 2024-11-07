@@ -1,9 +1,4 @@
-﻿using GameVerse.Web.ViewModels.Game.Details.Genres;
-using GameVerse.Web.ViewModels.Game.Details.Platforms;
-using GameVerse.Web.ViewModels.Game.Details.Restrictions;
-using GameVerse.Web.ViewModels.Game.Details.Reviews;
-
-namespace GameVerse.Web.ViewModels.Game.Details
+﻿namespace GameVerse.Web.ViewModels.Game.Details
 {
     public class GameDetailsViewModel
     {

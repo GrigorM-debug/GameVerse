@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameVerse.Web.ViewModels.Game.Details.Restrictions
+namespace GameVerse.Web.ViewModels.Game.Add
 {
     public class RestrictionSelectList
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameVerse.Web.ViewModels.Game
+namespace GameVerse.Web.ViewModels.Game.Add
 {
     public class GameTypeViewModel
     {

@@ -5,13 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GameVerse.Common.Enums;
-using GameVerse.Web.ViewModels.Game.Details.Genres;
-using GameVerse.Web.ViewModels.Game.Details.Platforms;
-using GameVerse.Web.ViewModels.Game.Details.Restrictions;
 using static GameVerse.Common.ApplicationConstants;
 using static GameVerse.Common.ApplicationConstants.GameConstants;
 
-namespace GameVerse.Web.ViewModels.Game
+namespace GameVerse.Web.ViewModels.Game.Add
 {
     public class GameInputViewModel
     {

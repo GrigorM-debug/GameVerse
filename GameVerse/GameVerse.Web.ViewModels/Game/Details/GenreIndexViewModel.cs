@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameVerse.Web.ViewModels.Game.Details.Platforms
+namespace GameVerse.Web.ViewModels.Game.Details
 {
-    public class PlatformSelectList
+    public class GenreIndexViewModel
     {
-        public Guid Id { get; set; }
 
         public string Name { get; set; } = null!;
     }

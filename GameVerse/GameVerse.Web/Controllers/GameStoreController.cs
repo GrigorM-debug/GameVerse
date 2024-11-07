@@ -1,7 +1,9 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using GameVerse.Services.Interfaces;
+using GameVerse.Web.Extensions;
 using GameVerse.Web.Filters;
 using GameVerse.Web.ViewModels.Game;
+using GameVerse.Web.ViewModels.Game.Add;
 using GameVerse.Web.ViewModels.Game.Details;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -49,9 +51,11 @@ namespace GameVerse.Web.Controllers
 
         [MustBeModerator]
         [HttpGet]
-        public Task<IActionResult> Add()
+        public async Task<IActionResult> Add()
         {
-            return View();
+            GameInputViewModel model = await _gameService.AddGameGetAsync();
+
+            return View(model);
         }
 
         [MustBeModerator]
@@ -77,9 +81,34 @@ namespace GameVerse.Web.Controllers
 
         [MustBeModerator]
         [HttpGet]
-        public Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
+            bool isGameExiting = await _gameService.GameExistByIdAsync(id);
 
+            if (isGameExiting == false)
+            {
+                return NotFound();
+            }
+
+            string? userId = User.GetId();
+
+            string? moderatorId = await _moderatorService.GetModeratorIdByUserIdAsync(userId);
+
+            if (moderatorId == null)
+            {
+                return Unauthorized();
+            }
+
+            bool isCreatorOfTheGame = await _gameService.HasPublisherWithIdAsync(moderatorId, id);
+
+            if (isCreatorOfTheGame == false)
+            {
+                return Unauthorized();
+            }
+
+            GameDeleteViewModel model = await _gameService.DeleteGameGetAsync(id, moderatorId);
+
+            return View(model);
         }
 
         [MustBeModerator]
