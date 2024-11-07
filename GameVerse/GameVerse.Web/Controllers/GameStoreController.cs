@@ -237,6 +237,10 @@ namespace GameVerse.Web.Controllers
 
             string? gameId = await _gameService.DeleteGamePostAsync(id, moderatorId);
 
+            _notyf.Success("Game was deleted successfully!");
+
+            Log.Information("Moderator with ID {ModeratorId} perform an {Action} in controller {Controller}", moderatorId, nameof(DeleteConfirm), nameof(GameStoreController));
+
             return RedirectToAction(nameof(Details), new { id = gameId });
         }
     }
