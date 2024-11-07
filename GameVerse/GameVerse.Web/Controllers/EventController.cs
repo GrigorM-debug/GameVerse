@@ -74,6 +74,15 @@ namespace GameVerse.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(EventInputViewModel inputModel)
         {
+            bool isEventExisting = await _eventService.EventExistByTitle(inputModel.Topic);
+
+            if (isEventExisting)
+            {
+                _notyf.Warning("Event with this Topic already exist !");
+
+                return View(inputModel);
+            }
+
             if (DateTime.TryParseExact(inputModel.StartDate, EventDateTimeFormat, CultureInfo.InvariantCulture,
                     DateTimeStyles.None, out DateTime startDate) == false)
             {
@@ -102,15 +111,6 @@ namespace GameVerse.Web.Controllers
 
             if (!ModelState.IsValid)
             {
-                return View(inputModel);
-            }
-
-            bool isEventExisting = await _eventService.EventExistByTitle(inputModel.Topic);
-
-            if(isEventExisting)
-            {
-                _notyf.Warning("Event with this Topic already exist !");
-
                 return View(inputModel);
             }
 

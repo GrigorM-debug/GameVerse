@@ -1,4 +1,5 @@
-﻿using AspNetCoreHero.ToastNotification.Abstractions;
+﻿using System.Globalization;
+using AspNetCoreHero.ToastNotification.Abstractions;
 using GameVerse.Services.Interfaces;
 using GameVerse.Web.Extensions;
 using GameVerse.Web.Filters;
@@ -7,6 +8,9 @@ using GameVerse.Web.ViewModels.Game.Add;
 using GameVerse.Web.ViewModels.Game.Details;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Serilog;
+using static GameVerse.Common.ApplicationConstants;
 
 namespace GameVerse.Web.Controllers
 {
@@ -58,12 +62,41 @@ namespace GameVerse.Web.Controllers
             return View(model);
         }
 
-        //[MustBeModerator]
-        //[HttpPost]
-        //public Task<IActionResult> Add(GameInputViewModel inputModel)
-        //{
-        //    return View();
-        //}
+        [MustBeModerator]
+        [HttpPost]
+        public async Task<IActionResult> Add(GameInputViewModel inputModel)
+        {
+            bool isGameWithTitleAlreadyExist = await _gameService.GameExistByTitleAsync(inputModel.Title);
+
+            if (isGameWithTitleAlreadyExist)
+            {
+                _notyf.Warning("Game with this Title already exist!");
+                return View(inputModel);
+            }
+
+            if (!DateTime.TryParseExact(inputModel.CreatedOn, DateTimeFormat, CultureInfo.InvariantCulture,
+                    DateTimeStyles.None, out DateTime createdOn))
+            {
+                ModelState.AddModelError(nameof(inputModel.CreatedOn), InvalidDateTimeErrorMessage);
+                return View(inputModel);
+            }
+
+            if (ModelState.IsValid == false)
+            {
+                return View(inputModel);
+            }
+
+            string? userId = User.GetId();
+            string? moderatorId = await _moderatorService.GetModeratorIdByUserIdAsync(userId);
+
+            string? gameId = await _gameService.AddGamePostAsync(inputModel, createdOn, moderatorId);
+
+            _notyf.Success("Game was added successfully!");
+
+            Log.Information("Moderator with ID {ModeratorId} perform an {Action} in controller {Controller}", moderatorId, nameof(Add), nameof(GameStoreController));
+
+            return RedirectToAction(nameof(Details), new { id = gameId });
+        }
 
         [MustBeModerator]
         [HttpGet]
