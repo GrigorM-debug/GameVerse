@@ -66,6 +66,7 @@ namespace GameVerse.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(GameInputViewModel inputModel)
         {
+            //Try to add logic for checking if selected type, genres, platforms and restrictions exist
             bool isGameWithTitleAlreadyExist = await _gameService.GameExistByTitleAsync(inputModel.Title);
 
             if (isGameWithTitleAlreadyExist)
@@ -133,6 +134,7 @@ namespace GameVerse.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(GameInputViewModel inputModel, string id)
         {
+            //Try to add logic for checking if selected type, genres, platforms and restrictions exist
             bool isGameExisting = await _gameService.GameExistByIdAsync(id);
 
             if (isGameExisting == false)
