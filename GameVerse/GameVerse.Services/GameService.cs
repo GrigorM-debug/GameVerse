@@ -194,9 +194,7 @@ namespace GameVerse.Services
 
             foreach (var selectedRestrictionId in inputModel.SelectedRestrictions)
             {
-                if (!game.GamesRestrictions.Where(r => r.IsDeleted == false).Select(r => r.RestrictionId).Contains(selectedRestrictionId)
-                    && !game.GamesRestrictions.Where(r => r.IsDeleted == false).Select(r => r.GameId).Contains(game.Id)
-                    )
+                if (!game.GamesRestrictions.Where(r => r.IsDeleted == false).Any(r => r.RestrictionId == selectedRestrictionId))
                 {
                     game.GamesRestrictions.Add(new GameRestriction()
                     {
