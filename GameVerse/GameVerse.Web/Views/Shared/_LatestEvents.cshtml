@@ -8,12 +8,11 @@
 <div class="mb-4"></div>
 
 <div class="container">
-
+    @if (Model.Any() == false)
+    {
+        <h2 class="mt-2">No Events Added</h2>
+    }
     <div class="row mt-n5">
-        @if (Model.Any() == false)
-        {
-            <h2>No Events Added</h2>
-        }
         @foreach (var e in Model)
         {
             <div class="col-md-6 col-lg-4 mt-5 wow fadeInUp" data-wow-delay=".2s" style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">
@@ -55,7 +54,8 @@
     .blog-grid img {
         width: 100%;
         border-top-left-radius: 0.25rem;
-        border-top-right-radius: 0.25rem
+        border-top-right-radius: 0.25rem;
+        height: 50%;
     }
 
     .blog-grid-text {
