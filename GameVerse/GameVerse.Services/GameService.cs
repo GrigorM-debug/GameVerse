@@ -181,8 +181,7 @@ namespace GameVerse.Services
 
             foreach (var selectedPlatformId in inputModel.SelectedPlatforms)
             {
-                if (!game.GamesPlatforms.Where(p => p.IsDeleted == false).Select(p => p.PlatformId).Contains(selectedPlatformId) 
-                    && !game.GamesPlatforms.Where(p => p.IsDeleted == false).Select(p => p.GameId).Contains(game.Id))
+                if (!game.GamesPlatforms.Where(p => p.IsDeleted == false).Any(p => p.PlatformId == selectedPlatformId))
                 {
                     game.GamesPlatforms.Add(new GamePlatform()
                     {
