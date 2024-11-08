@@ -6,22 +6,26 @@ using System.Diagnostics;
 using GameVerse.Services.Interfaces;
 using GameVerse.Web.ViewModels;
 using GameVerse.Web.ViewModels.Event;
+using GameVerse.Web.ViewModels.Game;
 using Serilog;
 
 namespace GameVerse.Web.Controllers
 {
-    public class HomeController(ILogger<HomeController> logger, IEventService eventService) : Controller
+    public class HomeController(ILogger<HomeController> logger, IEventService eventService, IGameService gameService) : Controller
     {
         private readonly ILogger<HomeController> _logger = logger;
         private readonly IEventService _eventService = eventService;
+        private readonly IGameService _gameService = gameService;
 
         public async Task<IActionResult> Index()
         {
             IEnumerable<EventIndexViewModel> latest3Events = await _eventService.GetLatest3EventsAsync();
+            IEnumerable<GameIndexViewModel> last3Games = await _gameService.GetLast3GamesAsync();
 
             HomeViewModel model = new HomeViewModel()
             {
-                Last3Events = latest3Events
+                Last3Events = latest3Events,
+                Last3Games = last3Games
             };
 
             return View(model);
