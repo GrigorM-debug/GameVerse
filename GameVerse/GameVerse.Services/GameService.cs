@@ -1,6 +1,7 @@
 ﻿
 
 using System.Globalization;
+using System.Linq;
 using GameVerse.Common.Enums;
 using GameVerse.Data;
 using GameVerse.Data.Models.Games;
@@ -26,19 +27,14 @@ namespace GameVerse.Services
             _genreRepository;
         private readonly IGenericRepository<Platform, Guid> _platformRepository;
         private readonly IGenericRepository<Restriction, Guid> _restrictionRepository;
-        private readonly IGenericRepository<GameGenre, object> _gameGenreRepository;
-        private readonly IGenericRepository<GamePlatform, object> _gamePlatformRepository;
-        private readonly IGenericRepository<GameRestriction, object> _gameRestrictionRepository;
+      
         private readonly GameVerseDbContext _context;
-        public GameService(IGenericRepository<Game, Guid> gameRepository, IGenericRepository<Genre, Guid> genreRepository, IGenericRepository<Platform, Guid> platformRepository, IGenericRepository<Restriction, Guid> restrictionRepository, IGenericRepository<GameGenre, object> gameGenreRepository, IGenericRepository<GamePlatform, object> gamePlatformRepository, IGenericRepository<GameRestriction, object> gameRestrictionRepository, GameVerseDbContext context)
+        public GameService(IGenericRepository<Game, Guid> gameRepository, IGenericRepository<Genre, Guid> genreRepository, IGenericRepository<Platform, Guid> platformRepository, IGenericRepository<Restriction, Guid> restrictionRepository, GameVerseDbContext context)
         {
             _gameRepository = gameRepository;
             _genreRepository = genreRepository;
             _platformRepository = platformRepository;
             _restrictionRepository = restrictionRepository;
-            _gameGenreRepository = gameGenreRepository;
-            _gamePlatformRepository = gamePlatformRepository;
-            _gameRestrictionRepository = gameRestrictionRepository;
             _context = context;
         }
 
@@ -116,7 +112,8 @@ namespace GameVerse.Services
         public async Task<GameInputViewModel> EditGameGetAsync(string gameId, string moderatorId)
         {
             Game? game = await _gameRepository
-                .AllAsReadOnly()
+                .GetWithIncludeAsync(g => g.GamesGenres, g=> g.GamesPlatforms, g => g.GamesRestrictions)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(g =>
                     g.Id.ToString() == gameId && g.PublisherId.ToString() == moderatorId && g.IsDeleted == false);
 
@@ -143,12 +140,17 @@ namespace GameVerse.Services
             model.RestrictionSelectList = restrictions;
             model.GameTypes = gameTypes;
 
+            model.SelectedGenres = game.GamesGenres.Select(g => g.GenreId);
+            model.SelectedPlatforms = game.GamesPlatforms.Select(p => p.PlatformId);
+            model.SelectedRestrictions = game.GamesRestrictions.Select(r => r.RestrictionId);
+
             return model;
         }
 
         public async Task<string> EditGamePostAsync(GameInputViewModel inputModel, DateTime createdOn,string gameId, string moderatorId)
         {
             Game? game = await _gameRepository
+                .GetWithIncludeAsync(g=> g.GamesGenres, g => g.GamesPlatforms, g => g.GamesRestrictions)
                 .FirstOrDefaultAsync(g =>
                     g.Id.ToString() == gameId && g.PublisherId.ToString() == moderatorId && g.IsDeleted == false);
 
@@ -163,13 +165,49 @@ namespace GameVerse.Services
             game.Type = inputModel.Type;
             game.PublisherId = Guid.Parse(moderatorId);
 
-            game.GamesGenres = inputModel.SelectedGenres.Select(genreId => new GameGenre(){GameId = game.Id, GenreId = genreId}).ToList();
+            foreach (var selectedGenreId in inputModel.SelectedGenres)
+            {
+                if (!game.GamesGenres.Where(g => g.IsDeleted == false).Any(g => g.GenreId == selectedGenreId))
+                {
+                    game.GamesGenres.Add(new GameGenre()
+                    {
+                        GenreId = selectedGenreId,
+                        Game = game,
+                        IsDeleted = false
+                    });
 
-            game.GamesPlatforms = inputModel.SelectedPlatforms
-                .Select(platformId => new GamePlatform() { GameId = game.Id, PlatformId = platformId }).ToList();
+                }
+            }
 
-            game.GamesRestrictions = inputModel.SelectedRestrictions.Select(restrictionId =>
-                new GameRestriction() { GameId = game.Id, RestrictionId = restrictionId }).ToList();
+            foreach (var selectedPlatformId in inputModel.SelectedPlatforms)
+            {
+                if (!game.GamesPlatforms.Where(p => p.IsDeleted == false).Select(p => p.PlatformId).Contains(selectedPlatformId) 
+                    && !game.GamesPlatforms.Where(p => p.IsDeleted == false).Select(p => p.GameId).Contains(game.Id))
+                {
+                    game.GamesPlatforms.Add(new GamePlatform()
+                    {
+                        PlatformId = selectedPlatformId,
+                        Game = game,
+                        IsDeleted = false
+                    });
+                }
+            }
+
+            foreach (var selectedRestrictionId in inputModel.SelectedRestrictions)
+            {
+                if (!game.GamesRestrictions.Where(r => r.IsDeleted == false).Select(r => r.RestrictionId).Contains(selectedRestrictionId)
+                    && !game.GamesRestrictions.Where(r => r.IsDeleted == false).Select(r => r.GameId).Contains(game.Id)
+                    )
+                {
+                    game.GamesRestrictions.Add(new GameRestriction()
+                    {
+                        RestrictionId = selectedRestrictionId,
+                        Game = game,
+                        IsDeleted = false
+                    });
+                }
+            }
+
 
             await _gameRepository.SaveChangesAsync();
 
@@ -265,6 +303,7 @@ namespace GameVerse.Services
                 .Include(g => g.GamesPlatforms).ThenInclude(x => x.Platform)
                 .Include(g => g.GamesRestrictions).ThenInclude(r => r.Restriction)
                 .Include(g => g.Reviews).ThenInclude(r => r.Reviewer)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(g => g.Id.ToString() == gameId && g.IsDeleted == false);
 
             GameDetailsViewModel gameDetailsViewModel = new GameDetailsViewModel()
