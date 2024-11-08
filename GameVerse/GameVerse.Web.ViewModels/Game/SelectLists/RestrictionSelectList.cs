@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameVerse.Web.ViewModels.Game.Add
+namespace GameVerse.Web.ViewModels.Game.SelectLists
 {
-    public class PlatformSelectList
+    public class RestrictionSelectList
     {
         public Guid Id { get; set; }
 
