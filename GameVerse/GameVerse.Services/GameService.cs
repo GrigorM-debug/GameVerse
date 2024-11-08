@@ -77,50 +77,37 @@ namespace GameVerse.Services
                 PublisherId = Guid.Parse(moderatorId),
             };
 
-            foreach (var gameGenre in inputModel.SelectedGenres)
+            foreach (var genreId in inputModel.SelectedGenres)
             {
-                GameGenre genre = new GameGenre()
+                game.GamesGenres.Add(new GameGenre()
                 {
-                    GenreId = gameGenre,
+                    GenreId = genreId,
                     Game = game,
                     IsDeleted = false
-                };
-
-                game.GamesGenres.Add(genre);
-                await _gameGenreRepository.AddAsync(genre);
-                await _gameGenreRepository.SaveChangesAsync();
-
+                });
             }
 
-            foreach (var gamePlatform in inputModel.SelectedPlatforms)
+            foreach (var platformId in inputModel.SelectedPlatforms)
             {
-                GamePlatform platform = new GamePlatform()
+                game.GamesPlatforms.Add(new GamePlatform()
                 {
-                    PlatformId = gamePlatform,
+                    PlatformId = platformId,
                     Game = game,
                     IsDeleted = false
-                };
-
-                game.GamesPlatforms.Add(platform);
-                await _gamePlatformRepository.AddAsync(platform);
-                await _gamePlatformRepository.SaveChangesAsync();
+                });
             }
 
-            foreach (var gameRestriction in inputModel.SelectedRestrictions)
+            foreach (var restrictionId in inputModel.SelectedRestrictions)
             {
-                GameRestriction restriction = new GameRestriction()
+                game.GamesRestrictions.Add(new GameRestriction()
                 {
-                    RestrictionId = gameRestriction,
+                    RestrictionId = restrictionId,
                     Game = game,
                     IsDeleted = false
-                };
-
-                game.GamesRestrictions.Add(restriction);
-                await _gameRestrictionRepository.AddAsync(restriction);
-                await _gameRestrictionRepository.SaveChangesAsync();
+                });
             }
 
-            //await _gameRepository.AddAsync(game);
+            await _gameRepository.AddAsync(game);
             await _gameRepository.SaveChangesAsync();
 
             return game.Id.ToString();
