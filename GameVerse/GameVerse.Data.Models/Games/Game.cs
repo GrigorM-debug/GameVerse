@@ -146,31 +146,31 @@ namespace GameVerse.Data.Models.Games
         /// <summary>
         /// Gets or sets the collection of platforms the game is available on.
         /// </summary>
-        public ICollection<GamePlatform> GamesPlatforms = new HashSet<GamePlatform>();
+        public ICollection<GamePlatform> GamesPlatforms { get; set; } = new HashSet<GamePlatform>();
 
         /// <summary>
         /// Gets or sets the collection of genres associated with the game.
         /// </summary>
-        public ICollection<GameGenre> GamesGenres = new HashSet<GameGenre>();
+        public ICollection<GameGenre> GamesGenres { get; set; } = new HashSet<GameGenre>();
 
         /// <summary>
         /// Gets or sets the collection of restrictions applied to the game.
         /// </summary>
-        public ICollection<GameRestriction> GamesRestrictions = new HashSet<GameRestriction>();
+        public ICollection<GameRestriction> GamesRestrictions { get; set; } = new HashSet<GameRestriction>();
 
         /// <summary>
         /// Gets or sets the collection of reviews for the game.
         /// </summary>
-        public ICollection<GameReview> Reviews = new HashSet<GameReview>();
+        public ICollection<GameReview> Reviews { get; set; } = new HashSet<GameReview>();
 
         /// <summary>
         /// Gets or sets the collection of wishlist items where the game is added by users.
         /// </summary>
-        public ICollection<GameUserWishlist> WishlistItems = new HashSet<GameUserWishlist>();
+        public ICollection<GameUserWishlist> WishlistItems { get; set; } = new HashSet<GameUserWishlist>();
 
         /// <summary>
         /// Gets or sets the collection of cart items where the game is added by users.
         /// </summary>
-        public ICollection<GameCart> GamesCarts = new HashSet<GameCart>();
+        public ICollection<GameCart> GamesCarts { get; set; } = new HashSet<GameCart>();
     }
 }

@@ -9,42 +9,52 @@
     <div class="row">
         <div class="col-md-5">
             <div class="project-info-box mt-0">
-                <h5>PROJECT DETAILS</h5>
-                <p class="mb-0">Vivamus pellentesque, felis in aliquam ullamcorper, lorem tortor porttitor erat, hendrerit porta nunc tellus eu lectus. Ut vel imperdiet est. Pellentesque condimentum, dui et blandit laoreet, quam nisi tincidunt tortor.</p>
+                <h2>@Model.Title</h2>
+                <p class="mb-0">@Model.Description</p>
             </div>
 
             <div class="project-info-box">
-                <p><b>Client:</b> CUPCAKE CO</p>
-                <p><b>Date:</b> 14.02.2020</p>
-                <p><b>Designer:</b> James Doe</p>
-                <p><b>Tools:</b> Illustrator</p>
-                <p class="mb-0"><b>Budget:</b> $500</p>
+                <p><b>Publishing Studio:</b> @Model.PublishingStudio</p>
+                <p><b>Year Published:</b> @Model.YearPublished</p>
+                <p><b>Publisher:</b> @Model.Publisher</p>
+                <p><b>Created On:</b> @Model.CreatedOn</p>
+                <p><b>Type:</b> @Model.Type</p>
+                <p><b>Quantity In Stock:</b> @Model.QuantityInStock</p>
+                <p class="mb-0"><b>Price:</b> @Model.Price</p>
             </div>
 
             <div class="project-info-box mt-0 mb-0">
                 <button type="button" class="btn btn-light btn-lg m-2 w-auto" asp-area="" asp-controller="GameStore" asp-action="Index">Back</button>
                 
-                 @* For logged user *@
-                <button type="button" class="btn btn-success btn-lg w-50" asp-area="" asp-controller="" asp-action="">Buy</button>
+                @* For logged user *@
+                @if (User?.Identity?.IsAuthenticated == true && !User.IsInRole("Moderator") && !User.IsInRole("Admin"))
+                {
+                    <button type="button" class="btn btn-success btn-lg w-50" asp-area="" asp-controller="" asp-action="">Buy</button>
+                }
 
-                @*For Admin who is creator of the Game*@
-                @* <button type="button" class="btn btn-primary btn-lg w-25" asp-area="" asp-controller="" asp-action="">Edit</button>
-                <button type="button" class="btn btn-danger btn-lg w-25" asp-area="" asp-controller="" asp-action="">Delete</button> *@
+                @*For Admin or Moderator who is creator of the Event*@
+                @if ((User.IsInRole("Moderator") && User?.Identity?.Name == Model.Publisher) || User.IsInRole("Admin"))
+                {
+                    <a type="button" class="btn btn-warning btn-lg w-25" asp-area="" asp-controller="GameStore" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+                    <a type="button" class="btn btn-danger btn-lg w-25" asp-area="" asp-controller="GameStore" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+                }
             </div>
         </div>
 
         <div class="col-md-7">
-            <img src="https://www.bootdey.com/image/400x300/FFB6C1/000000" alt="project-image" class="rounded game-details-img">
+            <img src="@Model.Image" alt="game-image" class="rounded game-details-img">
             <div class="project-info-box">
-                <p><b>Categories:</b> Design, Illustration</p>
-                <p><b>Skills:</b> Illustrator</p>
+                <p><b>Genres:</b> @String.Join(", ", Model.Genres)</p>
+                <p><b>Platforms:</b> @String.Join(", ", Model.Platforms)</p>
+                <p><b>Restrictions:</b> @String.Join(", ", Model.Restrictions)</p>
             </div>
+            <a href="https://www.systemrequirementslab.com/cyri" type="button" class="btn btn-primary">Can You Run It</a>
         </div>
     </div>
 </div>
 
 @* Game reviews section. Think about making it in partial view *@
-<div class="d-flex justify-content-between">
+@* <div class="d-flex justify-content-between">
     <h2 class="text-start mt-5 mb-3">Game Reviews</h2>
     <a type="button" class="btn btn-primary btn-sm fw-bold mt-5" asp-area="" asp-controller="" asp-action="">Add Review</a>
 </div>
@@ -57,7 +67,7 @@
         <button type="button" data-bs-target="#userReviewsCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
     </div> *@
 
-    <div class="carousel-inner">
+   @* <div class="carousel-inner">
         <div class="carousel-item active">
             <div class="row text-center justify-content-center">
                 <div class="col-md-4 mb-5 mb-md-0">
@@ -121,7 +131,7 @@
         <span class='visually-hidden'>Next</span>
     </button>
 
-</div>
+</div> *@
 
 
 <style>

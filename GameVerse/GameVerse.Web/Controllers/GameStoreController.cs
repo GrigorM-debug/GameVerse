@@ -165,6 +165,11 @@ namespace GameVerse.Web.Controllers
             string? userId = User.GetId();
             string? moderatorId = await _moderatorService.GetModeratorIdByUserIdAsync(userId);
 
+            if (moderatorId == null)
+            {
+                return Unauthorized();
+            }
+
             string? gameId = await _gameService.AddGamePostAsync(inputModel, createdOn, moderatorId);
 
             await _moderatorService.IncreaseCreatedTotalGamesCount(moderatorId);
@@ -211,6 +216,69 @@ namespace GameVerse.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(GameInputViewModel inputModel, string id)
         {
+            var genres = await _gameService.GetGenresAsync();
+            var platforms = await _gameService.GetPlatformsAsync();
+            var restrictions = await _gameService.GetRestrictionsAsync();
+            var types = _gameService.GetGameTypes();
+
+
+            var genresIds = genres.Select(g => g.Id).ToHashSet();
+
+            foreach (var selectedGenre in inputModel.SelectedGenres)
+            {
+                if (!genresIds.Contains(selectedGenre))
+                {
+                    inputModel.GenreSelectList = genres;
+                    inputModel.PlatformSelectList = platforms;
+                    inputModel.RestrictionSelectList = restrictions;
+                    inputModel.GameTypes = types;
+                    _notyf.Error("Selected genre/s doesn't exist");
+                    return View(inputModel);
+                }
+            }
+
+            var platformsIds = platforms.Select(p => p.Id).ToHashSet();
+
+            foreach (var selectedPlatform in inputModel.SelectedPlatforms)
+            {
+                if (!platformsIds.Contains(selectedPlatform))
+                {
+                    inputModel.GenreSelectList = genres;
+                    inputModel.PlatformSelectList = platforms;
+                    inputModel.RestrictionSelectList = restrictions;
+                    inputModel.GameTypes = types;
+                    _notyf.Error("Selected platform/s doesn't exist");
+                    return View(inputModel);
+                }
+            }
+
+            var restrictionsIds = restrictions.Select(r => r.Id).ToHashSet();
+
+            foreach (var selectedRestriction in inputModel.SelectedRestrictions)
+            {
+                if (!restrictionsIds.Contains(selectedRestriction))
+                {
+                    inputModel.GenreSelectList = genres;
+                    inputModel.PlatformSelectList = platforms;
+                    inputModel.RestrictionSelectList = restrictions;
+                    inputModel.GameTypes = types;
+                    _notyf.Error("Selected restriction/s doesn't exit");
+                    return View(inputModel);
+                }
+            }
+
+            var typesValues = types.Select(t => t.Value).ToHashSet();
+
+            if (!typesValues.Contains((int)inputModel.Type))
+            {
+                inputModel.GenreSelectList = genres;
+                inputModel.PlatformSelectList = platforms;
+                inputModel.RestrictionSelectList = restrictions;
+                inputModel.GameTypes = types;
+                _notyf.Error("Selected game type is invalid");
+                return View(inputModel);
+            }
+
             //Try to add logic for checking if selected type, genres, platforms and restrictions exist
             bool isGameExisting = await _gameService.GameExistByIdAsync(id);
 

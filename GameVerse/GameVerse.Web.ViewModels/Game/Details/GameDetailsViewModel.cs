@@ -26,10 +26,10 @@
 
         public IEnumerable<GenreIndexViewModel> Genres { get; set; } = new HashSet<GenreIndexViewModel>();
 
-        public IEnumerable<GamePlatformsIndexViewModel> Platforms = new HashSet<GamePlatformsIndexViewModel>();
+        public IEnumerable<GamePlatformsIndexViewModel> Platforms { get; set; } = new HashSet<GamePlatformsIndexViewModel>();
 
-        public IEnumerable<GameRestrictionsIndexViewModel> Restrictions = new HashSet<GameRestrictionsIndexViewModel>();
+        public IEnumerable<GameRestrictionsIndexViewModel> Restrictions { get; set; } = new HashSet<GameRestrictionsIndexViewModel>();
 
-        public IEnumerable<GameReviewsIndexViewModel> Reviews = new HashSet<GameReviewsIndexViewModel>();
+        public IEnumerable<GameReviewsIndexViewModel> Reviews { get; set; } = new HashSet<GameReviewsIndexViewModel>();
     }
 }

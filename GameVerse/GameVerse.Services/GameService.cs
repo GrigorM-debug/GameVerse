@@ -2,10 +2,12 @@
 
 using System.Globalization;
 using GameVerse.Common.Enums;
+using GameVerse.Data;
 using GameVerse.Data.Models.Games;
 using GameVerse.Data.Models.Games.Genres;
 using GameVerse.Data.Models.Games.Platform;
 using GameVerse.Data.Models.Games.Restrictions;
+using GameVerse.Data.Models.Games.Review;
 using GameVerse.Data.Repositories.Interfaces;
 using GameVerse.Services.Interfaces;
 using GameVerse.Web.ViewModels.Game;
@@ -27,8 +29,8 @@ namespace GameVerse.Services
         private readonly IGenericRepository<GameGenre, object> _gameGenreRepository;
         private readonly IGenericRepository<GamePlatform, object> _gamePlatformRepository;
         private readonly IGenericRepository<GameRestriction, object> _gameRestrictionRepository;
-
-        public GameService(IGenericRepository<Game, Guid> gameRepository, IGenericRepository<Genre, Guid> genreRepository, IGenericRepository<Platform, Guid> platformRepository, IGenericRepository<Restriction, Guid> restrictionRepository, IGenericRepository<GameGenre, object> gameGenreRepository, IGenericRepository<GamePlatform, object> gamePlatformRepository, IGenericRepository<GameRestriction, object> gameRestrictionRepository)
+        private readonly GameVerseDbContext _context;
+        public GameService(IGenericRepository<Game, Guid> gameRepository, IGenericRepository<Genre, Guid> genreRepository, IGenericRepository<Platform, Guid> platformRepository, IGenericRepository<Restriction, Guid> restrictionRepository, IGenericRepository<GameGenre, object> gameGenreRepository, IGenericRepository<GamePlatform, object> gamePlatformRepository, IGenericRepository<GameRestriction, object> gameRestrictionRepository, GameVerseDbContext context)
         {
             _gameRepository = gameRepository;
             _genreRepository = genreRepository;
@@ -37,6 +39,7 @@ namespace GameVerse.Services
             _gameGenreRepository = gameGenreRepository;
             _gamePlatformRepository = gamePlatformRepository;
             _gameRestrictionRepository = gameRestrictionRepository;
+            _context = context;
         }
 
         
@@ -258,15 +261,23 @@ namespace GameVerse.Services
 
         public async Task<GameDetailsViewModel> GetGameDetailsByIdAsync(string gameId)
         {
-            Game? g = await _gameRepository
-                .GetWithIncludeAsync(
-                    g=> g.Publisher.User,
-                    g => g.GamesGenres.Where(gg => gg.IsDeleted == false), 
-                    g => g.GamesPlatforms.Where(gp => gp.IsDeleted == false), 
-                    g => g.GamesRestrictions.Where(gr => gr.IsDeleted == false),
-                    g => g.Reviews.Where(r => r.IsDeleted == false)
-                    )
-                .AsNoTracking()
+            //Game? g = await _gameRepository
+            //    .GetWithIncludeAsync(
+            //        g=> g.Publisher.User,
+            //        g => g.GamesGenres, 
+            //        g => g.GamesPlatforms, 
+            //        g => g.GamesRestrictions,
+            //        g => g.Reviews
+            //        )
+            //    .AsNoTracking()
+            //    .FirstOrDefaultAsync(g => g.Id.ToString() == gameId && g.IsDeleted == false);
+
+            Game? g = await _context.Games
+                .Include(g => g.Publisher.User)
+                .Include(g => g.GamesGenres).ThenInclude(x => x.Genre)
+                .Include(g => g.GamesPlatforms).ThenInclude(x => x.Platform)
+                .Include(g => g.GamesRestrictions).ThenInclude(r => r.Restriction)
+                .Include(g => g.Reviews).ThenInclude(r => r.Reviewer)
                 .FirstOrDefaultAsync(g => g.Id.ToString() == gameId && g.IsDeleted == false);
 
             GameDetailsViewModel gameDetailsViewModel = new GameDetailsViewModel()
@@ -283,21 +294,25 @@ namespace GameVerse.Services
                 Type = g.Type.ToString(),
                 Publisher = g.Publisher.User.UserName,
                 Platforms = g.GamesPlatforms
+                    .Where(gp => gp.IsDeleted == false)
                     .Select(gp => new GamePlatformsIndexViewModel()
                     {
                         Name = gp.Platform.Name
-                    }),
+                    }).ToList(),
                 Restrictions = g.GamesRestrictions
+                    .Where(gr => gr.IsDeleted = false)
                     .Select(gr => new GameRestrictionsIndexViewModel()
                     {
                         Name = gr.Restriction.Name
-                    }),
+                    }).ToList(),
                 Genres = g.GamesGenres
+                    .Where(g => g.IsDeleted == false)
                     .Select(g=> new GenreIndexViewModel()
                     {
                         Name = g.Genre.Name
-                    }),
+                    }).ToList(),
                 Reviews = g.Reviews
+                    .Where(r => r.IsDeleted == false)
                     .Select(r => new GameReviewsIndexViewModel()
                     {
                         Id = r.Id.ToString(),
@@ -305,7 +320,7 @@ namespace GameVerse.Services
                         Rating = r.Rating,
                         CreatedOn = r.CreatedOn.ToString(DateTimeFormat, CultureInfo.InvariantCulture),
                         Reviewer = r.Reviewer.UserName
-                    })
+                    }).ToList()
             };
 
             return gameDetailsViewModel;
