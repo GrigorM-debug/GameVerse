@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Linq;
 using AspNetCoreHero.ToastNotification.Abstractions;
 using GameVerse.Services.Interfaces;
 using GameVerse.Web.Extensions;
@@ -66,6 +67,51 @@ namespace GameVerse.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(GameInputViewModel inputModel)
         {
+            var genres = await _gameService.GetGenresAsync();
+            var genresIds = genres.Select(g => g.Id).ToHashSet();
+
+            foreach (var selectedGenre in inputModel.SelectedGenres)
+            {
+                if (!genresIds.Contains(selectedGenre))
+                {
+                    _notyf.Error("Selected genre/s doesn't exist");
+                    return View(inputModel);
+                }
+            }
+            
+            var platforms = await _gameService.GetPlatformsAsync();
+            var platformsIds = platforms.Select(p => p.Id).ToHashSet();
+
+            foreach (var selectedPlatform in inputModel.SelectedPlatforms)
+            {
+                if (!platformsIds.Contains(selectedPlatform))
+                {
+                    _notyf.Error("Selected platform/s doesn't exist");
+                    return View(inputModel);
+                }
+            }
+
+            var restrictions = await _gameService.GetRestrictionsAsync();
+            var restrictionsIds = restrictions.Select(r => r.Id).ToHashSet();
+
+            foreach(var selectedRestriction in inputModel.SelectedRestrictions)
+            {
+                if (!restrictionsIds.Contains(selectedRestriction))
+                {
+                    _notyf.Error("Selected restriction/s doesn't exit");
+                    return View(inputModel);
+                }
+            }
+
+            var types = _gameService.GetGameTypes();
+            var typesValues = types.Select(t => t.Value).ToHashSet();
+
+            if (!typesValues.Contains((int)inputModel.Type))
+            {
+                _notyf.Error("Selected game is invalid");
+                return View(inputModel);
+            }
+
             //Try to add logic for checking if selected type, genres, platforms and restrictions exist
             bool isGameWithTitleAlreadyExist = await _gameService.GameExistByTitleAsync(inputModel.Title);
 
