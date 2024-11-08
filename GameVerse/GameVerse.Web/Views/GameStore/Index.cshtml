@@ -1,89 +1,43 @@
 ﻿
 
-@* The data for the Games with come from the Database *@
+@model IEnumerable<GameVerse.Web.ViewModels.Game.GameIndexViewModel>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <div class="container"></div>
 <div class="section-heading mb-4">
     <h2 class="h1 mb-0">Our Game Store</h2>
-     @* <span class="sub-title">Intructions</span> *@
 </div>
 <hr />
-<div class="row position-relative mt-n1-9">
-    <div class="col-md-6 col-lg-4 mt-1-9">
-        <div class="team-style1 text-center">
-            <img src="https://cdn.europosters.eu/image/750/posters/assassin-s-creed-iii-connor-i12724.jpg" class="border-radius-5" alt="...">
-            <div class="team-info">
-                <h3 class="text-primary mb-1 h4">Game Title</h3>
-                <span class="font-weight-600 text-secondary">Game Genre</span>
-            </div>
-            <div class="team-overlay">
-                <div class="d-table h-100 w-100">
-                    <div class="d-table-cell align-middle">
-                        <h3><a href="#" class="text-white">Short Description</a></h3>
-                        <p class="text-white mb-0">I preserve each companion certification and I'm an authorized AWS solutions architect professional.</p>
-                        <ul class="social-icon-style1">
-                            <li><a href="#!"><i class="fab fa-facebook-f"></i></a></li>
-                            <li><a href="#!"><i class="fab fa-twitter"></i></a></li>
-                            <li><a href="#!"><i class="fab fa-youtube"></i></a></li>
-                            <li><a href="#!"><i class="fab fa-linkedin-in"></i></a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6 col-lg-4 mt-1-9">
-        <div class="team-style1 text-center">
-             <img src="https://image.api.playstation.com/cdn/EP0082/CUSA10872_00/b9BPfFTux1rbQYxxIeJdMNgaVFhDeFG9.png" class="border-radius-5" alt="...">
-            <div class="team-info">
-                <h3 class="text-primary mb-1 h4">Game Title</h3>
-                <span class="font-weight-600 text-secondary">Game Genre</span>
-            </div>
-            <div class="team-overlay">
-                <div class="d-table h-100 w-100">
-                    <div class="d-table-cell align-middle">
-                        <h3><a href="#" class="text-white">Short Description</a></h3>
-                        <p class="text-white mb-0">I preserve each companion certification and I'm an authorized AWS solutions architect professional.</p>
-                        <ul class="social-icon-style1">
-                            <li><a href="#!"><i class="fab fa-facebook-f"></i></a></li>
-                            <li><a href="#!"><i class="fab fa-twitter"></i></a></li>
-                            <li><a href="#!"><i class="fab fa-youtube"></i></a></li>
-                            <li><a href="#!"><i class="fab fa-linkedin-in"></i></a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6 col-lg-4 mt-1-9">
-        <div class="team-style1 text-center">
-                <img src="https://file-cdn.scdkey.com/product/P201609081840430848.jpg" class="border-radius-5" alt="...">
-            <div class="team-info">
-                <h3 class="text-primary mb-1 h4">Game Title</h3>
-                <span class="font-weight-600 text-secondary">Game Genre</span>
-            </div>
-            <div class="team-overlay">
-                <div class="d-table h-100 w-100">
-                    <div class="d-table-cell align-middle">
-                        <h3><a href="#" class="text-white">Short Description</a></h3>
-                        <p class="text-white mb-0">I preserve each companion certification and I'm an authorized AWS solutions architect professional.</p>
-                        <ul class="social-icon-style1">
-                            <li><button type="button" class="btn btn-primary">Details</button></li>
 
-                            @* For the logged in users *@
-                            <li><button type="button" class="btn btn-primary">Buy</button></li>
-                            <li><button type="button" class="btn btn-primary">Add to Wishlist</button></li>
-                            
-                            @* For the Admin who is the creator of the game *@
-                            <li><button type="button" class="btn btn-primary">Edit</button></li>
-                            <li><button type="button" class="btn btn-primary">Delete</button></li>
-                        </ul>
+@if (Model.Any() == false)
+{
+    <h2 class="mt-2">No Games Added</h2>
+}
+<div class="row position-relative mt-n1-9">
+    
+    @foreach (var game in Model)
+    {
+        <div class="col-md-6 col-lg-4 mt-1-9">
+            <div class="team-style1 text-center">
+                <img src="@game.Image" class="border-radius-5" alt="Game Picture">
+                <div class="team-info">
+                    <h3 class="text-primary mb-1 h4">@game.Title</h3>
+                    <span class="font-weight-600 text-secondary"><b>Price: </b>@game.Price</span>
+                </div>
+                <div class="team-overlay">
+                    <div class="d-table h-100 w-100">
+                        <div class="d-table-cell align-middle">
+                            <h3><a href="#" class="text-white"><b>Created By: </b>@game.Publisher</a></h3>
+                            <h3><a href="#" class="text-white"><b>Created On: </b>@game.CreatedOn</a></h3>
+                            <ul class="social-icon-style1">
+                                <li><a asp-controller="GameStore" asp-action="Details" asp-route-id="@game.Id" type="button" class="btn btn-primary">Details</a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    }
 
     <partial name="_Pagination" />
 </div>
