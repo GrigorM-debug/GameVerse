@@ -1,0 +1,94 @@
+﻿@model IEnumerable<GameVerse.Web.ViewModels.Game.GameIndexViewModel>
+
+<h2 class="text-center mt-5 mb-3">Latest Games</h2>
+<hr />
+<div class="mb-4"></div>
+
+@{
+    int itemsCount = Model.Count();
+    var games = Model.ToList();
+}
+
+@if (Model.Any() == false)
+{
+    <h2 class="mt-2">No Games Added</h2>
+}
+
+
+<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+    <ol class="carousel-indicators">
+        @* <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+         <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+         <li data-target="#carouselExampleIndicators" data-slide-to="2"></li> *@
+        @for (int i = 0; i < itemsCount; i++)
+        {
+            <li data-target="#carouselExampleIndicators" data-slide-to="@i" class="@(i == 0 ? "active" : "")"></li>
+        }
+    </ol>
+    <div class="carousel-inner">
+        @for (int i = 0; i < itemsCount; i++)
+        {
+            <div class="carousel-item @(i == 0 ? "active" : "")">
+                <img class="d-block w-100" src="@games[i].Image" alt="@games[i].Title">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>@games[i].Title</h5>
+                    <p><b>Created On: </b>@games[i].CreatedOn</p>
+                    <p><b>Published By: </b>@games[i].Publisher</p>
+                    <a asp-controller="GameStore" asp-action="Details" asp-route-id="@games[i].Id" type="button" class="btn btn-primary">Details</a>
+                </div>
+            </div>
+        }
+    </div>
+    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+</div>
+
+<style>
+    #carouselExampleIndicators {
+        height: 50vh;
+    }
+
+    .carousel-item {
+        height: 50vh;
+    }
+
+    .carousel-item img {
+        object-fit: cover;
+        height: 500px;
+        width: 100%;
+    }
+
+    .carousel-caption {
+        bottom: 20px;
+        margin-bottom: 1em;
+    }
+
+    .carousel-caption h5,
+    .carousel-caption p {
+        margin-bottom: 0.5em;
+        padding: 0 15px;
+    }
+
+    .carousel-item {
+        position: relative; 
+    }
+
+    .carousel-caption {
+        opacity: 0; 
+        transition: opacity 0.5s ease;
+        border: 2px solid rgba(128, 0, 128, 0.8);
+        border-radius: 10px; 
+        padding: 10px; 
+        background-color: black; 
+    }
+
+    .carousel-item:hover .carousel-caption {
+        opacity: 1; 
+    }
+</style>
