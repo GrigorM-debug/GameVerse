@@ -35,6 +35,16 @@ namespace GameVerse.Services
             await _moderatorRepository.SaveChangesAsync();
         }
 
+        public async Task IncreaseCreatedTotalGamesCount(string moderatorId)
+        {
+            Moderator moderator = await _moderatorRepository.FirstOrDefaultAsync(m => m.Id.ToString() == moderatorId);
+
+            moderator.TotalGamesCreated += 1;
+
+            await _moderatorRepository.SaveChangesAsync();
+        }
+
+
         public async Task<bool> ModeratorExistByUserIdAsync(string userId)
         {
             Moderator? moderator = await _moderatorRepository

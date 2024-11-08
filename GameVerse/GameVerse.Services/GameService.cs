@@ -9,8 +9,8 @@ using GameVerse.Data.Models.Games.Restrictions;
 using GameVerse.Data.Repositories.Interfaces;
 using GameVerse.Services.Interfaces;
 using GameVerse.Web.ViewModels.Game;
-using GameVerse.Web.ViewModels.Game.Add;
 using GameVerse.Web.ViewModels.Game.Details;
+using GameVerse.Web.ViewModels.Game.SelectLists;
 using Microsoft.EntityFrameworkCore;
 
 using static GameVerse.Common.ApplicationConstants;

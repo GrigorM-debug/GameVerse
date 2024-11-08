@@ -9,5 +9,7 @@ namespace GameVerse.Services.Interfaces
         Task<string?> GetModeratorIdByUserIdAsync(string? userId);
 
         Task InCreaseCreatedTotalEventsCount(string moderatorId);
+
+        Task IncreaseCreatedTotalGamesCount(string moderatorId);
     }
 }

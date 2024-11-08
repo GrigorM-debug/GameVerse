@@ -5,7 +5,6 @@ using GameVerse.Services.Interfaces;
 using GameVerse.Web.Extensions;
 using GameVerse.Web.Filters;
 using GameVerse.Web.ViewModels.Game;
-using GameVerse.Web.ViewModels.Game.Add;
 using GameVerse.Web.ViewModels.Game.Details;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -167,6 +166,8 @@ namespace GameVerse.Web.Controllers
             string? moderatorId = await _moderatorService.GetModeratorIdByUserIdAsync(userId);
 
             string? gameId = await _gameService.AddGamePostAsync(inputModel, createdOn, moderatorId);
+
+            await _moderatorService.IncreaseCreatedTotalGamesCount(moderatorId);
 
             _notyf.Success("Game was added successfully!");
 

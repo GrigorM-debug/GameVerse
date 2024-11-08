@@ -6,11 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GameVerse.Common.Enums;
+using GameVerse.Web.ViewModels.Game.SelectLists;
 using Microsoft.VisualBasic;
 using static GameVerse.Common.ApplicationConstants;
 using static GameVerse.Common.ApplicationConstants.GameConstants;
 
-namespace GameVerse.Web.ViewModels.Game.Add
+namespace GameVerse.Web.ViewModels.Game
 {
     public class GameInputViewModel
     {

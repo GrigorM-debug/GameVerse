@@ -14,7 +14,7 @@ namespace GameVerse.Services
     /// <summary>
     /// Provides methods for managing events, including adding, editing, deleting, and retrieving event details.
     /// </summary>
-    public class EventService(IGenericRepository<Event, Guid> eventRepository, IModeratorService moderatorService) : BaseService, IEventService
+    public class EventService(IGenericRepository<Event, Guid> eventRepository) : BaseService, IEventService
     {
         /// <summary>
         /// Injection the Generic Repository using Primary Constructor
@@ -22,7 +22,6 @@ namespace GameVerse.Services
         /// <param name="eventRepository">The repository used for data access operations on <see cref="Event"/> entities.</param>
         private readonly IGenericRepository<Event, Guid> _eventRepository = eventRepository;
 
-        private readonly IModeratorService _moderatorService = moderatorService;
 
         /// <summary>
         /// Gets last 3 Events added in the Db, Ordered by Id Descending
@@ -78,7 +77,6 @@ namespace GameVerse.Services
             };
 
             await _eventRepository.AddAsync(newEvent);
-            await _moderatorService.InCreaseCreatedTotalEventsCount(moderatorId);
             await _eventRepository.SaveChangesAsync();
 
             return newEvent.Id.ToString();
