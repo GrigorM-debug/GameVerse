@@ -140,9 +140,9 @@ namespace GameVerse.Services
             model.RestrictionSelectList = restrictions;
             model.GameTypes = gameTypes;
 
-            model.SelectedGenres = game.GamesGenres.Select(g => g.GenreId);
-            model.SelectedPlatforms = game.GamesPlatforms.Select(p => p.PlatformId);
-            model.SelectedRestrictions = game.GamesRestrictions.Select(r => r.RestrictionId);
+            model.SelectedGenres = game.GamesGenres.Where(g => g.IsDeleted == false).Select(g => g.GenreId);
+            model.SelectedPlatforms = game.GamesPlatforms.Where(p => p.IsDeleted == false).Select(p => p.PlatformId);
+            model.SelectedRestrictions = game.GamesRestrictions.Where(r => r.IsDeleted == false).Select(r => r.RestrictionId);
 
             return model;
         }
