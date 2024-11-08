@@ -44,11 +44,11 @@
         <div class="col-md-7">
             <img src="@Model.Image" alt="game-image" class="rounded game-details-img">
             <div class="project-info-box">
-                <p><b>Genres:</b> @String.Join(", ", Model.Genres)</p>
-                <p><b>Platforms:</b> @String.Join(", ", Model.Platforms)</p>
-                <p><b>Restrictions:</b> @String.Join(", ", Model.Restrictions)</p>
+                <p><b>Genres:</b> @String.Join(", ", Model.Genres.Select(g => g.Name))</p>
+                <p><b>Platforms:</b> @String.Join(", ", Model.Platforms.Select(p => p.Name))</p>
+                <p><b>Restrictions:</b> @String.Join(", ", Model.Restrictions.Select(r => r.Name))</p>
+                <a href="https://www.systemrequirementslab.com/cyri" type="button" class="btn btn-primary">Can You Run It</a>
             </div>
-            <a href="https://www.systemrequirementslab.com/cyri" type="button" class="btn btn-primary">Can You Run It</a>
         </div>
     </div>
 </div>

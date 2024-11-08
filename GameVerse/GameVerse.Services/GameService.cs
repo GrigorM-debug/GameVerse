@@ -300,7 +300,7 @@ namespace GameVerse.Services
                         Name = gp.Platform.Name
                     }).ToList(),
                 Restrictions = g.GamesRestrictions
-                    .Where(gr => gr.IsDeleted = false)
+                    .Where(gr => gr.IsDeleted == false)
                     .Select(gr => new GameRestrictionsIndexViewModel()
                     {
                         Name = gr.Restriction.Name
