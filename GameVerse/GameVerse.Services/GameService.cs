@@ -165,46 +165,77 @@ namespace GameVerse.Services
             game.Type = inputModel.Type;
             game.PublisherId = Guid.Parse(moderatorId);
 
-            foreach (var selectedGenreId in inputModel.SelectedGenres)
+            var selectedGenreIds = inputModel.SelectedGenres.ToHashSet();
+            foreach (var gameGenre in game.GamesGenres.ToList())
             {
-                if (!game.GamesGenres.Where(g => g.IsDeleted == false).Any(g => g.GenreId == selectedGenreId))
+                if (selectedGenreIds.Contains(gameGenre.GenreId))
                 {
-                    game.GamesGenres.Add(new GameGenre()
-                    {
-                        GenreId = selectedGenreId,
-                        Game = game,
-                        IsDeleted = false
-                    });
-
+                    gameGenre.IsDeleted = false; // Reactivate if selected
+                    selectedGenreIds.Remove(gameGenre.GenreId); // Remove processed IDs
+                }
+                else
+                {
+                    gameGenre.IsDeleted = true; // Mark as deleted if not in selected list
                 }
             }
 
-            foreach (var selectedPlatformId in inputModel.SelectedPlatforms)
+            foreach (var newGenreId in selectedGenreIds)
             {
-                if (!game.GamesPlatforms.Where(p => p.IsDeleted == false).Any(p => p.PlatformId == selectedPlatformId))
+                game.GamesGenres.Add(new GameGenre
                 {
-                    game.GamesPlatforms.Add(new GamePlatform()
-                    {
-                        PlatformId = selectedPlatformId,
-                        Game = game,
-                        IsDeleted = false
-                    });
+                    GenreId = newGenreId,
+                    Game = game,
+                    IsDeleted = false
+                });
+            }
+
+            var selectedPlatformIds = inputModel.SelectedPlatforms.ToHashSet();
+            foreach (var gamePlatform in game.GamesPlatforms.ToList())
+            {
+                if (selectedPlatformIds.Contains(gamePlatform.PlatformId))
+                {
+                    gamePlatform.IsDeleted = false;
+                    selectedPlatformIds.Remove(gamePlatform.PlatformId);
+                }
+                else
+                {
+                    gamePlatform.IsDeleted = true;
                 }
             }
 
-            foreach (var selectedRestrictionId in inputModel.SelectedRestrictions)
+            foreach (var newPlatformId in selectedPlatformIds)
             {
-                if (!game.GamesRestrictions.Where(r => r.IsDeleted == false).Any(r => r.RestrictionId == selectedRestrictionId))
+                game.GamesPlatforms.Add(new GamePlatform
                 {
-                    game.GamesRestrictions.Add(new GameRestriction()
-                    {
-                        RestrictionId = selectedRestrictionId,
-                        Game = game,
-                        IsDeleted = false
-                    });
+                    PlatformId = newPlatformId,
+                    Game = game,
+                    IsDeleted = false
+                });
+            }
+
+            var selectedRestrictionIds = inputModel.SelectedRestrictions.ToHashSet();
+            foreach (var gameRestriction in game.GamesRestrictions.ToList())
+            {
+                if (selectedRestrictionIds.Contains(gameRestriction.RestrictionId))
+                {
+                    gameRestriction.IsDeleted = false;
+                    selectedRestrictionIds.Remove(gameRestriction.RestrictionId);
+                }
+                else
+                {
+                    gameRestriction.IsDeleted = true;
                 }
             }
 
+            foreach (var newRestrictionId in selectedRestrictionIds)
+            {
+                game.GamesRestrictions.Add(new GameRestriction
+                {
+                    RestrictionId = newRestrictionId,
+                    Game = game,
+                    IsDeleted = false
+                });
+            }
 
             await _gameRepository.SaveChangesAsync();
 
