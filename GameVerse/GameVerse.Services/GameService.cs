@@ -24,13 +24,19 @@ namespace GameVerse.Services
             _genreRepository;
         private readonly IGenericRepository<Platform, Guid> _platformRepository;
         private readonly IGenericRepository<Restriction, Guid> _restrictionRepository;
+        private readonly IGenericRepository<GameGenre, object> _gameGenreRepository;
+        private readonly IGenericRepository<GamePlatform, object> _gamePlatformRepository;
+        private readonly IGenericRepository<GameRestriction, object> _gameRestrictionRepository;
 
-        public GameService(IGenericRepository<Game, Guid> gameRepository, IGenericRepository<Genre, Guid> genreRepository, IGenericRepository<Platform, Guid> platformRepository, IGenericRepository<Restriction, Guid> restrictionRepository)
+        public GameService(IGenericRepository<Game, Guid> gameRepository, IGenericRepository<Genre, Guid> genreRepository, IGenericRepository<Platform, Guid> platformRepository, IGenericRepository<Restriction, Guid> restrictionRepository, IGenericRepository<GameGenre, object> gameGenreRepository, IGenericRepository<GamePlatform, object> gamePlatformRepository, IGenericRepository<GameRestriction, object> gameRestrictionRepository)
         {
             _gameRepository = gameRepository;
             _genreRepository = genreRepository;
             _platformRepository = platformRepository;
             _restrictionRepository = restrictionRepository;
+            _gameGenreRepository = gameGenreRepository;
+            _gamePlatformRepository = gamePlatformRepository;
+            _gameRestrictionRepository = gameRestrictionRepository;
         }
 
         
@@ -68,16 +74,50 @@ namespace GameVerse.Services
                 PublisherId = Guid.Parse(moderatorId),
             };
 
-            game.GamesGenres =
-                inputModel.SelectedGenres.Select(genreId => new GameGenre() { GameId = game.Id, GenreId = genreId }).ToList();
+            foreach (var gameGenre in inputModel.SelectedGenres)
+            {
+                GameGenre genre = new GameGenre()
+                {
+                    GenreId = gameGenre,
+                    Game = game,
+                    IsDeleted = false
+                };
 
-            game.GamesPlatforms = inputModel.SelectedPlatforms
-                .Select(platformId => new GamePlatform() { GameId = game.Id, PlatformId = platformId }).ToList();
+                game.GamesGenres.Add(genre);
+                await _gameGenreRepository.AddAsync(genre);
+                await _gameGenreRepository.SaveChangesAsync();
 
-            game.GamesRestrictions = inputModel.SelectedRestrictions.Select(restrictionId =>
-                new GameRestriction() { GameId = game.Id, RestrictionId = restrictionId }).ToList();
+            }
 
-            await _gameRepository.AddAsync(game);
+            foreach (var gamePlatform in inputModel.SelectedPlatforms)
+            {
+                GamePlatform platform = new GamePlatform()
+                {
+                    PlatformId = gamePlatform,
+                    Game = game,
+                    IsDeleted = false
+                };
+
+                game.GamesPlatforms.Add(platform);
+                await _gamePlatformRepository.AddAsync(platform);
+                await _gamePlatformRepository.SaveChangesAsync();
+            }
+
+            foreach (var gameRestriction in inputModel.SelectedRestrictions)
+            {
+                GameRestriction restriction = new GameRestriction()
+                {
+                    RestrictionId = gameRestriction,
+                    Game = game,
+                    IsDeleted = false
+                };
+
+                game.GamesRestrictions.Add(restriction);
+                await _gameRestrictionRepository.AddAsync(restriction);
+                await _gameRestrictionRepository.SaveChangesAsync();
+            }
+
+            //await _gameRepository.AddAsync(game);
             await _gameRepository.SaveChangesAsync();
 
             return game.Id.ToString();
