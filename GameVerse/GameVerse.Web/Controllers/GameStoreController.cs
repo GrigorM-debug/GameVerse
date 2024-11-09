@@ -37,7 +37,8 @@ namespace GameVerse.Web.Controllers
             IEnumerable<GameIndexViewModel> games = await _gameService.GetAllGamesAsync(
                 model.CurrentPage,
                 model.GamesPerPage,
-                model.GameSelectedSortOrder
+                model.GameSelectedSortOrder,
+                model.SearchString
             );
 
             model.TotalGamesCount = totalGameCount;
