@@ -15,8 +15,8 @@
             Sort By: @Model.EventSelectedSortOrder
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <li><a asp-controller="Event" asp-action="Index" asp-route-eventSelectedSortOrder="@EventSortOrder.Newest" class="dropdown-item font-weight-bold">Newest</a></li>
-            <li><a asp-controller="Event" asp-action="Index" asp-route-eventSelectedSortOrder="@EventSortOrder.Oldest" class="dropdown-item font-weight-bold">Oldest</a></li>
+            <li><a asp-controller="Event" asp-action="Index" asp-route-eventSelectedSortOrder="@EntitySortOrder.Newest" class="dropdown-item font-weight-bold">Newest</a></li>
+            <li><a asp-controller="Event" asp-action="Index" asp-route-eventSelectedSortOrder="@EntitySortOrder.Oldest" class="dropdown-item font-weight-bold">Oldest</a></li>
         </ul>
     </div>
 </div>
