@@ -1,4 +1,5 @@
 ﻿
+using GameVerse.Common.Enums;
 using GameVerse.Web.ViewModels.Game;
 using GameVerse.Web.ViewModels.Game.Details;
 using GameVerse.Web.ViewModels.Game.SelectLists;
@@ -28,7 +29,7 @@ namespace GameVerse.Services.Interfaces
 
         Task<bool> HasPublisherWithIdAsync(string moderatorId, string gameId);
 
-        Task<bool> GameExistByTitleAsync(string title);
+        Task<bool> GameExistByTitleAndTypeAsync(string title, GameType type);
 
         Task<IEnumerable<GameIndexViewModel>> GetAllGamesAsync(int currentPage, int gamesPerPage);
 

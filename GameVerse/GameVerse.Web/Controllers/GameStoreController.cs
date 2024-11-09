@@ -8,6 +8,7 @@ using GameVerse.Web.ViewModels.Game;
 using GameVerse.Web.ViewModels.Game.Details;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using static GameVerse.Common.ApplicationConstants;
@@ -66,6 +67,14 @@ namespace GameVerse.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(GameInputViewModel inputModel)
         {
+            string? userId = User.GetId();
+            string? moderatorId = await _moderatorService.GetModeratorIdByUserIdAsync(userId);
+
+            if (moderatorId == null)
+            {
+                return Unauthorized();
+            }
+
             var genres = await _gameService.GetGenresAsync();
             var platforms = await _gameService.GetPlatformsAsync();
             var restrictions = await _gameService.GetRestrictionsAsync();
@@ -73,6 +82,17 @@ namespace GameVerse.Web.Controllers
 
 
             var genresIds = genres.Select(g => g.Id).ToHashSet();
+
+            if (!inputModel.SelectedGenres.Any())
+            {
+                inputModel.GenreSelectList = genres;
+                inputModel.PlatformSelectList = platforms;
+                inputModel.RestrictionSelectList = restrictions;
+                inputModel.GameTypes = types;
+                ModelState.AddModelError(nameof(inputModel.SelectedGenres), "Please select genre/s for the game");
+                _notyf.Error("Please select genre/s for the game");
+                return View(inputModel);
+            }
 
             foreach (var selectedGenre in inputModel.SelectedGenres)
             {
@@ -82,12 +102,24 @@ namespace GameVerse.Web.Controllers
                     inputModel.PlatformSelectList = platforms;
                     inputModel.RestrictionSelectList = restrictions;
                     inputModel.GameTypes = types;
+                    ModelState.AddModelError(nameof(inputModel.SelectedGenres), "Selected genre/s doesn't exist");
                     _notyf.Error("Selected genre/s doesn't exist");
                     return View(inputModel);
                 }
             }
             
             var platformsIds = platforms.Select(p => p.Id).ToHashSet();
+
+            if (!inputModel.SelectedPlatforms.Any())
+            {
+                inputModel.GenreSelectList = genres;
+                inputModel.PlatformSelectList = platforms;
+                inputModel.RestrictionSelectList = restrictions;
+                inputModel.GameTypes = types;
+                ModelState.AddModelError(nameof(inputModel.SelectedPlatforms), "Please select platform/s for the game");
+                _notyf.Error("Please select platform/s for the game");
+                return View(inputModel);
+            }
 
             foreach (var selectedPlatform in inputModel.SelectedPlatforms)
             {
@@ -97,12 +129,24 @@ namespace GameVerse.Web.Controllers
                     inputModel.PlatformSelectList = platforms;
                     inputModel.RestrictionSelectList = restrictions;
                     inputModel.GameTypes = types;
+                    ModelState.AddModelError(nameof(inputModel.SelectedPlatforms), "Selected platform/s doesn't exist");
                     _notyf.Error("Selected platform/s doesn't exist");
                     return View(inputModel);
                 }
             }
 
             var restrictionsIds = restrictions.Select(r => r.Id).ToHashSet();
+
+            if (!inputModel.SelectedRestrictions.Any())
+            {
+                inputModel.GenreSelectList = genres;
+                inputModel.PlatformSelectList = platforms;
+                inputModel.RestrictionSelectList = restrictions;
+                inputModel.GameTypes = types;
+                ModelState.AddModelError(nameof(inputModel.SelectedRestrictions), "Please select restriction/s for the game");
+                _notyf.Error("Please select restriction/s for the game");
+                return View(inputModel);
+            }
 
             foreach(var selectedRestriction in inputModel.SelectedRestrictions)
             {
@@ -112,6 +156,7 @@ namespace GameVerse.Web.Controllers
                     inputModel.PlatformSelectList = platforms;
                     inputModel.RestrictionSelectList = restrictions;
                     inputModel.GameTypes = types;
+                    ModelState.AddModelError(nameof(inputModel.SelectedRestrictions), "Selected restriction/s doesn't exist");
                     _notyf.Error("Selected restriction/s doesn't exit");
                     return View(inputModel);
                 }
@@ -125,20 +170,21 @@ namespace GameVerse.Web.Controllers
                 inputModel.PlatformSelectList = platforms;
                 inputModel.RestrictionSelectList = restrictions;
                 inputModel.GameTypes = types;
+                ModelState.AddModelError(nameof(inputModel.GameTypes), "Selected game type is invalid");
                 _notyf.Error("Selected game type is invalid");
                 return View(inputModel);
             }
 
-            //Try to add logic for checking if selected type, genres, platforms and restrictions exist
-            bool isGameWithTitleAlreadyExist = await _gameService.GameExistByTitleAsync(inputModel.Title);
+            bool isGameWithTitleAndTypeAlreadyExist = await _gameService.GameExistByTitleAndTypeAsync(inputModel.Title,
+                inputModel.Type);
 
-            if (isGameWithTitleAlreadyExist)
+            if (isGameWithTitleAndTypeAlreadyExist)
             {
                 inputModel.GenreSelectList = genres;
                 inputModel.PlatformSelectList = platforms;
                 inputModel.RestrictionSelectList = restrictions;
                 inputModel.GameTypes = types;
-                _notyf.Warning("Game with this Title already exist!");
+                _notyf.Warning($"{inputModel.Type.ToString()} for {inputModel.Title} already exist!");
                 return View(inputModel);
             }
 
@@ -160,14 +206,6 @@ namespace GameVerse.Web.Controllers
                 inputModel.RestrictionSelectList = restrictions;
                 inputModel.GameTypes = types;
                 return View(inputModel);
-            }
-
-            string? userId = User.GetId();
-            string? moderatorId = await _moderatorService.GetModeratorIdByUserIdAsync(userId);
-
-            if (moderatorId == null)
-            {
-                return Unauthorized();
             }
 
             string? gameId = await _gameService.AddGamePostAsync(inputModel, createdOn, moderatorId);
@@ -197,6 +235,7 @@ namespace GameVerse.Web.Controllers
 
             if (moderatorId == null)
             {
+                _notyf.Warning("You don't have the permission to do this");
                 return Unauthorized();
             }
 
@@ -204,6 +243,7 @@ namespace GameVerse.Web.Controllers
 
             if (isModeratorCreatorOfTheGame == false)
             {
+                _notyf.Warning("You are not the creator of the game");
                 return Unauthorized();
             }
 
@@ -216,6 +256,30 @@ namespace GameVerse.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(GameInputViewModel inputModel, string id)
         {
+            bool isGameExisting = await _gameService.GameExistByIdAsync(id);
+
+            if (isGameExisting == false)
+            {
+                return NotFound();
+            }
+
+            string? userId = User.GetId();
+            string? moderatorId = await _moderatorService.GetModeratorIdByUserIdAsync(userId);
+
+            if (moderatorId == null)
+            {
+                _notyf.Warning("You don't have the permission to do this");
+                return Unauthorized();
+            }
+
+            bool isModeratorCreatorOfTheGame = await _gameService.HasPublisherWithIdAsync(moderatorId, id);
+
+            if (isModeratorCreatorOfTheGame == false)
+            {
+                _notyf.Warning("You are not the creator of the game");
+                return Unauthorized();
+            }
+
             var genres = await _gameService.GetGenresAsync();
             var platforms = await _gameService.GetPlatformsAsync();
             var restrictions = await _gameService.GetRestrictionsAsync();
@@ -223,6 +287,17 @@ namespace GameVerse.Web.Controllers
 
 
             var genresIds = genres.Select(g => g.Id).ToHashSet();
+
+            if (!inputModel.SelectedGenres.Any())
+            {
+                inputModel.GenreSelectList = genres;
+                inputModel.PlatformSelectList = platforms;
+                inputModel.RestrictionSelectList = restrictions;
+                inputModel.GameTypes = types;
+                ModelState.AddModelError(nameof(inputModel.SelectedGenres), "Please select genre/s for the game");
+                _notyf.Error("Please select genre/s for the game");
+                return View(inputModel);
+            }
 
             foreach (var selectedGenre in inputModel.SelectedGenres)
             {
@@ -232,12 +307,24 @@ namespace GameVerse.Web.Controllers
                     inputModel.PlatformSelectList = platforms;
                     inputModel.RestrictionSelectList = restrictions;
                     inputModel.GameTypes = types;
+                    ModelState.AddModelError(nameof(inputModel.SelectedGenres), "Selected genre/s doesn't exist");
                     _notyf.Error("Selected genre/s doesn't exist");
                     return View(inputModel);
                 }
             }
 
             var platformsIds = platforms.Select(p => p.Id).ToHashSet();
+
+            if (!inputModel.SelectedPlatforms.Any())
+            {
+                inputModel.GenreSelectList = genres;
+                inputModel.PlatformSelectList = platforms;
+                inputModel.RestrictionSelectList = restrictions;
+                inputModel.GameTypes = types;
+                ModelState.AddModelError(nameof(inputModel.SelectedPlatforms), "Please select platform/s for the game");
+                _notyf.Error("Please select platform/s for the game");
+                return View(inputModel);
+            }
 
             foreach (var selectedPlatform in inputModel.SelectedPlatforms)
             {
@@ -247,12 +334,24 @@ namespace GameVerse.Web.Controllers
                     inputModel.PlatformSelectList = platforms;
                     inputModel.RestrictionSelectList = restrictions;
                     inputModel.GameTypes = types;
+                    ModelState.AddModelError(nameof(inputModel.SelectedPlatforms), "Selected platform/s doesn't exist");
                     _notyf.Error("Selected platform/s doesn't exist");
                     return View(inputModel);
                 }
             }
 
             var restrictionsIds = restrictions.Select(r => r.Id).ToHashSet();
+
+            if (!inputModel.SelectedRestrictions.Any())
+            {
+                inputModel.GenreSelectList = genres;
+                inputModel.PlatformSelectList = platforms;
+                inputModel.RestrictionSelectList = restrictions;
+                inputModel.GameTypes = types;
+                ModelState.AddModelError(nameof(inputModel.SelectedRestrictions), "Please select restriction/s for the game");
+                _notyf.Error("Please select restriction/s for the game");
+                return View(inputModel);
+            }
 
             foreach (var selectedRestriction in inputModel.SelectedRestrictions)
             {
@@ -262,6 +361,7 @@ namespace GameVerse.Web.Controllers
                     inputModel.PlatformSelectList = platforms;
                     inputModel.RestrictionSelectList = restrictions;
                     inputModel.GameTypes = types;
+                    ModelState.AddModelError(nameof(inputModel.SelectedRestrictions), "Selected restriction/s doesn't exit");
                     _notyf.Error("Selected restriction/s doesn't exit");
                     return View(inputModel);
                 }
@@ -275,22 +375,17 @@ namespace GameVerse.Web.Controllers
                 inputModel.PlatformSelectList = platforms;
                 inputModel.RestrictionSelectList = restrictions;
                 inputModel.GameTypes = types;
+                ModelState.AddModelError(nameof(inputModel.Type), "Selected game type is invalid");
                 _notyf.Error("Selected game type is invalid");
                 return View(inputModel);
             }
 
-            //Try to add logic for checking if selected type, genres, platforms and restrictions exist
-            bool isGameExisting = await _gameService.GameExistByIdAsync(id);
-
-            if (isGameExisting == false)
-            {
-                return NotFound();
-            }
 
             if (!DateTime.TryParseExact(inputModel.CreatedOn, DateTimeFormat, CultureInfo.InvariantCulture,
                     DateTimeStyles.None, out DateTime createdOn))
             {
                 ModelState.AddModelError(nameof(inputModel.CreatedOn), InvalidDateTimeErrorMessage);
+                _notyf.Error(InvalidDateTimeErrorMessage);
                 return View(inputModel);
             }
 
@@ -299,20 +394,6 @@ namespace GameVerse.Web.Controllers
                 return View(inputModel);
             }
 
-            string? userId = User.GetId();
-            string? moderatorId = await _moderatorService.GetModeratorIdByUserIdAsync(userId);
-
-            if (moderatorId == null)
-            {
-                return Unauthorized();
-            }
-
-            bool isModeratorCreatorOfTheGame = await _gameService.HasPublisherWithIdAsync(moderatorId, id);
-
-            if (isModeratorCreatorOfTheGame == false)
-            {
-                return Unauthorized();
-            }
 
             string? gameId = await _gameService.EditGamePostAsync(inputModel, createdOn,id, moderatorId);
 

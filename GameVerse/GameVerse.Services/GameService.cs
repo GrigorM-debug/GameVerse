@@ -393,10 +393,10 @@ namespace GameVerse.Services
             return true;
         }
 
-        public async Task<bool> GameExistByTitleAsync(string title)
+        public async Task<bool> GameExistByTitleAndTypeAsync(string title, GameType type)
         {
             Game? game = await _gameRepository.AllAsReadOnly()
-                .FirstOrDefaultAsync(g => g.IsDeleted == false && g.Title == title);
+                .FirstOrDefaultAsync(g => g.IsDeleted == false && g.Title == title && g.Type == type);
 
             if (game == null)
             {
