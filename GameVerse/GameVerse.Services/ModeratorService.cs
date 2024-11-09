@@ -44,6 +44,24 @@ namespace GameVerse.Services
             await _moderatorRepository.SaveChangesAsync();
         }
 
+        public async Task DecreaseCreatedTotalGamesCount(string moderatorId)
+        {
+            Moderator moderator = await _moderatorRepository.FirstOrDefaultAsync(m => m.Id.ToString() == moderatorId);
+
+            moderator.TotalGamesCreated -= 1;
+
+            await _moderatorRepository.SaveChangesAsync();
+        }
+
+        public async Task DecreaseCreatedTotalEventsCount(string moderatorId)
+        {
+            Moderator moderator = await _moderatorRepository.FirstOrDefaultAsync(m => m.Id.ToString() == moderatorId);
+
+            moderator.TotalEventsCreated -= 1;
+
+            await _moderatorRepository.SaveChangesAsync();
+        }
+
 
         public async Task<bool> ModeratorExistByUserIdAsync(string userId)
         {

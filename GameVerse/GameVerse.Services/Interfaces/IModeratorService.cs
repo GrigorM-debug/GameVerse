@@ -11,5 +11,9 @@ namespace GameVerse.Services.Interfaces
         Task InCreaseCreatedTotalEventsCount(string moderatorId);
 
         Task IncreaseCreatedTotalGamesCount(string moderatorId);
+
+        Task DecreaseCreatedTotalGamesCount(string moderatorId);
+
+        Task DecreaseCreatedTotalEventsCount(string moderatorId);
     }
 }

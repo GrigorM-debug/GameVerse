@@ -302,6 +302,8 @@ namespace GameVerse.Web.Controllers
 
             await _eventService.DeleteEventPostAsync(id, moderatorId);
 
+            await _moderatorService.DecreaseCreatedTotalEventsCount(moderatorId);
+
             _notyf.Success("Event was deleted successfully !");
 
             Log.Information("Moderator with ID {ModeratorId} perform an {Action} in controller {Controller}", moderatorId, nameof(Delete), nameof(EventController));
