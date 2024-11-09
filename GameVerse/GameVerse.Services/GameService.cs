@@ -245,6 +245,7 @@ namespace GameVerse.Services
 
         public async Task<GameDeleteViewModel> DeleteGameGetAsync(string gameId, string moderatorId)
         {
+            //Not done yet
             Game? game = await _gameRepository
                 .GetWithIncludeAsync(g => g.Publisher.User)
                 .AsNoTracking()
@@ -264,6 +265,7 @@ namespace GameVerse.Services
 
         public async Task<string> DeleteGamePostAsync(string gameId, string moderatorId)
         {
+            //Not done yet
             Game? game = await _gameRepository
                 .GetWithIncludeAsync(g => 
                     g.GamesGenres.Where(g => g.IsDeleted == false),
@@ -406,12 +408,18 @@ namespace GameVerse.Services
             return true;
         }
 
-        public async Task<IEnumerable<GameIndexViewModel>> GetAllGamesAsync(int currentPage, int gamesPerPage)
+        public async Task<IEnumerable<GameIndexViewModel>> GetAllGamesAsync(int currentPage, int gamesPerPage, EntitySortOrder sortOrder)
         {
-            IEnumerable<GameIndexViewModel> games = await _gameRepository
+            IQueryable<Game> query =  _gameRepository
                 .GetWithIncludeAsync(g => g.Publisher.User)
                 .AsNoTracking()
-                .Where(g => g.IsDeleted == false)
+                .Where(g => g.IsDeleted == false);
+
+            query = sortOrder == EntitySortOrder.Newest
+                ? query.OrderByDescending(g => g.Id)
+                : query.OrderBy(g => g.Id);
+
+            var gameIndexViewModels = await query
                 .Skip((currentPage - 1) * gamesPerPage)
                 .Take(gamesPerPage)
                 .Select(g => new GameIndexViewModel()
@@ -425,7 +433,7 @@ namespace GameVerse.Services
                     Publisher = g.Publisher.User.UserName
                 }).ToListAsync();
 
-            return games;
+            return gameIndexViewModels;
         }
 
         public async Task<IEnumerable<GameIndexViewModel>> GetLast3GamesAsync()
