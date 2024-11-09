@@ -408,6 +408,16 @@ namespace GameVerse.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(string id)
         {
+            string? userId = User.GetId();
+
+            string? moderatorId = await _moderatorService.GetModeratorIdByUserIdAsync(userId);
+
+            if (moderatorId == null)
+            {
+                _notyf.Warning("You don't have the permission to do this");
+                return Unauthorized();
+            }
+
             bool isGameExiting = await _gameService.GameExistByIdAsync(id);
 
             if (isGameExiting == false)
@@ -415,19 +425,11 @@ namespace GameVerse.Web.Controllers
                 return NotFound();
             }
 
-            string? userId = User.GetId();
-
-            string? moderatorId = await _moderatorService.GetModeratorIdByUserIdAsync(userId);
-
-            if (moderatorId == null)
-            {
-                return Unauthorized();
-            }
-
             bool isCreatorOfTheGame = await _gameService.HasPublisherWithIdAsync(moderatorId, id);
 
             if (isCreatorOfTheGame == false)
             {
+                _notyf.Warning("You are not the creator of the Game");
                 return Unauthorized();
             }
 
@@ -440,6 +442,16 @@ namespace GameVerse.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteConfirm(string id)
         {
+            string? userId = User.GetId();
+
+            string? moderatorId = await _moderatorService.GetModeratorIdByUserIdAsync(userId);
+
+            if (moderatorId == null)
+            {
+                _notyf.Warning("You don't have the permission to do this");
+                return Unauthorized();
+            }
+
             bool isGameExiting = await _gameService.GameExistByIdAsync(id);
 
             if (isGameExiting == false)
@@ -447,23 +459,17 @@ namespace GameVerse.Web.Controllers
                 return NotFound();
             }
 
-            string? userId = User.GetId();
-
-            string? moderatorId = await _moderatorService.GetModeratorIdByUserIdAsync(userId);
-
-            if (moderatorId == null)
-            {
-                return Unauthorized();
-            }
-
             bool isCreatorOfTheGame = await _gameService.HasPublisherWithIdAsync(moderatorId, id);
 
             if (isCreatorOfTheGame == false)
             {
+                _notyf.Warning("You are not the creator of the Game");
                 return Unauthorized();
             }
 
             string? gameId = await _gameService.DeleteGamePostAsync(id, moderatorId);
+
+            await _moderatorService.DecreaseCreatedTotalGamesCount(moderatorId);
 
             _notyf.Success("Game was deleted successfully!");
 
