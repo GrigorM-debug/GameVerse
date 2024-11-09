@@ -31,7 +31,7 @@ namespace GameVerse.Services.Interfaces
 
         Task<bool> GameExistByTitleAndTypeAsync(string title, GameType type);
 
-        Task<IEnumerable<GameIndexViewModel>> GetAllGamesAsync(int currentPage, int gamesPerPage, EntitySortOrder sortOrder, string? searchString);
+        Task<IEnumerable<GameIndexViewModel>> GetAllGamesAsync(int currentPage, int gamesPerPage, EntitySortOrder sortOrder, string? searchString, GameType? gameSelectedGameTypeSortOrder);
 
         Task<IEnumerable<GameIndexViewModel>> GetLast3GamesAsync();
 

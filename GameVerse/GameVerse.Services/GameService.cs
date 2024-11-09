@@ -408,7 +408,7 @@ namespace GameVerse.Services
             return true;
         }
 
-        public async Task<IEnumerable<GameIndexViewModel>> GetAllGamesAsync(int currentPage, int gamesPerPage, EntitySortOrder sortOrder, string? searchString)
+        public async Task<IEnumerable<GameIndexViewModel>> GetAllGamesAsync(int currentPage, int gamesPerPage, EntitySortOrder sortOrder, string? searchString, GameType? gameSelectedGameTypeSortOrder)
         {
             IQueryable<Game> query =  _gameRepository
                 .GetWithIncludeAsync(g => g.Publisher.User)
@@ -418,6 +418,11 @@ namespace GameVerse.Services
             if (searchString != null)
             {
                 query = query.Where(g => g.Title.Contains(searchString));
+            }
+
+            if (gameSelectedGameTypeSortOrder != null)
+            {
+                query = query.Where(g => g.Type == gameSelectedGameTypeSortOrder);
             }
 
             query = sortOrder == EntitySortOrder.Newest
