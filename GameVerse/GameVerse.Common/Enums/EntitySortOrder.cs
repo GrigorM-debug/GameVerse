@@ -1,7 +1,7 @@
 ﻿
 namespace GameVerse.Common.Enums
 {
-    public enum EventSortOrder
+    public enum EntitySortOrder
     {
         Newest = 1, 
         Oldest = 2

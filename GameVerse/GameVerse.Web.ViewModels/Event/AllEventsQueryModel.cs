@@ -12,7 +12,7 @@ namespace GameVerse.Web.ViewModels.Event
 
         public int TotalEventsCount { get; set; }
 
-        public EventSortOrder EventSelectedSortOrder { get; set; } = EventSortOrder.Newest;
+        public EntitySortOrder EventSelectedSortOrder { get; set; } = EntitySortOrder.Newest;
 
         public IEnumerable<EventIndexViewModel> Events { get; set; } = new HashSet<EventIndexViewModel>();
     }

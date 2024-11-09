@@ -119,8 +119,6 @@ namespace GameVerse.Services
             e.IsDeleted = true;
 
             await _eventRepository.SaveChangesAsync();
-
-
         }
 
         /// <summary>
@@ -174,6 +172,7 @@ namespace GameVerse.Services
                 e.TicketPrice = inputModel.TicketPrice;
                 e.Image = inputModel.Image;
                 e.PublisherId = Guid.Parse(moderatorId);
+                e.Status = EntityStatus.Approved;
             }
 
             await _eventRepository.SaveChangesAsync();
@@ -225,7 +224,7 @@ namespace GameVerse.Services
         public async Task<IEnumerable<EventIndexViewModel>> GetAllEventsAsync(
             int currentPage,
             int eventsPerPage,
-            EventSortOrder sortOrder
+            EntitySortOrder sortOrder
             )
         {
             IQueryable<Event> query = _eventRepository
@@ -235,7 +234,7 @@ namespace GameVerse.Services
 
             //If the sortOrder is Newest we Order the Events by Id Descending to get the newest added Events in the Database
             //If the sortOrder is Oldest we Order the Events by Id Ascending to get the oldest added Events in the Database
-            query = sortOrder == EventSortOrder.Newest
+            query = sortOrder == EntitySortOrder.Newest
                 ? query.OrderByDescending(e => e.Id) 
                 : query.OrderBy(e => e.Id);
 
