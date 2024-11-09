@@ -16,26 +16,34 @@ using static GameVerse.Common.ApplicationConstants;
 namespace GameVerse.Web.Controllers
 {
     [Authorize]
-    public class GameStoreController : Controller
+    public class GameStoreController(ILogger<GameStoreController> logger, INotyfService notyf, IModeratorService moderatorService, IGameService gameService) : Controller
     {
-        private readonly ILogger<GameStoreController> _logger;
-        private readonly INotyfService _notyf;
-        private readonly IModeratorService _moderatorService;
-        private readonly IGameService _gameService;
-
-        public GameStoreController(ILogger<GameStoreController> logger, INotyfService notyf, IModeratorService moderatorService, IGameService gameService)
-        {
-            _logger = logger;
-            _notyf = notyf;
-            _moderatorService = moderatorService;
-            _gameService = gameService;
-        }
+        private readonly ILogger<GameStoreController> _logger = logger;
+        private readonly INotyfService _notyf = notyf;
+        private readonly IModeratorService _moderatorService = moderatorService;
+        private readonly IGameService _gameService = gameService;
 
         [AllowAnonymous]
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index([FromQuery] AllGamesQueryModel model)
         {
-            return View();
+            if (model.CurrentPage < 1)
+            {
+                model.CurrentPage = 1;
+            }
+
+            int totalGameCount = await gameService.GetTotalGamesCountAsync();
+
+            IEnumerable<GameIndexViewModel> games = await _gameService.GetAllGamesAsync(
+                model.CurrentPage,
+                model.GamesPerPage,
+                model.GameSelectedSortOrder
+            );
+
+            model.TotalGamesCount = totalGameCount;
+            model.Games = games;
+
+            return View(model);
         }
 
         [AllowAnonymous]
