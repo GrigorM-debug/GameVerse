@@ -38,7 +38,8 @@ namespace GameVerse.Web.Controllers
                 model.CurrentPage,
                 model.GamesPerPage,
                 model.GameSelectedSortOrder,
-                model.SearchString
+                model.SearchString,
+                model.GameSelectedGameTypeSortOrder
             );
 
             model.TotalGamesCount = totalGameCount;
