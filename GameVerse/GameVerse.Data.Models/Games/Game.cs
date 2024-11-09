@@ -143,6 +143,7 @@ namespace GameVerse.Data.Models.Games
         [ForeignKey(nameof(BuyerId))]
         public ApplicationUser? Buyer { get; set; }
 
+
         /// <summary>
         /// Gets or sets the collection of platforms the game is available on.
         /// </summary>

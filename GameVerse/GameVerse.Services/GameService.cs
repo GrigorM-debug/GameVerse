@@ -38,8 +38,6 @@ namespace GameVerse.Services
             _context = context;
         }
 
-        
-
         public async Task<GameInputViewModel> AddGameGetAsync()
         {
             IEnumerable<GenreSelectList> genres = await GetGenresAsync();
@@ -279,17 +277,17 @@ namespace GameVerse.Services
             {
                 game.IsDeleted = true;
 
-                foreach (var genre in game.GamesGenres)
+                foreach (var genre in game.GamesGenres.ToList())
                 {
                     genre.IsDeleted = true;
                 }
 
-                foreach (var platform in game.GamesPlatforms)
+                foreach (var platform in game.GamesPlatforms.ToList())
                 {
                     platform.IsDeleted = true;
                 }
 
-                foreach (var restriction in game.GamesRestrictions)
+                foreach (var restriction in game.GamesRestrictions.ToList())
                 {
                     restriction.IsDeleted = true;
                 }
