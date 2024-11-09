@@ -74,6 +74,14 @@ namespace GameVerse.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(EventInputViewModel inputModel)
         {
+            string? moderatorId = await _moderatorService.GetModeratorIdByUserIdAsync(User.GetId());
+
+            if (moderatorId == null)
+            {
+                _notyf.Warning("You don't have the permission to do this");
+                return Unauthorized();
+            }
+
             bool isEventExisting = await _eventService.EventExistByTitle(inputModel.Topic);
 
             if (isEventExisting)
@@ -87,6 +95,7 @@ namespace GameVerse.Web.Controllers
                     DateTimeStyles.None, out DateTime startDate) == false)
             {
                 ModelState.AddModelError(nameof(inputModel.StartDate), EventDateTimeErrorMessage);
+                _notyf.Error(EventDateTimeErrorMessage);
                 return View(inputModel);
             }
 
@@ -94,18 +103,21 @@ namespace GameVerse.Web.Controllers
                     DateTimeStyles.None, out DateTime endDate) == false)
             {
                 ModelState.AddModelError(nameof(inputModel.EndDate), EventDateTimeErrorMessage);
+                _notyf.Error(EventDateTimeErrorMessage);
                 return View(inputModel);
             }
 
             if (startDate > endDate)
             {
-                ModelState.AddModelError(nameof(inputModel.EndDate), "End date cannot be earlier than Start date.");
+                ModelState.AddModelError(nameof(inputModel.EndDate), "End date can not be earlier than Start date.");
+                _notyf.Error("End date can not be earlier than Start date.");
                 return View(inputModel);
             }
 
             if (startDate == endDate)
             {
-                ModelState.AddModelError(nameof(inputModel.EndDate), "End date cannot be the same as Start date.");
+                ModelState.AddModelError(nameof(inputModel.EndDate), "End date can not be the same as Start date.");
+                _notyf.Warning("End date can not be the same as Start date.");
                 return View(inputModel);
             }
 
@@ -114,9 +126,9 @@ namespace GameVerse.Web.Controllers
                 return View(inputModel);
             }
 
-            string? moderatorId = await _moderatorService.GetModeratorIdByUserIdAsync(User.GetId());
 
             string eventId = await _eventService.AddEventAsync(inputModel, moderatorId!, startDate, endDate);
+
             await _moderatorService.InCreaseCreatedTotalEventsCount(moderatorId);
 
             _notyf.Success("Event was added successfully!");
@@ -142,12 +154,14 @@ namespace GameVerse.Web.Controllers
             if(String.IsNullOrEmpty(moderatorId))
             {
                 //You can also redirect to Login Page. 
+                _notyf.Warning("You don't have the permission to do this");
                 return Unauthorized();
             }
 
             if (await _eventService.HasPublisherWithIdAsync(moderatorId, id) == false && User.IsAdmin() == false)
             {
                 //You can also redirect to Login Page.
+                _notyf.Warning("You are not the creator of the Event");
                 return Unauthorized();
             }
 
@@ -172,12 +186,14 @@ namespace GameVerse.Web.Controllers
             if(String.IsNullOrEmpty(moderatorId))
             {
                 //You can also redirect to Login Page
+                _notyf.Warning("You don't have the permission to do this");
                 return Unauthorized();
             }
 
             if (await _eventService.HasPublisherWithIdAsync(moderatorId, id) == false && User.IsAdmin() == false)
             {
                 //You can also redirect to Login Page
+                _notyf.Warning("You are not the creator of the Event");
                 return Unauthorized();
             }
 
@@ -185,6 +201,7 @@ namespace GameVerse.Web.Controllers
                     DateTimeStyles.None, out DateTime startDate) == false)
             {
                 ModelState.AddModelError(nameof(inputModel.StartDate), EventDateTimeErrorMessage);
+                _notyf.Error(EventDateTimeErrorMessage);
                 return View(inputModel);
             }
 
@@ -192,18 +209,21 @@ namespace GameVerse.Web.Controllers
                     DateTimeStyles.None, out DateTime endDate) == false)
             {
                 ModelState.AddModelError(nameof(inputModel.EndDate), EventDateTimeErrorMessage);
+                _notyf.Error(EventDateTimeErrorMessage);
                 return View(inputModel);
             }
 
             if (startDate > endDate)
             {
                 ModelState.AddModelError(nameof(inputModel.EndDate), "End date cannot be earlier than Start date.");
+                _notyf.Error("End date cannot be earlier than Start date.");
                 return View(inputModel);
             }
 
             if (startDate == endDate)
             {
                 ModelState.AddModelError(nameof(inputModel.EndDate), "End date cannot be the same as Start date.");
+                _notyf.Error("End date cannot be the same as Start date.");
                 return View(inputModel);
             }
 
@@ -237,12 +257,14 @@ namespace GameVerse.Web.Controllers
             if (String.IsNullOrEmpty(moderatorId))
             {
                 //You can also redirect to Login Page
+                _notyf.Warning("You don't have the permission to do this");
                 return Unauthorized();
             }
 
             if (await _eventService.HasPublisherWithIdAsync(moderatorId, id) == false && User.IsAdmin() == false)
             {
                 //You can also redirect to Login Page
+                _notyf.Warning("You are not the creator of the Event");
                 return Unauthorized();
             }
 
@@ -267,12 +289,14 @@ namespace GameVerse.Web.Controllers
             if (String.IsNullOrEmpty(moderatorId))
             {
                 //You can also redirect to Login Page
+                _notyf.Warning("You don't have the permission to do this");
                 return Unauthorized();
             }
 
             if (await _eventService.HasPublisherWithIdAsync(moderatorId, id) == false && User.IsAdmin() == false)
             {
                 //You can also redirect to Login Page
+                _notyf.Warning("You are not the creator of the Event");
                 return Unauthorized();
             }
 
