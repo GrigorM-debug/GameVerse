@@ -16,6 +16,8 @@ namespace GameVerse.Web.ViewModels.Game
 
         public EntitySortOrder GameSelectedSortOrder { get; set; } = EntitySortOrder.Newest;
 
+        public GameType? GameSelectedGameTypeSortOrder { get; set; }
+
         public IEnumerable<GameIndexViewModel> Games { get; set; } = new HashSet<GameIndexViewModel>();
     }
 }
