@@ -224,7 +224,7 @@ namespace GameVerse.Web.Controllers
 
             _notyf.Success("Game was added successfully!");
 
-            Log.Information("Moderator with ID {ModeratorId} perform an {Action} in controller {Controller}", moderatorId, nameof(Add), nameof(GameStoreController));
+            Log.Information("Moderator with ID {ModeratorId} perform an {Action} action in controller {Controller}", moderatorId, nameof(Add), nameof(GameStoreController));
 
             return RedirectToAction(nameof(Details), new { id = gameId });
         }
@@ -409,7 +409,7 @@ namespace GameVerse.Web.Controllers
 
             _notyf.Success("Game was edited successfully!");
 
-            Log.Information("Moderator with ID {ModeratorId} perform an {Action} in controller {Controller}", moderatorId, nameof(Edit), nameof(GameStoreController));
+            Log.Information("Moderator with ID {ModeratorId} perform an {Action} action in controller {Controller}", moderatorId, nameof(Edit), nameof(GameStoreController));
 
             return RedirectToAction(nameof(Details), new { id = gameId });
         }
@@ -483,9 +483,9 @@ namespace GameVerse.Web.Controllers
 
             _notyf.Success("Game was deleted successfully!");
 
-            Log.Information("Moderator with ID {ModeratorId} perform an {Action} in controller {Controller}", moderatorId, nameof(DeleteConfirm), nameof(GameStoreController));
+            Log.Information("Moderator with ID {ModeratorId} perform an {Action} action in controller {Controller}", moderatorId, nameof(DeleteConfirm), nameof(GameStoreController));
 
-            return RedirectToAction(nameof(Details), new { id = gameId });
+            return RedirectToAction(nameof(Index));
         }
     }
 }

@@ -243,7 +243,6 @@ namespace GameVerse.Services
 
         public async Task<GameDeleteViewModel> DeleteGameGetAsync(string gameId, string moderatorId)
         {
-            //Not done yet
             Game? game = await _gameRepository
                 .GetWithIncludeAsync(g => g.Publisher.User)
                 .AsNoTracking()
@@ -263,7 +262,6 @@ namespace GameVerse.Services
 
         public async Task<string> DeleteGamePostAsync(string gameId, string moderatorId)
         {
-            //Not done yet
             Game? game = await _gameRepository
                 .GetWithIncludeAsync(g => 
                     g.GamesGenres.Where(g => g.IsDeleted == false),
