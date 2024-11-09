@@ -26,6 +26,16 @@
                 <li><a asp-controller="GameStore" asp-action="Index" asp-route-gameSelectedSortOrder="@EntitySortOrder.Oldest" class="dropdown-item font-weight-bold">Oldest</a></li>
             </ul>
         </div>
+        <div class="dropdown m-lg-2">
+            <button class="btn btn-primary dropdown-toggle font-weight-bold p-2" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                Sort by Type: @Model.GameSelectedGameTypeSortOrder
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <li><a asp-controller="GameStore" asp-action="Index" asp-route-gameSelectedGameTypeSortOrder="" class="dropdown-item font-weight-bold">All</a></li>
+                <li><a asp-controller="GameStore" asp-action="Index" asp-route-gameSelectedGameTypeSortOrder="@GameType.DigitalKey" class="dropdown-item font-weight-bold">DigitalKey</a></li>
+                <li><a asp-controller="GameStore" asp-action="Index" asp-route-gameSelectedGameTypeSortOrder="@GameType.PhysicalCopy" class="dropdown-item font-weight-bold">PhysicalCopy</a></li>
+            </ul>
+        </div>
     </div>
 </div>
 <hr />
