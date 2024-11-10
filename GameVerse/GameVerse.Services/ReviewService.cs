@@ -2,6 +2,7 @@
 using GameVerse.Data.Models.Games.Review;
 using GameVerse.Data.Repositories.Interfaces;
 using GameVerse.Services.Interfaces;
+using GameVerse.Web.ViewModels.Game.Review;
 using Microsoft.EntityFrameworkCore;
 
 namespace GameVerse.Services
@@ -24,19 +25,63 @@ namespace GameVerse.Services
             return true;
         }
 
-        public Task AddReviewAsync(string userId, string gameId)
+        public async Task AddReviewAsync(ReviewInputViewModel inputModel, string userId, string gameId, DateTime createdOn)
         {
-            throw new NotImplementedException();
+            GameReview? review = await _reviewRepository.FirstOrDefaultAsync(r =>
+                r.ReviewerId.ToString() == userId && r.GameId.ToString() == gameId);
+
+            if (review != null)
+            {
+                if (review.IsDeleted == true) ;
+                review.IsDeleted = false;
+            }
+            else
+            {
+                review = new GameReview()
+                {
+                    Content = inputModel.Content,
+                    Rating = inputModel.Rating,
+                    CreatedOn = createdOn,
+                    GameId = Guid.Parse(gameId),
+                    ReviewerId = Guid.Parse(userId)
+                };
+
+                await _reviewRepository.AddAsync(review);
+            }
+
+            await _reviewRepository.SaveChangesAsync();
         }
 
-        public Task EditReviewAsync(string reviewId, string userId)
+        public async Task EditReviewAsync(ReviewInputViewModel inputModel, DateTime createdOn, string reviewId, string userId, string gameId)
         {
-            throw new NotImplementedException();
+            GameReview? review = await _reviewRepository.FirstOrDefaultAsync(r =>
+                r.Id.ToString() == reviewId && r.ReviewerId.ToString() == userId && r.GameId.ToString() == gameId &&
+                r.IsDeleted == false);
+
+            if (review != null)
+            {
+                review.Content = inputModel.Content;
+                review.Rating = inputModel.Rating;
+                review.CreatedOn = createdOn;
+                review.GameId = Guid.Parse(gameId);
+                review.ReviewerId = Guid.Parse(userId);
+                review.IsDeleted = false;
+
+                await _reviewRepository.SaveChangesAsync();
+            }
         }
 
-        public Task DeleteReviewAsync(string reviewId, string userId)
+        public async Task DeleteReviewAsync(string reviewId, string userId, string gameId)
         {
-            throw new NotImplementedException();
+            GameReview? review = await _reviewRepository.FirstOrDefaultAsync(r =>
+                r.Id.ToString() == reviewId && r.ReviewerId.ToString() == userId && r.GameId.ToString() == gameId &&
+                r.IsDeleted == false);
+
+            if (review != null)
+            {
+                review.IsDeleted = true;
+                await _reviewRepository.SaveChangesAsync();
+            }
         }
     }
 }
