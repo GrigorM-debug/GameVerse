@@ -32,8 +32,10 @@ namespace GameVerse.Services
 
             if (review != null)
             {
-                if (review.IsDeleted == true) ;
-                review.IsDeleted = false;
+                if (review.IsDeleted == true)
+                {
+                    review.IsDeleted = false;
+                }
             }
             else
             {
