@@ -1,0 +1,31 @@
+﻿
+
+@{
+    ViewData["Title"] = "Delete Review";
+}
+
+<h2 class="text-start mt-5 mb-3">Delete Game</h2>
+<hr />
+<div class="mb-4"></div>
+
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">Title: @Model.Title</h3>
+                <p class="card-text">Added By: @Model.PublisherName</p>
+                <p class="card-text">Are you sure you want to Delete Event with Topic @Model.Title</p>
+            </div>
+            <div class="card-footer">
+                <form asp-controller="GameStore" asp-action="DeleteConfirm" method="post">
+                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="Title" />
+                    <input type="hidden" asp-for="PublisherId" />
+                    <button type="submit" class="btn btn-danger">Confirm Delete</button>
+                    <a asp-controller="GameStore" asp-action="Details" asp-route-id="@Model.Id" class="btn btn-warning">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
