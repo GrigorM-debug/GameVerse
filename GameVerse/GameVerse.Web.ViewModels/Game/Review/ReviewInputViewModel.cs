@@ -17,5 +17,7 @@ namespace GameVerse.Web.ViewModels.Game.Review
 
         [Required]
         public string CreatedOn { get; set; } = DateTime.Now.ToString(DateTimeFormat, CultureInfo.InvariantCulture);
+
+        public string GameId { get; set; } = null!;
     }
 }

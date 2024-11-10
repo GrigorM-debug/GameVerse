@@ -47,79 +47,88 @@
                 <p><b>Genres:</b> @String.Join(", ", Model.Genres.Select(g => g.Name))</p>
                 <p><b>Platforms:</b> @String.Join(", ", Model.Platforms.Select(p => p.Name))</p>
                 <p><b>Restrictions:</b> @String.Join(", ", Model.Restrictions.Select(r => r.Name))</p>
-                <a href="https://www.systemrequirementslab.com/cyri" type="button" class="btn btn-primary">Can You Run It</a>
+                <a href="https://www.systemrequirementslab.com/cyri" type="button" class="btn btn-primary font-weight-bold">Can You Run It</a>
             </div>
         </div>
     </div>
 </div>
 
 @* Game reviews section. Think about making it in partial view *@
-@* <div class="d-flex justify-content-between">
+ <div class="d-flex justify-content-between">
     <h2 class="text-start mt-5 mb-3">Game Reviews</h2>
-    <a type="button" class="btn btn-primary btn-sm fw-bold mt-5" asp-area="" asp-controller="" asp-action="">Add Review</a>
+    @if (User?.Identity?.IsAuthenticated == true && !User.IsInRole("Moderator") && !User.IsInRole("Admin"))
+    {
+        <a type="button" class="btn btn-primary btn-sm fw-bold mt-5" asp-area="" asp-controller="Review" asp-action="Add" asp-route-gameId="@Model.Id">Add Review</a>
+    }
 </div>
 <hr />
 <div class="mb-4"></div>
+@{
+    int reviewsCount = Model.Reviews.Count();
+
+    var reviews = Model.Reviews.ToList();
+
+    var currentUserName = User?.Identity?.Name;
+}
+
+@if (!Model.Reviews.Any())
+{
+    <h2 class="mt-2">No reviews added</h2>
+}
 <div id="userReviewsCarousel" class="carousel slide" data-bs-ride="carousel">
+     <div class="carousel-indicators">
+         @* <button type="button" data-bs-target="#userReviewsCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+         <button type="button" data-bs-target="#userReviewsCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+         <button type="button" data-bs-target="#userReviewsCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button> *@
+        
+        @for (int i = 0; i < reviewsCount; i++)
+        {
+            <button type="button" data-bs-target="#userReviewsCarousel" data-bs-slide-to="@i" class="@(i==0 ? "active" : "")" aria-current="@(i==0 ? "true" : "false")"></button>
+        }
+     </div> 
+
+    <div class="carousel-inner">
+        @for (int i = 0; i < reviewsCount; i++)
+        {
+            <div class="carousel-item @(@i == 0 ? "active" : "")">
+                <div class="row text-center justify-content-center">
+                    <div class="col-md-4 mb-5 mb-md-0">
+                         @* <div class="d-flex justify-content-center mb-4">
+                             <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(1).webp"
+                                  class="rounded-circle shadow-1-strong" width="100" height="100" /> <!-- Smaller Image -->
+                         </div> *@
+                        <h5 class="mb-3">@reviews[i].Reviewer</h5>
+                        <h6 class="mb-3">Created On: @reviews[i].CreatedOn</h6>
+                        <p class="px-xl-3">
+                            <i class="fas fa-quote-left pe-2"></i>@reviews[i].Content
+                        </p>
+                        <ul class="list-unstyled d-flex justify-content-center mb-0">
+                            @for (int j = 0; j < reviews[i].Rating; j++)
+                            {
+                                <li><i class="fas fa-star fa-sm text-warning"></i></li>
+                            }
+                        </ul>
+                        @if (User?.Identity?.IsAuthenticated == true && reviews[i].Reviewer == currentUserName && !User.IsInRole("Admin") && !User.IsInRole("Moderator"))
+                        {
+                            <div class="d-flex justify-content-around">
+                                <a type="button" class="btn btn-warning">Edit</a>
+                                <a type="button" class="btn btn-danger">Delete</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+
     @* <div class="carousel-indicators">
         <button type="button" data-bs-target="#userReviewsCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-        <button type="button" data-bs-target="#userReviewsCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-        <button type="button" data-bs-target="#userReviewsCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+         <button type="button" data-bs-target="#userReviewsCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+         <button type="button" data-bs-target="#userReviewsCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button> 
+        
+        
     </div> *@
-
-   @* <div class="carousel-inner">
-        <div class="carousel-item active">
-            <div class="row text-center justify-content-center">
-                <div class="col-md-4 mb-5 mb-md-0">
-                    <div class="d-flex justify-content-center mb-4">
-                        <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(1).webp"
-                             class="rounded-circle shadow-1-strong" width="100" height="100" /> <!-- Smaller Image -->
-                    </div>
-                    <h5 class="mb-3">Maria Smantha</h5>
-                    <h6 class="text-primary mb-3">Web Developer</h6>
-                    <p class="px-xl-3">
-                        <i class="fas fa-quote-left pe-2"></i>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    </p>
-                    <ul class="list-unstyled d-flex justify-content-center mb-0">
-                        <li><i class="fas fa-star fa-sm text-warning"></i></li>
-                        <li><i class="fas fa-star fa-sm text-warning"></i></li>
-                        <li><i class="fas fa-star fa-sm text-warning"></i></li>
-                        <li><i class="fas fa-star fa-sm text-warning"></i></li>
-                        <li><i class="fas fa-star-half-alt fa-sm text-warning"></i></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="carousel-item">
-            <div class="row text-center justify-content-center">
-                <div class="col-md-4 mb-5 mb-md-0">
-                    <div class="d-flex justify-content-center mb-4">
-                        <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(2).webp"
-                             class="rounded-circle shadow-1-strong" width="100" height="100" /> <!-- Smaller Image -->
-                    </div>
-                    <h5 class="mb-3">Lisa Cudrow</h5>
-                    <h6 class="text-primary mb-3">Graphic Designer</h6>
-                    <p class="px-xl-3">
-                        <i class="fas fa-quote-left pe-2"></i>Ut enim ad minima veniam, quis nostrum exercitationem ullam.
-                    </p>
-                    <ul class="list-unstyled d-flex justify-content-center mb-0">
-                        <li><i class="fas fa-star fa-sm text-warning"></i></li>
-                        <li><i class="fas fa-star fa-sm text-warning"></i></li>
-                        <li><i class="fas fa-star fa-sm text-warning"></i></li>
-                        <li><i class="fas fa-star fa-sm text-warning"></i></li>
-                        <li><i class="fas fa-star fa-sm text-warning"></i></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="carousel-indicators">
-        <button type="button" data-bs-target="#userReviewsCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-        <button type="button" data-bs-target="#userReviewsCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-        <button type="button" data-bs-target="#userReviewsCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
-    </div>
 
     <!-- Carousel controls -->
     <button class="carousel-control-prev" type="button" data-bs-target="#userReviewsCarousel" data-bs-slide="prev">
@@ -131,7 +140,7 @@
         <span class='visually-hidden'>Next</span>
     </button>
 
-</div> *@
+</div> 
 
 
 <style>

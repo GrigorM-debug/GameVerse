@@ -34,7 +34,7 @@ namespace GameVerse.Web.Controllers
 
             bool isGameExisting = await _gameService.GameExistByIdAsync(gameId);
 
-            if (isGameExisting)
+            if (!isGameExisting)
             {
                 _notyf.Error("Game doesn't exist");
                 return NotFound();
@@ -50,6 +50,8 @@ namespace GameVerse.Web.Controllers
             }
 
             ReviewInputViewModel model = new ReviewInputViewModel();
+
+            model.GameId = gameId;
 
             return View(model);
         }
@@ -67,7 +69,7 @@ namespace GameVerse.Web.Controllers
 
             bool isGameExisting = await _gameService.GameExistByIdAsync(gameId);
 
-            if (isGameExisting)
+            if (!isGameExisting)
             {
                 _notyf.Error("Game doesn't exist");
                 return NotFound();

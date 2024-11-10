@@ -12,7 +12,7 @@
         <div class="input-group mt-2">
             <div class="form-outline" data-mdb-input-init>
                 <form asp-controller="GameStore" asp-action="Index" asp-route-searchString="@Model.SearchString" method="get" class="d-flex justify-content-center align-items-center">
-                    <input asp-for="@Model.SearchString" type="search" name="searchString" class="form-control" placeholder="Search by Title" value="@Model.SearchString"/>
+                    <input asp-for="@Model.SearchString" type="search" name="searchString" class="form-control font-weight-bold" placeholder="Search by Title" value="@Model.SearchString"/>
                     <input type="submit" class="btn btn-primary p-2" data-mdb-ripple-init value="Search"/>
                 </form>
             </div>
