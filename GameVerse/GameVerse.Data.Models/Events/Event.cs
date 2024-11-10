@@ -142,23 +142,6 @@ namespace GameVerse.Data.Models.Events
         [ForeignKey(nameof(PublisherId))]
         public Moderator Publisher { get; set; } = null!;
 
-        /// <summary>
-        /// Gets or sets the moderator who publishes the event.
-        /// </summary>
-        /// <remarks>
-        /// This is a required field that establishes a foreign key relationship with the <see cref="Moderator"/> entity.
-        /// </remarks>
-        [Comment("The user that bought ticket for the event")]
-        public Guid? ParticipantId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the participant who bought a ticket for the event.
-        /// </summary>
-        /// <remarks>
-        /// This is a required field that establishes a foreign key relationship with the <see cref="ApplicationUser"/> entity.
-        /// </remarks>
-        [ForeignKey(nameof(ParticipantId))]
-        public ApplicationUser? Participant { get; set; } = null!;
 
         /// <summary>
         /// Gets or sets a value indicating whether the event has been soft deleted.

@@ -16,7 +16,7 @@ using static GameVerse.Common.ApplicationConstants;
 namespace GameVerse.Web.Controllers
 {
     [Authorize]
-    public class GameStoreController(ILogger<GameStoreController> logger, INotyfService notyf, IModeratorService moderatorService, IGameService gameService) : Controller
+    public class GameStoreController(ILogger<GameStoreController> logger, INotyfService notyf, IModeratorService moderatorService, IGameService gameService) : BaseController
     {
         private readonly ILogger<GameStoreController> _logger = logger;
         private readonly INotyfService _notyf = notyf;

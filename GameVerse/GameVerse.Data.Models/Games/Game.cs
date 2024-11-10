@@ -5,7 +5,6 @@ using GameVerse.Data.Models.Games.Genres;
 using GameVerse.Data.Models.Games.Platform;
 using GameVerse.Data.Models.Games.Restrictions;
 using GameVerse.Data.Models.Games.Review;
-using GameVerse.Data.Models.GameUserActions;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -131,17 +130,6 @@ namespace GameVerse.Data.Models.Games
         [ForeignKey(nameof(PublisherId))]
         public Moderator Publisher { get; set; } = null!;
 
-        /// <summary>
-        /// Gets or sets the unique identifier for the buyer of the game.
-        /// </summary>
-        [Comment("The game buyer unique identifier")]
-        public Guid? BuyerId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the buyer of the game.
-        /// </summary>
-        [ForeignKey(nameof(BuyerId))]
-        public ApplicationUser? Buyer { get; set; }
 
 
         /// <summary>
@@ -164,10 +152,6 @@ namespace GameVerse.Data.Models.Games
         /// </summary>
         public ICollection<GameReview> Reviews { get; set; } = new HashSet<GameReview>();
 
-        /// <summary>
-        /// Gets or sets the collection of wishlist items where the game is added by users.
-        /// </summary>
-        public ICollection<GameUserWishlist> WishlistItems { get; set; } = new HashSet<GameUserWishlist>();
 
         /// <summary>
         /// Gets or sets the collection of cart items where the game is added by users.

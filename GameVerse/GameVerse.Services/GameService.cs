@@ -271,6 +271,7 @@ namespace GameVerse.Services
                 .FirstOrDefaultAsync(g =>
                     g.Id.ToString() == gameId && g.PublisherId.ToString() == moderatorId && g.IsDeleted == false);
 
+            //Think about refactoring this
             if (game != null)
             {
                 game.IsDeleted = true;

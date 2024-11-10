@@ -7,7 +7,6 @@ using GameVerse.Data.Models.Games.Genres;
 using GameVerse.Data.Models.Games.Platform;
 using GameVerse.Data.Models.Games.Restrictions;
 using GameVerse.Data.Models.Games.Review;
-using GameVerse.Data.Models.GameUserActions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -41,20 +40,14 @@ namespace GameVerse.Data
 
         public DbSet<GamePlatform> GamesPlatforms { get; set; } = null!;
 
+        public DbSet<UserBoughtGame> UserBoughtGames { get; set; } = null!;
+
         public DbSet<Cart> Carts { get; set; } = null!;
 
         public DbSet<GameCart> GamesCarts { get; set; } = null!;
 
         public DbSet<EventCart> EventsCarts { get; set; } = null!;
 
-        //Games that users marked as completed. Games that they finiched playing.
-        public DbSet<GameUserCompleted> GamesUsersCompleted { get; set; } = null!;
-
-        //Games that users are currently playing.
-        public DbSet<GameUserCurrentlyPlaying> GamesUsersCurrentlyPlaying { get; set; } = null!;
-
-        //Games that users would like to buy and play. 
-        public DbSet<GameUserWishlist> GameUserWishlists { get; set; } = null!;
 
         public DbSet<Moderator> Moderators { get; set; } = null!;
 
@@ -102,6 +95,16 @@ namespace GameVerse.Data
             builder
                 .Entity<GameReview>()
                 .Property(g => g.IsDeleted)
+                .HasDefaultValue(false);
+
+            builder
+                .Entity<EventCart>()
+                .Property(ec => ec.IsDeleted)
+                .HasDefaultValue(false);
+
+            builder
+                .Entity<GameCart>()
+                .Property(gc => gc.IsDeleted)
                 .HasDefaultValue(false);
 
             base.OnModelCreating(builder);

@@ -17,9 +17,9 @@ namespace GameVerse.Data.Models.Carts
         [ForeignKey(nameof(UserId))]
         public ApplicationUser User { get; set; } = null!;
 
-        public DateTime OrderDate { get; set; }
 
-        public int TotalAmount { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal TotalPrice { get; set; }
 
         public ICollection<GameCart> GamesCarts = new HashSet<GameCart>();
         public ICollection<EventCart> EventsCarts = new HashSet<EventCart>();
