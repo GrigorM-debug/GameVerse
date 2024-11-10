@@ -4,6 +4,7 @@ using AspNetCoreHero.ToastNotification.Abstractions;
 using GameVerse.Data.Models.Games;
 using GameVerse.Services.Interfaces;
 using GameVerse.Web.Extensions;
+using GameVerse.Web.Filters;
 using GameVerse.Web.ViewModels.Game.Review;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +23,7 @@ namespace GameVerse.Web.Controllers
         private readonly ILogger<ReviewController> _logger = logger;
 
         [HttpGet]
+        [NotModerator]
         public async Task<IActionResult> Add(string gameId)
         {
             string? userId = User.GetId();
@@ -57,6 +59,7 @@ namespace GameVerse.Web.Controllers
         }
 
         [HttpPost]
+        [NotModerator]
         public async Task<IActionResult> Add(ReviewInputViewModel inputModel, string gameId)
         {
             string? userId = User.GetId();
