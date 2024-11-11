@@ -107,5 +107,39 @@ namespace GameVerse.Web.Controllers
 
             return RedirectToAction("Details", "GameStore", new { id = gameId });
         }
+
+        [HttpGet]
+        [NotModerator]
+        public async Task<IActionResult> Edit(string reviewId, string gameId)
+        {
+            string? userId = User.GetId();
+
+            if (userId == null)
+            {
+                _notyf.Error("Please log in");
+                return Unauthorized();
+            }
+
+            bool isGameExisting = await _gameService.GameExistByIdAsync(gameId);
+
+            if (!isGameExisting)
+            {
+                _notyf.Error("Game doesn't exist");
+                return NotFound();
+            }
+
+            bool isReviewForGameAlreadyExist =
+                await _reviewService.ReviewAlreadyExistByGameIdAndUserIdAsync(userId, gameId);
+
+            if (!isReviewForGameAlreadyExist)
+            {
+                _notyf.Error("Review for this game doesn't exist");
+                return RedirectToAction("Details", "GameStore", new { id = gameId });
+            }
+
+            ReviewInputViewModel model = await _reviewService.EditViewGetAsync(reviewId, gameId, userId);
+
+            return View(model);
+        }
     }
 }
