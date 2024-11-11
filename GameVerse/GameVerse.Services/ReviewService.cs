@@ -1,9 +1,11 @@
 ﻿
+using System.Globalization;
 using GameVerse.Data.Models.Games.Review;
 using GameVerse.Data.Repositories.Interfaces;
 using GameVerse.Services.Interfaces;
 using GameVerse.Web.ViewModels.Game.Review;
 using Microsoft.EntityFrameworkCore;
+using static GameVerse.Common.ApplicationConstants;
 
 namespace GameVerse.Services
 {
@@ -24,6 +26,7 @@ namespace GameVerse.Services
 
             return true;
         }
+
 
         public async Task AddReviewAsync(ReviewInputViewModel inputModel, string userId, string gameId, DateTime createdOn)
         {
@@ -54,7 +57,33 @@ namespace GameVerse.Services
             await _reviewRepository.SaveChangesAsync();
         }
 
-        public async Task EditReviewAsync(ReviewInputViewModel inputModel, DateTime createdOn, string reviewId, string userId, string gameId)
+        public async Task<ReviewInputViewModel> EditViewGetAsync(string reviewId, string gameId, string userId)
+        {
+            GameReview? review = await _reviewRepository
+                .AllAsReadOnly()
+                .FirstOrDefaultAsync(r =>
+                    r.Id.ToString() == reviewId
+                    && r.GameId.ToString() == gameId
+                    && r.ReviewerId.ToString() == userId
+                    && r.IsDeleted == false);
+
+            ReviewInputViewModel model = new ReviewInputViewModel();
+
+            if (review != null)
+            {
+                model = new ReviewInputViewModel
+                {
+                    Content = review.Content,
+                    Rating = review.Rating,
+                    CreatedOn = review.CreatedOn.ToString(DateTimeFormat, CultureInfo.InvariantCulture),
+                    GameId = review.GameId.ToString()
+                };
+            }
+
+            return model;
+        }
+
+        public async Task EditReviewPostAsync(ReviewInputViewModel inputModel, DateTime createdOn, string reviewId, string userId, string gameId)
         {
             GameReview? review = await _reviewRepository.FirstOrDefaultAsync(r =>
                 r.Id.ToString() == reviewId && r.ReviewerId.ToString() == userId && r.GameId.ToString() == gameId &&
