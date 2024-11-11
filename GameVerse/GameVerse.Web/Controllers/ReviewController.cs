@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using System.Runtime.InteropServices.JavaScript;
 using AspNetCoreHero.ToastNotification.Abstractions;
 using GameVerse.Data.Models.Games;
 using GameVerse.Services.Interfaces;
@@ -8,7 +7,6 @@ using GameVerse.Web.Filters;
 using GameVerse.Web.ViewModels.Game.Review;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using Serilog;
 using static GameVerse.Common.ApplicationConstants;
 
