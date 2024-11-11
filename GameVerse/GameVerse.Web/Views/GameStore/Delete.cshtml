@@ -19,9 +19,9 @@
             </div>
             <div class="card-footer">
                 <form asp-controller="GameStore" asp-action="DeleteConfirm" method="post">
-                    <input type="hidden" asp-for="Id" />
-                    <input type="hidden" asp-for="Title" />
-                    <input type="hidden" asp-for="PublisherId" />
+                     @* <input type="hidden" asp-for="Id" />
+                     <input type="hidden" asp-for="Title" />
+                     <input type="hidden" asp-for="PublisherId" /> *@
                     <button type="submit" class="btn btn-danger">Confirm Delete</button>
                     <a asp-controller="Event" asp-action="Details" asp-route-id="@Model.Id" class="btn btn-warning">Cancel</a>
                 </form>
