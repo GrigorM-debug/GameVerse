@@ -111,7 +111,7 @@
                         @if (User?.Identity?.IsAuthenticated == true && reviews[i].Reviewer == currentUserName && !User.IsInRole("Admin") && !User.IsInRole("Moderator"))
                         {
                             <div class="d-flex justify-content-around">
-                                <a type="button" class="btn btn-warning">Edit</a>
+                                <a asp-action="Edit" asp-controller="Review" asp-route-id="@reviews[i].Id" asp-route-gameId="@Model.Id" type="button" class="btn btn-warning">Edit</a>
                                 <a type="button" class="btn btn-danger">Delete</a>
                             </div>
                         }
