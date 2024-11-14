@@ -13,9 +13,9 @@ namespace GameVerse.Services.Interfaces
 
         Task<ReviewInputViewModel> EditViewGetAsync(string reviewId, string gameId, string userId);
 
-        Task EditReviewPostAsync(ReviewInputViewModel inputModel, DateTime createdOn, string reviewId, string userId, string gameId);
+        Task<bool> EditReviewPostAsync(ReviewInputViewModel inputModel, DateTime createdOn, string reviewId, string userId, string gameId);
 
         Task<ReviewDeleteViewModel> DeleteReviewGetAsync(string reviewId, string userId, string gameId);
-        Task DeleteReviewPostAsync(string reviewId, string userId, string gameId);
+        Task<bool> DeleteReviewPostAsync(string reviewId, string userId, string gameId);
     }
 }

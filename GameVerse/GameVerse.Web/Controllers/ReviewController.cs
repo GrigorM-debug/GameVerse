@@ -182,11 +182,14 @@ namespace GameVerse.Web.Controllers
                 return View(inputModel);
             }
 
-            await _reviewService.EditReviewPostAsync(inputModel, createdOn, id, userId, gameId);
+            bool isEditedSuccessfully = await _reviewService.EditReviewPostAsync(inputModel, createdOn, id, userId, gameId);
 
-            _notyf.Success("Review successfully edited");
+            if (isEditedSuccessfully)
+            {
+                _notyf.Success("Review successfully edited");
 
-            Log.Information("User with ID {UserId} perform {Action} in controller {Controller}", userId, nameof(Edit), nameof(ReviewController));
+                Log.Information("User with ID {UserId} perform {Action} in controller {Controller}", userId, nameof(Edit), nameof(ReviewController));
+            }
 
             return RedirectToAction("Details", "GameStore", new { id = gameId });
         }
@@ -254,11 +257,14 @@ namespace GameVerse.Web.Controllers
                 return RedirectToAction("Details", "GameStore", new { id = gameId });
             }
 
-            await _reviewService.DeleteReviewPostAsync(id, userId, gameId);
+            bool isDeletedSuccessfully = await _reviewService.DeleteReviewPostAsync(id, userId, gameId);
 
-            _notyf.Success("Review successfully deleted");
+            if (isDeletedSuccessfully)
+            {
+                _notyf.Success("Review successfully deleted");
 
-            Log.Information("User with ID {UserId} perform {Action} in controller {Controller}", userId, nameof(DeleteConfirm), nameof(ReviewController));
+                Log.Information("User with ID {UserId} perform {Action} in controller {Controller}", userId, nameof(DeleteConfirm), nameof(ReviewController));
+            }
 
             return RedirectToAction("Details", "GameStore", new { id = gameId });
         }

@@ -83,7 +83,7 @@ namespace GameVerse.Services
             return model;
         }
 
-        public async Task EditReviewPostAsync(ReviewInputViewModel inputModel, DateTime createdOn, string reviewId, string userId, string gameId)
+        public async Task<bool> EditReviewPostAsync(ReviewInputViewModel inputModel, DateTime createdOn, string reviewId, string userId, string gameId)
         {
             GameReview? review = await _reviewRepository.FirstOrDefaultAsync(r =>
                 r.Id.ToString() == reviewId && r.ReviewerId.ToString() == userId && r.GameId.ToString() == gameId &&
@@ -99,7 +99,11 @@ namespace GameVerse.Services
                 review.IsDeleted = false;
 
                 await _reviewRepository.SaveChangesAsync();
+
+                return true;
             }
+
+            return false;
         }
 
         public async Task<ReviewDeleteViewModel> DeleteReviewGetAsync(string reviewId, string userId, string gameId)
@@ -127,7 +131,7 @@ namespace GameVerse.Services
             return model;
         }
 
-        public async Task DeleteReviewPostAsync(string reviewId, string userId, string gameId)
+        public async Task<bool> DeleteReviewPostAsync(string reviewId, string userId, string gameId)
         {
             GameReview? review = await _reviewRepository.FirstOrDefaultAsync(r =>
                 r.Id.ToString() == reviewId && r.ReviewerId.ToString() == userId && r.GameId.ToString() == gameId &&
@@ -137,7 +141,10 @@ namespace GameVerse.Services
             {
                 review.IsDeleted = true;
                 await _reviewRepository.SaveChangesAsync();
+                return true;
             }
+
+            return false;   
         }
     }
 }
