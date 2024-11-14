@@ -9,10 +9,23 @@ using static GameVerse.Common.ApplicationConstants;
 
 namespace GameVerse.Services
 {
+    /// <summary>
+    /// Implements the review management functionality for games.
+    /// </summary>
     public class ReviewService(IGenericRepository<GameReview, Guid> reviewRepository) : IReviewService
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ReviewService"/> class.
+        /// </summary>
+        /// <param name="reviewRepository">The repository for managing game reviews.</param>
         private readonly IGenericRepository<GameReview, Guid> _reviewRepository = reviewRepository;
 
+        /// <summary>
+        /// Checks if a review already exists for a given game by a specific user.
+        /// </summary>
+        /// <param name="userId">The ID of the user.</param>
+        /// <param name="gameId">The ID of the game.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains a boolean indicating whether the review exists.</returns>
         public async Task<bool> ReviewAlreadyExistByGameIdAndUserIdAsync(string userId, string gameId)
         {
             GameReview? review = await _reviewRepository
@@ -27,7 +40,14 @@ namespace GameVerse.Services
             return true;
         }
 
-
+        /// <summary>
+        /// Adds a new review for a specific game by a user.
+        /// </summary>
+        /// <param name="inputModel">The input model containing review details.</param>
+        /// <param name="userId">The ID of the user adding the review.</param>
+        /// <param name="gameId">The ID of the game being reviewed.</param>
+        /// <param name="createdOn">The date and time when the review is created.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains a boolean indicating whether the review was added successfully.</returns>
         public async Task<bool> AddReviewAsync(ReviewInputViewModel inputModel, string userId, string gameId, DateTime createdOn)
         {
             GameReview? review = await _reviewRepository.FirstOrDefaultAsync(r =>
@@ -64,6 +84,13 @@ namespace GameVerse.Services
             return false;
         }
 
+        /// <summary>
+        /// Retrieves the review data for editing by a specific user.
+        /// </summary>
+        /// <param name="reviewId">The ID of the review to edit.</param>
+        /// <param name="gameId">The ID of the game associated with the review.</param>
+        /// <param name="userId">The ID of the user requesting the edit.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains the input model with existing review details.</returns>
         public async Task<ReviewInputViewModel> EditViewGetAsync(string reviewId, string gameId, string userId)
         {
             GameReview? review = await _reviewRepository
@@ -90,6 +117,15 @@ namespace GameVerse.Services
             return model;
         }
 
+        /// <summary>
+        /// Updates an existing review with new details.
+        /// </summary>
+        /// <param name="inputModel">The input model containing updated review details.</param>
+        /// <param name="createdOn">The date and time when the review was last modified.</param>
+        /// <param name="reviewId">The ID of the review to update.</param>
+        /// <param name="userId">The ID of the user updating the review.</param>
+        /// <param name="gameId">The ID of the game associated with the review.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains a boolean indicating whether the update was successful.</returns>
         public async Task<bool> EditReviewPostAsync(ReviewInputViewModel inputModel, DateTime createdOn, string reviewId, string userId, string gameId)
         {
             GameReview? review = await _reviewRepository.FirstOrDefaultAsync(r =>
@@ -113,6 +149,13 @@ namespace GameVerse.Services
             return false;
         }
 
+        /// <summary>
+        /// Retrieves data for deleting a specific review.
+        /// </summary>
+        /// <param name="reviewId">The ID of the review to delete.</param>
+        /// <param name="userId">The ID of the user requesting deletion.</param>
+        /// <param name="gameId">The ID of the game associated with the review.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains a view model for deleting the review.</returns>
         public async Task<ReviewDeleteViewModel> DeleteReviewGetAsync(string reviewId, string userId, string gameId)
         {
             GameReview? review = await _reviewRepository
@@ -138,6 +181,13 @@ namespace GameVerse.Services
             return model;
         }
 
+        /// <summary>
+        /// Deletes an existing review.
+        /// </summary>
+        /// <param name="reviewId">The ID of the review to delete.</param>
+        /// <param name="userId">The ID of the user deleting the review.</param>
+        /// <param name="gameId">The ID of the game associated with the review.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains a boolean indicating whether the deletion was successful.</returns>
         public async Task<bool> DeleteReviewPostAsync(string reviewId, string userId, string gameId)
         {
             GameReview? review = await _reviewRepository.FirstOrDefaultAsync(r =>
