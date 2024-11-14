@@ -112,7 +112,7 @@
                         {
                             <div class="d-flex justify-content-around">
                                 <a asp-action="Edit" asp-controller="Review" asp-route-id="@reviews[i].Id" asp-route-gameId="@Model.Id" type="button" class="btn btn-warning">Edit</a>
-                                <a type="button" class="btn btn-danger">Delete</a>
+                                <a asp-action="Delete" asp-controller="Review" asp-route-id="@reviews[i].Id" asp-route-gameId="@Model.Id" type="button" class="btn btn-danger">Delete</a>
                             </div>
                         }
                     </div>
