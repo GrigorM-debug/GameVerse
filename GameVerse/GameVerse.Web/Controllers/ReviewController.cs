@@ -59,6 +59,7 @@ namespace GameVerse.Web.Controllers
 
         [HttpPost]
         [NotModerator]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(ReviewInputViewModel inputModel, string gameId)
         {
             string? userId = User.GetId();
@@ -143,6 +144,7 @@ namespace GameVerse.Web.Controllers
 
         [HttpPost]
         [NotModerator]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(ReviewInputViewModel inputModel, string id, string gameId)
         {
             string? userId = User.GetId();
@@ -230,6 +232,7 @@ namespace GameVerse.Web.Controllers
 
         [HttpPost]
         [NotModerator]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirm(string id, string gameId)
         {
             string? userId = User.GetId();
