@@ -1,10 +1,12 @@
-﻿
+﻿@model GameVerse.Web.ViewModels.Game.Review.ReviewDeleteViewModel
 
-@* @{
+@{
     ViewData["Title"] = "Delete Review";
 }
 
-<h2 class="text-start mt-5 mb-3">Delete Game</h2>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+
+<h2 class="text-start mt-5 mb-3">Delete Review</h2>
 <hr />
 <div class="mb-4"></div>
 
@@ -13,19 +15,26 @@
     <div class="col-md-6">
         <div class="card">
             <div class="card-body">
-                <h3 class="card-title">Title: @Model.Title</h3>
-                <p class="card-text">Added By: @Model.PublisherName</p>
-                <p class="card-text">Are you sure you want to Delete Event with Topic @Model.Title</p>
+                <h3 class="card-title">Are you sure you want to Delete Review for Game @Model.GameName</h3>
+                <p class="card-text">
+                    Rating: 
+                    @for (int j = 0; j < @Model.Rating; j++)
+                    {
+                        <i class="fas fa-star fa-sm text-warning"></i>
+                    }
+                </p>
+                <p class="card-text">Reviewer Name: @Model.ReviewerName</p>
+                <p class="card-text">Content: @Model.Content</p>
+                <p class="card-text">Created On: @Model.CreatedOn</p>
             </div>
             <div class="card-footer">
-                <form asp-controller="GameStore" asp-action="DeleteConfirm" method="post">
-                    <input type="hidden" asp-for="Id" />
-                    <input type="hidden" asp-for="Title" />
-                    <input type="hidden" asp-for="PublisherId" />
+                <form asp-controller="Review" asp-action="DeleteConfirm" asp-route-Id="@Model.Id" asp-route-gameId="@Model.GameId" method="post">
+                   @*  <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="ReviewerId" /> *@
                     <button type="submit" class="btn btn-danger">Confirm Delete</button>
-                    <a asp-controller="GameStore" asp-action="Details" asp-route-id="@Model.Id" class="btn btn-warning">Cancel</a>
+                    <a asp-controller="GameStore" asp-action="Details" asp-route-id="@Model.GameId" class="btn btn-warning">Cancel</a>
                 </form>
             </div>
         </div>
     </div>
-</div> *@
+</div> 
