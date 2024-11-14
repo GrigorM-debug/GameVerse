@@ -7,6 +7,7 @@ using GameVerse.Web.Filters;
 using GameVerse.Web.ViewModels.Game.Review;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using Serilog;
 using static GameVerse.Common.ApplicationConstants;
 
@@ -108,7 +109,7 @@ namespace GameVerse.Web.Controllers
 
         [HttpGet]
         [NotModerator]
-        public async Task<IActionResult> Edit(string reviewId, string gameId)
+        public async Task<IActionResult> Edit(string id, string gameId)
         {
             string? userId = User.GetId();
 
@@ -135,9 +136,131 @@ namespace GameVerse.Web.Controllers
                 return RedirectToAction("Details", "GameStore", new { id = gameId });
             }
 
-            ReviewInputViewModel model = await _reviewService.EditViewGetAsync(reviewId, gameId, userId);
+            ReviewInputViewModel model = await _reviewService.EditViewGetAsync(id, gameId, userId);
 
             return View(model);
+        }
+
+        [HttpPost]
+        [NotModerator]
+        public async Task<IActionResult> Edit(ReviewInputViewModel inputModel, string id, string gameId)
+        {
+            string? userId = User.GetId();
+
+            if (userId == null)
+            {
+                _notyf.Error("Please log in");
+                return Unauthorized();
+            }
+
+            bool isGameExisting = await _gameService.GameExistByIdAsync(gameId);
+
+            if (!isGameExisting)
+            {
+                _notyf.Error("Game doesn't exist");
+                return NotFound();
+            }
+
+            bool isReviewForGameAlreadyExist =
+                await _reviewService.ReviewAlreadyExistByGameIdAndUserIdAsync(userId, gameId);
+
+            if (!isReviewForGameAlreadyExist)
+            {
+                _notyf.Error("Review for this game doesn't exist");
+                return RedirectToAction("Details", "GameStore", new { id = gameId });
+            }
+
+            if (!DateTime.TryParseExact(inputModel.CreatedOn, DateTimeFormat, CultureInfo.InvariantCulture,
+                    DateTimeStyles.None, out DateTime createdOn))
+            {
+                ModelState.AddModelError(nameof(inputModel.CreatedOn), InvalidDateTimeErrorMessage);
+                return View(inputModel);
+            }
+
+            if (ModelState.IsValid == false)
+            {
+                return View(inputModel);
+            }
+
+            await _reviewService.EditReviewPostAsync(inputModel, createdOn, id, userId, gameId);
+
+            _notyf.Success("Review successfully edited");
+
+            Log.Information("User with ID {UserId} perform {Action} in controller {Controller}", userId, nameof(Edit), nameof(ReviewController));
+
+            return RedirectToAction("Details", "GameStore", new { id = gameId });
+        }
+
+        [HttpGet]
+        [NotModerator]
+        public async Task<IActionResult> Delete(string id, string gameId)
+        {
+            string? userId = User.GetId();
+
+            if (userId == null)
+            {
+                _notyf.Error("Please log in");
+                return Unauthorized();
+            }
+
+            bool isGameExisting = await _gameService.GameExistByIdAsync(gameId);
+
+            if (!isGameExisting)
+            {
+                _notyf.Error("Game doesn't exist");
+                return NotFound();
+            }
+
+            bool isReviewForGameAlreadyExist =
+                await _reviewService.ReviewAlreadyExistByGameIdAndUserIdAsync(userId, gameId);
+
+            if (!isReviewForGameAlreadyExist)
+            {
+                _notyf.Error("Review for this game doesn't exist");
+                return RedirectToAction("Details", "GameStore", new { id = gameId });
+            }
+
+            ReviewDeleteViewModel model = await _reviewService.DeleteReviewGetAsync(id, userId, gameId);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [NotModerator]
+        public async Task<IActionResult> DeleteConfirm(string id, string gameId)
+        {
+            string? userId = User.GetId();
+
+            if (userId == null)
+            {
+                _notyf.Error("Please log in");
+                return Unauthorized();
+            }
+
+            bool isGameExisting = await _gameService.GameExistByIdAsync(gameId);
+
+            if (!isGameExisting)
+            {
+                _notyf.Error("Game doesn't exist");
+                return NotFound();
+            }
+
+            bool isReviewForGameAlreadyExist =
+                await _reviewService.ReviewAlreadyExistByGameIdAndUserIdAsync(userId, gameId);
+
+            if (!isReviewForGameAlreadyExist)
+            {
+                _notyf.Error("Review for this game doesn't exist");
+                return RedirectToAction("Details", "GameStore", new { id = gameId });
+            }
+
+            await _reviewService.DeleteReviewPostAsync(id, userId, gameId);
+
+            _notyf.Success("Review successfully deleted");
+
+            Log.Information("User with ID {UserId} perform {Action} in controller {Controller}", userId, nameof(DeleteConfirm), nameof(ReviewController));
+
+            return RedirectToAction("Details", "GameStore", new { id = gameId });
         }
     }
 }
