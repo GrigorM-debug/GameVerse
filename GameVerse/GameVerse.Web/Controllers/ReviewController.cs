@@ -14,6 +14,7 @@ using static GameVerse.Common.ApplicationConstants;
 namespace GameVerse.Web.Controllers
 {
     [Authorize]
+    [OnlyUsersWithoutRoles]
     public class ReviewController(IGameService gameService, IReviewService reviewService, INotyfService notyf, ILogger<ReviewController> logger) : BaseController
     {
         private readonly IGameService _gameService = gameService;
@@ -22,7 +23,6 @@ namespace GameVerse.Web.Controllers
         private readonly ILogger<ReviewController> _logger = logger;
 
         [HttpGet]
-        [NotModerator]
         public async Task<IActionResult> Add(string gameId)
         {
             string? userId = User.GetId();
@@ -58,7 +58,6 @@ namespace GameVerse.Web.Controllers
         }
 
         [HttpPost]
-        [NotModerator]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(ReviewInputViewModel inputModel, string gameId)
         {
@@ -112,7 +111,6 @@ namespace GameVerse.Web.Controllers
         }
 
         [HttpGet]
-        [NotModerator]
         public async Task<IActionResult> Edit(string id, string gameId)
         {
             string? userId = User.GetId();
@@ -146,7 +144,6 @@ namespace GameVerse.Web.Controllers
         }
 
         [HttpPost]
-        [NotModerator]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(ReviewInputViewModel inputModel, string id, string gameId)
         {
@@ -200,7 +197,6 @@ namespace GameVerse.Web.Controllers
         }
 
         [HttpGet]
-        [NotModerator]
         public async Task<IActionResult> Delete(string id, string gameId)
         {
             string? userId = User.GetId();
@@ -234,7 +230,6 @@ namespace GameVerse.Web.Controllers
         }
 
         [HttpPost]
-        [NotModerator]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirm(string id, string gameId)
         {
