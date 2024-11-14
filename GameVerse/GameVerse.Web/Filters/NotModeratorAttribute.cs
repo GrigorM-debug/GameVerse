@@ -23,6 +23,7 @@ namespace GameVerse.Web.Filters
             if (isModerator)
             {
                 context.Result = new StatusCodeResult(StatusCodes.Status401Unauthorized);
+                return;
             }
         }
     }
