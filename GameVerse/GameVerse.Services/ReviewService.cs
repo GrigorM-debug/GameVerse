@@ -102,7 +102,32 @@ namespace GameVerse.Services
             }
         }
 
-        public async Task DeleteReviewAsync(string reviewId, string userId, string gameId)
+        public async Task<ReviewDeleteViewModel> DeleteReviewGetAsync(string reviewId, string userId, string gameId)
+        {
+            GameReview? review = await _reviewRepository
+                .GetWithIncludeAsync(r => r.Reviewer, r => r.Game)
+                .FirstOrDefaultAsync(r =>
+                r.Id.ToString() == reviewId && r.ReviewerId.ToString() == userId && r.GameId.ToString() == gameId &&
+                r.IsDeleted == false);
+
+            ReviewDeleteViewModel model = new ReviewDeleteViewModel();
+
+            if (review != null)
+            {
+                model.Id = review.Id.ToString();
+                model.Content = review.Content;
+                model.Rating = review.Rating;
+                model.ReviewerId = review.ReviewerId.ToString();
+                model.ReviewerName = review.Reviewer.UserName;
+                model.CreatedOn = review.CreatedOn.ToString(DateTimeFormat, CultureInfo.InvariantCulture);
+                model.GameName = review.Game.Title;
+                model.GameId = review.GameId.ToString();
+            }
+
+            return model;
+        }
+
+        public async Task DeleteReviewPostAsync(string reviewId, string userId, string gameId)
         {
             GameReview? review = await _reviewRepository.FirstOrDefaultAsync(r =>
                 r.Id.ToString() == reviewId && r.ReviewerId.ToString() == userId && r.GameId.ToString() == gameId &&
