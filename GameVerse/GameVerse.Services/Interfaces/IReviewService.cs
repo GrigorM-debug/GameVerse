@@ -9,7 +9,7 @@ namespace GameVerse.Services.Interfaces
     {
         Task<bool> ReviewAlreadyExistByGameIdAndUserIdAsync(string userId, string gameId);
 
-        Task AddReviewAsync(ReviewInputViewModel inputModel, string userId, string gameId, DateTime createdOn);
+        Task<bool> AddReviewAsync(ReviewInputViewModel inputModel, string userId, string gameId, DateTime createdOn);
 
         Task<ReviewInputViewModel> EditViewGetAsync(string reviewId, string gameId, string userId);
 

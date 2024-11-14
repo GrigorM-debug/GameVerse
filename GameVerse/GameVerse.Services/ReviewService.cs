@@ -28,7 +28,7 @@ namespace GameVerse.Services
         }
 
 
-        public async Task AddReviewAsync(ReviewInputViewModel inputModel, string userId, string gameId, DateTime createdOn)
+        public async Task<bool> AddReviewAsync(ReviewInputViewModel inputModel, string userId, string gameId, DateTime createdOn)
         {
             GameReview? review = await _reviewRepository.FirstOrDefaultAsync(r =>
                 r.ReviewerId.ToString() == userId && r.GameId.ToString() == gameId);
@@ -38,9 +38,14 @@ namespace GameVerse.Services
                 if (review.IsDeleted == true)
                 {
                     review.IsDeleted = false;
+                    await _reviewRepository.SaveChangesAsync();
+                    return true;
                 }
+
+                return false;
             }
-            else
+
+            if (review == null)
             {
                 review = new GameReview()
                 {
@@ -52,9 +57,11 @@ namespace GameVerse.Services
                 };
 
                 await _reviewRepository.AddAsync(review);
+                await _reviewRepository.SaveChangesAsync();
+                return true;
             }
 
-            await _reviewRepository.SaveChangesAsync();
+            return false;
         }
 
         public async Task<ReviewInputViewModel> EditViewGetAsync(string reviewId, string gameId, string userId)

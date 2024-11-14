@@ -99,11 +99,14 @@ namespace GameVerse.Web.Controllers
                 return View(inputModel);
             }
 
-            await _reviewService.AddReviewAsync(inputModel, userId, gameId, createdOn);
+            bool isAddedSuccessfully = await _reviewService.AddReviewAsync(inputModel, userId, gameId, createdOn);
 
-            _notyf.Success("Review successfully added");
+            if (isAddedSuccessfully)
+            {
+                _notyf.Success("Review successfully added");
 
-            Log.Information("User with ID {UserId} perform {Action} in controller {Controller}", userId, nameof(Add), nameof(ReviewController));
+                Log.Information("User with ID {UserId} perform {Action} in controller {Controller}", userId, nameof(Add), nameof(ReviewController));
+            }
 
             return RedirectToAction("Details", "GameStore", new { id = gameId });
         }
