@@ -1,19 +1,23 @@
-﻿using AspNetCoreHero.ToastNotification.Abstractions;
+﻿using System.Globalization;
+using AspNetCoreHero.ToastNotification.Abstractions;
 using GameVerse.Data.Models.Carts;
 using GameVerse.Data.Models.Events;
 using GameVerse.Data.Models.Games;
 using GameVerse.Data.Repositories.Interfaces;
 using GameVerse.Web.Extensions;
 using GameVerse.Web.Filters;
+using GameVerse.Web.ViewModels.ShoppingCart;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
+using static GameVerse.Common.ApplicationConstants.EventConstants;
 
 namespace GameVerse.Web.Controllers
 {
     [Authorize]
     [OnlyUsersWithoutRoles]
-    public class CartController(
+    public class ShoppingCartController(
         IGenericRepository<Cart, Guid> cartRepository, 
         IGenericRepository<Game, Guid> gameRespository, 
         IGenericRepository<Event, Guid> eventRepository, 
@@ -35,16 +39,66 @@ namespace GameVerse.Web.Controllers
 
             if (userId == null)
             {
+                _notyf.Warning("You don't have the permission to do this");
                 return Unauthorized();
             }
 
-            var cart = await _cartRepository
+            Cart cart = await _cartRepository
                 .GetWithIncludeAsync(
                 c => c.GamesCarts.Where(gc => gc.IsDeleted == false),
                 c => c.EventsCarts.Where(ec => ec.IsDeleted == false))
                 .AsNoTracking()
                 .FirstOrDefaultAsync(c => c.UserId.ToString() == userId);
 
+            ICollection<GameCartItemsViewModel> gameCartItemsViewModels = new HashSet<GameCartItemsViewModel>();
+
+            if (cart.GamesCarts.Any())
+            {
+                foreach (var gameCartItem in cart.GamesCarts.ToList())
+                {
+                    GameCartItemsViewModel gameCartItemModel = new GameCartItemsViewModel()
+                    {
+                        Id = gameCartItem.GameId.ToString(),
+                        Title = gameCartItem.Game.Title,
+                        Price = gameCartItem.Game.Price.ToString("C"),
+                        AddedOn = gameCartItem.AddedOn.ToString(EventDateTimeFormat, CultureInfo.InvariantCulture),
+                        Quantity = gameCartItem.Quantity,
+                        TotalPrice = (gameCartItem.Game.Price * gameCartItem.Quantity)
+                    };
+
+                    gameCartItemsViewModels.Add(gameCartItemModel);
+                }
+            }
+
+            ICollection<EventCartItemsViewModel> eventCartItemsViewModels = new HashSet<EventCartItemsViewModel>();
+
+            if (cart.EventsCarts.Any())
+            {
+                foreach (var eventCartItem in cart.EventsCarts.ToList())
+                {
+                    EventCartItemsViewModel eventCartItemModel = new EventCartItemsViewModel()
+                    {
+                        Id = eventCartItem.EventId.ToString(),
+                        Topic = eventCartItem.Event.Topic,
+                        TicketPrice = eventCartItem.Event.TicketPrice.ToString("C"),
+                        TicketQuantity = eventCartItem.TicketQuantity,
+                        AddedOn = eventCartItem.AddedOn.ToString(EventDateTimeFormat, CultureInfo.InvariantCulture),
+                        TotalPrice = (eventCartItem.Event.TicketPrice * eventCartItem.TicketQuantity)
+                    };
+
+                    eventCartItemsViewModels.Add(eventCartItemModel);
+                }
+            }
+
+            ShoppingCartViewModel model = new ShoppingCartViewModel();
+
+            model.GameCartItems = gameCartItemsViewModels;
+            model.EventCartItems = eventCartItemsViewModels;
+
+            decimal allGameCartItemsTotalPrice = gameCartItemsViewModels.Select(g => g.TotalPrice).Sum();
+            decimal allEventCartItemsTotalPrice = eventCartItemsViewModels.Select(e => e.TotalPrice).Sum();
+
+            model.TotalPrice = (allGameCartItemsTotalPrice + allEventCartItemsTotalPrice).ToString("C");
 
             return View();
         }
