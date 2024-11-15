@@ -1,5 +1,9 @@
 ﻿@model GameVerse.Web.ViewModels.Game.Details.GameDetailsViewModel
 
+@{
+    ViewData["Title"] = "Game Details";
+}
+
 <h2 class="text-start mt-5 mb-3">Game Details</h2>
 <hr />
 <div class="mb-4"></div>
@@ -58,7 +62,7 @@
     <h2 class="text-start mt-5 mb-3">Game Reviews</h2>
     @if (User?.Identity?.IsAuthenticated == true && !User.IsInRole("Moderator") && !User.IsInRole("Admin"))
     {
-        <a type="button" class="btn btn-primary btn-sm fw-bold mt-5" asp-area="" asp-controller="Review" asp-action="Add" asp-route-gameId="@Model.Id">Add Review</a>
+        <a type="button" class="btn btn-primary btn-sm fw-bold mt-5 align-content-center" asp-area="" asp-controller="Review" asp-action="Add" asp-route-gameId="@Model.Id">Add Review</a>
     }
 </div>
 <hr />
