@@ -35,7 +35,7 @@ namespace GameVerse.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            string userId = User.GetId();
+            string? userId = User.GetId();
 
             if (userId == null)
             {
@@ -43,7 +43,7 @@ namespace GameVerse.Web.Controllers
                 return Unauthorized();
             }
 
-            Cart cart = await _cartRepository
+            Cart? cart = await _cartRepository
                 .GetWithIncludeAsync(
                 c => c.GamesCarts.Where(gc => gc.IsDeleted == false),
                 c => c.EventsCarts.Where(ec => ec.IsDeleted == false))
@@ -124,7 +124,7 @@ namespace GameVerse.Web.Controllers
                 return NotFound();
             }
 
-            Cart cart = await _cartRepository
+            Cart? cart = await _cartRepository
                 .GetWithIncludeAsync(c => c.GamesCarts)
                 .FirstOrDefaultAsync(c => c.UserId.ToString() == userId);
 
@@ -181,7 +181,7 @@ namespace GameVerse.Web.Controllers
                 return NotFound();
             }
 
-            Cart cart = await _cartRepository
+            Cart? cart = await _cartRepository
                 .GetWithIncludeAsync(c => c.EventsCarts)
                 .FirstOrDefaultAsync(c => c.UserId.ToString() == userId);
 
