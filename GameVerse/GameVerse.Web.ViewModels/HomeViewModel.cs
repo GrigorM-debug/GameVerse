@@ -7,8 +7,8 @@ namespace GameVerse.Web.ViewModels
 {
     public class HomeViewModel
     {
-        public IEnumerable<EventIndexViewModel> Last3Events = new HashSet<EventIndexViewModel>();
+        public IEnumerable<EventIndexViewModel> Last3Events { get; set; } = new HashSet<EventIndexViewModel>();
 
-        public IEnumerable<GameIndexViewModel> Last3Games = new HashSet<GameIndexViewModel>();
+        public IEnumerable<GameIndexViewModel> Last3Games { get; set; } = new HashSet<GameIndexViewModel>();
     }
 }
