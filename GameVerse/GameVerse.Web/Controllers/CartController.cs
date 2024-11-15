@@ -13,7 +13,13 @@ namespace GameVerse.Web.Controllers
 {
     [Authorize]
     [OnlyUsersWithoutRoles]
-    public class CartController(IGenericRepository<Cart, Guid> cartRepository, IGenericRepository<Game, Guid> gameRespository, IGenericRepository<Event, Guid> eventRepository, INotyfService notyf, IGenericRepository<EventRegistration, object> eventRegistrationRepository, IGenericRepository<UserBoughtGame, object> userBoughtGamesRepository) : BaseController
+    public class CartController(
+        IGenericRepository<Cart, Guid> cartRepository, 
+        IGenericRepository<Game, Guid> gameRespository, 
+        IGenericRepository<Event, Guid> eventRepository, 
+        INotyfService notyf, 
+        IGenericRepository<EventRegistration, object> eventRegistrationRepository, 
+        IGenericRepository<UserBoughtGame, object> userBoughtGamesRepository) : BaseController
     {
         private readonly IGenericRepository<Cart, Guid> _cartRepository = cartRepository;
         private readonly IGenericRepository<Game, Guid> _gameRepository = gameRespository;
@@ -157,6 +163,83 @@ namespace GameVerse.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpPost]
+        public async Task<IActionResult> RemoveGameFromCart(string gameId)
+        {
+            string? userId = User.GetId();
+
+            if (userId == null)
+            {
+                _notyf.Warning("You don't have the permission to do this");
+                return Unauthorized();
+            }
+
+            Game? game = await _gameRepository
+                .AllAsReadOnly()
+                .FirstOrDefaultAsync(g => g.Id.ToString() == gameId && g.IsDeleted == false);
+
+            if (game == null)
+            {
+                _notyf.Error("Game doesn't exist");
+                return NotFound();
+            }
+
+            Cart cart = await _cartRepository
+                .GetWithIncludeAsync(c => c.GamesCarts.Where(c => c.IsDeleted == false))
+                .FirstOrDefaultAsync(c => c.UserId.ToString() == userId);
+
+            GameCart? gameItem = cart.GamesCarts.FirstOrDefault(gc => gc.GameId.ToString() == gameId);
+
+            if (gameItem == null)
+            {
+                _notyf.Error("Item doesn't exist in your shopping cart");
+                return RedirectToAction(nameof(Index));
+            }
+
+            gameItem.IsDeleted = true;
+            await _cartRepository.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveEventFromCart(string eventId)
+        {
+            string? userId = User.GetId();
+
+            if (userId == null)
+            {
+                _notyf.Warning("You don't have the permission to do this");
+                return Unauthorized();
+            }
+
+            Event? e = await _eventRepository
+                .AllAsReadOnly()
+                .FirstOrDefaultAsync(e => e.Id.ToString() == eventId && e.IsDeleted == false);
+
+            if (e == null)
+            {
+                _notyf.Error("Event doesn't exist");
+                return NotFound();
+            }
+
+            Cart cart = await _cartRepository
+                .GetWithIncludeAsync(c => c.EventsCarts.Where(c => c.IsDeleted == false))
+                .FirstOrDefaultAsync(c => c.UserId.ToString() == userId);
+
+            GameCart? gameItem = cart.GamesCarts.FirstOrDefault(gc => gc.GameId.ToString() == eventId);
+
+            if (gameItem == null)
+            {
+                _notyf.Error("Item doesn't exist in your shopping cart");
+                return RedirectToAction(nameof(Index));
+            }
+
+            gameItem.IsDeleted = true;
+            await _cartRepository.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
         //[HttpPost]
         //public async Task<IActionResult> Purchase()
         //{
