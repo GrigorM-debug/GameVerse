@@ -63,7 +63,8 @@ namespace GameVerse.Web.Controllers
                         Price = gameCartItem.Game.Price.ToString("C"),
                         AddedOn = gameCartItem.AddedOn.ToString(EventDateTimeFormat, CultureInfo.InvariantCulture),
                         Quantity = gameCartItem.Quantity,
-                        TotalPrice = (gameCartItem.Game.Price * gameCartItem.Quantity)
+                        TotalPrice = (gameCartItem.Game.Price * gameCartItem.Quantity),
+                        Image = gameCartItem.Game.Image
                     };
 
                     gameCartItemsViewModels.Add(gameCartItemModel);
@@ -83,7 +84,8 @@ namespace GameVerse.Web.Controllers
                         TicketPrice = eventCartItem.Event.TicketPrice.ToString("C"),
                         TicketQuantity = eventCartItem.TicketQuantity,
                         AddedOn = eventCartItem.AddedOn.ToString(EventDateTimeFormat, CultureInfo.InvariantCulture),
-                        TotalPrice = (eventCartItem.Event.TicketPrice * eventCartItem.TicketQuantity)
+                        TotalPrice = (eventCartItem.Event.TicketPrice * eventCartItem.TicketQuantity),
+                        Image = eventCartItem.Event.Image
                     };
 
                     eventCartItemsViewModels.Add(eventCartItemModel);
