@@ -34,7 +34,11 @@
                     
                     @if (!Model.GameCartItems.Any() || !Model.EventCartItems.Any())
                     {
-                        <h3>No products added</h3>
+                        <tr>
+                            <td class="p-4">
+                                    <h3>No products added</h3>
+                            </td>
+                        </tr>
                     }
                     
                     @foreach (var gameCartItem in Model.GameCartItems)
@@ -89,10 +93,10 @@
             </div>
             <!-- / Shopping cart table -->
 
-            <div class="d-flex flex-wrap justify-content-between align-items-center pb-4">
+            <div class="d-flex flex-wrap justify-content-end align-items-center pb-4">
                 <div class="d-flex">
                     <div class="text-right mt-4">
-                        <label class="text-muted font-weight-normal m-0">Total price</label>
+                        <label class="text-muted font-weight-bold m-0">Total price: </label>
                         <div class="text-large"><strong>@Model.TotalPrice</strong></div>
                     </div>
                 </div>

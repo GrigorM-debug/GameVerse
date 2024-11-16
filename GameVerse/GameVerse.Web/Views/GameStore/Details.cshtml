@@ -27,13 +27,15 @@
                 <p class="mb-0"><b>Price:</b> @Model.Price</p>
             </div>
 
-            <div class="project-info-box mt-0 mb-0">
+            <div class="project-info-box mt-0 mb-0 d-flex justify-content-center">
                 <button type="button" class="btn btn-light btn-lg m-2 w-auto" asp-area="" asp-controller="GameStore" asp-action="Index">Back</button>
                 
                 @* For logged user *@
                 @if (User?.Identity?.IsAuthenticated == true && !User.IsInRole("Moderator") && !User.IsInRole("Admin"))
                 {
-                    <button type="button" class="btn btn-success btn-lg w-50" asp-area="" asp-controller="" asp-action="">Buy</button>
+                    <form asp-controller="ShoppingCart" asp-action="AddGameToCart" asp-route-gameId="@Model.Id" method="post" class="">
+                        <input type="submit" class="btn btn-success btn-lg" data-mdb-ripple-init value="Buy" />
+                    </form>
                 }
 
                 @*For Admin or Moderator who is creator of the Event*@

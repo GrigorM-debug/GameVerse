@@ -44,11 +44,19 @@ namespace GameVerse.Web.Controllers
             }
 
             Cart? cart = await _cartRepository
-                .GetWithIncludeAsync(
-                c => c.GamesCarts.Where(gc => gc.IsDeleted == false),
-                c => c.EventsCarts.Where(ec => ec.IsDeleted == false))
+                .GetWithIncludeAsync()
                 .AsNoTracking()
                 .FirstOrDefaultAsync(c => c.UserId.ToString() == userId);
+
+            ShoppingCartViewModel model = new ShoppingCartViewModel();
+
+            if (cart == null)
+            {
+                return View(model);
+            }
+
+            cart.GamesCarts = cart.GamesCarts.Where(gc => !gc.IsDeleted).ToList();
+            cart.EventsCarts = cart.EventsCarts.Where(ec => !ec.IsDeleted).ToList();
 
             ICollection<GameCartItemsViewModel> gameCartItemsViewModels = new HashSet<GameCartItemsViewModel>();
 
@@ -92,7 +100,6 @@ namespace GameVerse.Web.Controllers
                 }
             }
 
-            ShoppingCartViewModel model = new ShoppingCartViewModel();
 
             model.GameCartItems = gameCartItemsViewModels;
             model.EventCartItems = eventCartItemsViewModels;
@@ -102,7 +109,7 @@ namespace GameVerse.Web.Controllers
 
             model.TotalPrice = (allGameCartItemsTotalPrice + allEventCartItemsTotalPrice).ToString("C");
 
-            return View();
+            return View(model);
         }
 
         [HttpPost]
@@ -127,7 +134,8 @@ namespace GameVerse.Web.Controllers
             }
 
             Cart? cart = await _cartRepository
-                .GetWithIncludeAsync(c => c.GamesCarts)
+                .GetWithIncludeAsync()
+                .AsNoTracking()
                 .FirstOrDefaultAsync(c => c.UserId.ToString() == userId);
 
             GameCart? gameItem = cart.GamesCarts.FirstOrDefault(gc => gc.GameId.ToString() == gameId);
