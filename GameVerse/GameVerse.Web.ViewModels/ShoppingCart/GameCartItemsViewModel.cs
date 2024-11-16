@@ -14,5 +14,7 @@ namespace GameVerse.Web.ViewModels.ShoppingCart
         public decimal TotalPrice { get; set; } 
 
         public string AddedOn { get; set; } = null!;
+
+        public string Image { get; set; } = null!;
     }
 }
