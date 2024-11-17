@@ -4,13 +4,14 @@ using GameVerse.Data.Models.Carts;
 using GameVerse.Data.Models.Events;
 using GameVerse.Data.Models.Games;
 using GameVerse.Data.Repositories.Interfaces;
+using GameVerse.Services.Interfaces;
 using GameVerse.Web.Extensions;
 using GameVerse.Web.Filters;
 using GameVerse.Web.ViewModels.ShoppingCart;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using Serilog;
 using static GameVerse.Common.ApplicationConstants.EventConstants;
 
 namespace GameVerse.Web.Controllers
@@ -18,19 +19,16 @@ namespace GameVerse.Web.Controllers
     [Authorize]
     [OnlyUsersWithoutRoles]
     public class ShoppingCartController(
-        IGenericRepository<Cart, Guid> cartRepository, 
-        IGenericRepository<Game, Guid> gameRespository, 
-        IGenericRepository<Event, Guid> eventRepository, 
         INotyfService notyf, 
-        IGenericRepository<EventRegistration, object> eventRegistrationRepository, 
-        IGenericRepository<UserBoughtGame, object> userBoughtGamesRepository) : BaseController
+        IGameService gameService,
+        IEventService eventService,
+        IShoppingCartService shoppingCartService
+        ) : BaseController
     {
-        private readonly IGenericRepository<Cart, Guid> _cartRepository = cartRepository;
-        private readonly IGenericRepository<Game, Guid> _gameRepository = gameRespository;
-        private readonly IGenericRepository<Event, Guid> _eventRepository = eventRepository;
-        private readonly IGenericRepository<EventRegistration, object> _eventRegistrationRepository = eventRegistrationRepository;
-        private readonly IGenericRepository<UserBoughtGame, object> _userBoughtGamesRepository = userBoughtGamesRepository;
         private readonly INotyfService _notyf = notyf;
+        private readonly IShoppingCartService _shoppingCartService = shoppingCartService;
+        private readonly IGameService _gameService = gameService;
+        private readonly IEventService _eventService = eventService;
 
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -43,71 +41,7 @@ namespace GameVerse.Web.Controllers
                 return Unauthorized();
             }
 
-            Cart? cart = await _cartRepository
-                .GetWithIncludeAsync()
-                .AsNoTracking()
-                .FirstOrDefaultAsync(c => c.UserId.ToString() == userId);
-
-            ShoppingCartViewModel model = new ShoppingCartViewModel();
-
-            if (cart == null)
-            {
-                return View(model);
-            }
-
-            cart.GamesCarts = cart.GamesCarts.Where(gc => !gc.IsDeleted).ToList();
-            cart.EventsCarts = cart.EventsCarts.Where(ec => !ec.IsDeleted).ToList();
-
-            ICollection<GameCartItemsViewModel> gameCartItemsViewModels = new HashSet<GameCartItemsViewModel>();
-
-            if (cart.GamesCarts.Any())
-            {
-                foreach (var gameCartItem in cart.GamesCarts.ToList())
-                {
-                    GameCartItemsViewModel gameCartItemModel = new GameCartItemsViewModel()
-                    {
-                        Id = gameCartItem.GameId.ToString(),
-                        Title = gameCartItem.Game.Title,
-                        Price = gameCartItem.Game.Price.ToString("C"),
-                        AddedOn = gameCartItem.AddedOn.ToString(EventDateTimeFormat, CultureInfo.InvariantCulture),
-                        Quantity = gameCartItem.Quantity,
-                        TotalPrice = (gameCartItem.Game.Price * gameCartItem.Quantity),
-                        Image = gameCartItem.Game.Image
-                    };
-
-                    gameCartItemsViewModels.Add(gameCartItemModel);
-                }
-            }
-
-            ICollection<EventCartItemsViewModel> eventCartItemsViewModels = new HashSet<EventCartItemsViewModel>();
-
-            if (cart.EventsCarts.Any())
-            {
-                foreach (var eventCartItem in cart.EventsCarts.ToList())
-                {
-                    EventCartItemsViewModel eventCartItemModel = new EventCartItemsViewModel()
-                    {
-                        Id = eventCartItem.EventId.ToString(),
-                        Topic = eventCartItem.Event.Topic,
-                        TicketPrice = eventCartItem.Event.TicketPrice.ToString("C"),
-                        TicketQuantity = eventCartItem.TicketQuantity,
-                        AddedOn = eventCartItem.AddedOn.ToString(EventDateTimeFormat, CultureInfo.InvariantCulture),
-                        TotalPrice = (eventCartItem.Event.TicketPrice * eventCartItem.TicketQuantity),
-                        Image = eventCartItem.Event.Image
-                    };
-
-                    eventCartItemsViewModels.Add(eventCartItemModel);
-                }
-            }
-
-
-            model.GameCartItems = gameCartItemsViewModels;
-            model.EventCartItems = eventCartItemsViewModels;
-
-            decimal allGameCartItemsTotalPrice = gameCartItemsViewModels.Select(g => g.TotalPrice).Sum();
-            decimal allEventCartItemsTotalPrice = eventCartItemsViewModels.Select(e => e.TotalPrice).Sum();
-
-            model.TotalPrice = (allGameCartItemsTotalPrice + allEventCartItemsTotalPrice).ToString("C");
+            ShoppingCartViewModel model = await _shoppingCartService.GetShoppingCartItemsAsync(userId);
 
             return View(model);
         }
@@ -123,9 +57,7 @@ namespace GameVerse.Web.Controllers
                 return Unauthorized();
             }
 
-            Game? game = await _gameRepository
-                .AllAsReadOnly()
-                .FirstOrDefaultAsync(g => g.Id.ToString() == gameId && g.IsDeleted == false);
+            Game? game = await _gameService.GetGameByIdAsync(gameId);
 
             if (game == null)
             {
@@ -133,39 +65,11 @@ namespace GameVerse.Web.Controllers
                 return NotFound();
             }
 
-            Cart? cart = await _cartRepository
-                .GetWithIncludeAsync()
-                .AsNoTracking()
-                .FirstOrDefaultAsync(c => c.UserId.ToString() == userId);
+            await _shoppingCartService.AddGameToCartAsync(gameId, userId, game);
 
-            GameCart? gameItem = cart.GamesCarts.FirstOrDefault(gc => gc.GameId.ToString() == gameId);
+            _notyf.Success("Game added successfully in the Shopping Cart");
 
-            if (gameItem != null)
-            {
-                if (gameItem.IsDeleted == false)
-                {
-                    gameItem.Quantity++;
-                }
-                else
-                {
-                    gameItem.IsDeleted = false;
-                    gameItem.Quantity = 1;
-                }
-            }
-            else
-            {
-                gameItem = new GameCart()
-                {
-                    Game = game,
-                    Quantity = 1,
-                    IsDeleted = false,
-                    AddedOn = DateTime.Now,
-                };
-
-                cart.GamesCarts.Add(gameItem);
-            }
-
-            await _cartRepository.SaveChangesAsync();
+            Log.Information("User with ID {UserId} made {Action} in {Controller}", userId, nameof(AddGameToCart), nameof(ShoppingCartController));
 
             return RedirectToAction(nameof(Index));
         }
@@ -181,9 +85,7 @@ namespace GameVerse.Web.Controllers
                 return Unauthorized();
             }
 
-            Event? e = await _eventRepository
-                .AllAsReadOnly()
-                .FirstOrDefaultAsync(e => e.Id.ToString() == eventId && e.IsDeleted == false);
+            Event? e = await _eventService.GetEventByIdAsync(eventId);
 
             if (e == null)
             {
@@ -191,38 +93,11 @@ namespace GameVerse.Web.Controllers
                 return NotFound();
             }
 
-            Cart? cart = await _cartRepository
-                .GetWithIncludeAsync(c => c.EventsCarts)
-                .FirstOrDefaultAsync(c => c.UserId.ToString() == userId);
+            await _shoppingCartService.AddEventToCartAsync(eventId, userId, e);
 
-            EventCart eventItem = cart.EventsCarts.FirstOrDefault(gc => gc.EventId.ToString() == eventId);
+            _notyf.Success("Event ticket added successfully in the Shopping Cart");
 
-            if (eventItem != null)
-            {
-                if (eventItem.IsDeleted == false)
-                {
-                    eventItem.TicketQuantity++;
-                }
-                else
-                {
-                    eventItem.IsDeleted = false;
-                    eventItem.TicketQuantity = 1;
-                }
-            }
-            else
-            {
-                eventItem = new EventCart()
-                {
-                    Event = e,
-                    TicketQuantity = 1,
-                    IsDeleted = false,
-                    AddedOn = DateTime.Now
-                };
-
-                cart.EventsCarts.Add(eventItem);
-            }
-
-            await _cartRepository.SaveChangesAsync();
+            Log.Information("User with ID {UserId} made {Action} in {Controller}", userId, nameof(AddEventToCart), nameof(ShoppingCartController));
 
             return RedirectToAction(nameof(Index));
         }
@@ -238,9 +113,7 @@ namespace GameVerse.Web.Controllers
                 return Unauthorized();
             }
 
-            Game? game = await _gameRepository
-                .AllAsReadOnly()
-                .FirstOrDefaultAsync(g => g.Id.ToString() == gameId && g.IsDeleted == false);
+            Game? game = await _gameService.GetGameByIdAsync(gameId);
 
             if (game == null)
             {
@@ -248,22 +121,22 @@ namespace GameVerse.Web.Controllers
                 return NotFound();
             }
 
-            Cart cart = await _cartRepository
-                .GetWithIncludeAsync(c => c.GamesCarts.Where(c => c.IsDeleted == false))
-                .FirstOrDefaultAsync(c => c.UserId.ToString() == userId);
+            bool gameItemExistInTheShoppingCart =
+                await _shoppingCartService.GameItemExistInTheShoppingCart(gameId, userId);
 
-            GameCart? gameItem = cart.GamesCarts.FirstOrDefault(gc => gc.GameId.ToString() == gameId);
-
-            if (gameItem == null)
+            if (!gameItemExistInTheShoppingCart)
             {
                 _notyf.Error("Item doesn't exist in your shopping cart");
                 return RedirectToAction(nameof(Index));
             }
 
-            gameItem.IsDeleted = true;
-            await _cartRepository.SaveChangesAsync();
+            await _shoppingCartService.RemoveGameFromCartAsync(gameId, userId, game.Price);
 
-            return RedirectToAction(nameof(Index));
+            _notyf.Success("Game successfully removed from Shopping Cart");
+
+            Log.Information("User with ID {UserId} perform {Action} in {Controller}", userId, nameof(RemoveGameFromCart), nameof(ShoppingCartController));
+
+            return RedirectToAction("Details", "GameStore", new{id = gameId});
         }
 
         [HttpPost]
@@ -277,9 +150,7 @@ namespace GameVerse.Web.Controllers
                 return Unauthorized();
             }
 
-            Event? e = await _eventRepository
-                .AllAsReadOnly()
-                .FirstOrDefaultAsync(e => e.Id.ToString() == eventId && e.IsDeleted == false);
+            Event? e = await _eventService.GetEventByIdAsync(eventId);
 
             if (e == null)
             {
@@ -287,74 +158,23 @@ namespace GameVerse.Web.Controllers
                 return NotFound();
             }
 
-            Cart cart = await _cartRepository
-                .GetWithIncludeAsync(c => c.EventsCarts.Where(c => c.IsDeleted == false))
-                .FirstOrDefaultAsync(c => c.UserId.ToString() == userId);
+            bool isEventItemExistInTheShoppingCart =
+                await _shoppingCartService.EventItemExistInTheShoppingCart(eventId, userId);
 
-            GameCart? gameItem = cart.GamesCarts.FirstOrDefault(gc => gc.GameId.ToString() == eventId);
-
-            if (gameItem == null)
+            if (!isEventItemExistInTheShoppingCart)
             {
                 _notyf.Error("Item doesn't exist in your shopping cart");
                 return RedirectToAction(nameof(Index));
             }
 
-            gameItem.IsDeleted = true;
-            await _cartRepository.SaveChangesAsync();
+            await _shoppingCartService.RemoveEventFromCartAsync(eventId, userId, e.TicketPrice);
 
-            return RedirectToAction(nameof(Index));
+            _notyf.Success("Event ticket successfully removed from Shopping Cart");
+
+            Log.Information("User with ID {UserId} perform {Action} in {Controller}", userId, nameof(RemoveEventFromCart), nameof(ShoppingCartController));
+
+            return RedirectToAction("Details", "Event", new {id = eventId});
         }
-        //[HttpPost]
-        //public async Task<IActionResult> Purchase()
-        //{
-        //    string userId = User.GetId();
 
-        //    if (userId == null)
-        //    {
-        //        return Unauthorized();
-        //    }
-
-        //    var cart = await _cartRepository
-        //        .GetWithIncludeAsync(c => c.GamesCarts.Where(gc => gc.IsDeleted == false), c => c.EventsCarts.Where(ec => ec.IsDeleted == false))
-        //        .FirstOrDefaultAsync(c => c.UserId.ToString() == userId);
-
-        //    var gameItems = cart.GamesCarts.ToList();
-        //    var eventItems = cart.EventsCarts.ToList();
-
-        //    if (eventItems != null)
-        //    {
-        //        foreach (var eventItem in eventItems)
-        //        {
-        //            var eventRegistration = new EventRegistration()
-        //            {
-        //                UserId = Guid.Parse(userId),
-        //                EventId = eventItem.EventId,
-        //                RegistrationDate = DateTime.Now,
-        //            };
-
-        //            await _eventRegistrationRepository.AddAsync(eventRegistration);
-        //        }
-        //        await _eventRegistrationRepository.SaveChangesAsync();
-        //    }
-
-        //    if (gameItems != null)
-        //    {
-        //        foreach (var gameItem in gameItems)
-        //        {
-        //            var userBoughtGame = new UserBoughtGame()
-        //            {
-        //                UserId = Guid.Parse(userId),
-        //                GameId = gameItem.GameId,
-        //                BoughtOn = DateTime.Now,
-        //            };
-
-        //            await _userBoughtGamesRepository.AddAsync(userBoughtGame);
-        //        }
-
-        //        await _userBoughtGamesRepository.SaveChangesAsync();
-        //    }
-
-        //    //For example redirect to Home Page and add Toaster message
-        //}
     }
 }

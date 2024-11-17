@@ -21,7 +21,7 @@ namespace GameVerse.Data.Models.Carts
         [Column(TypeName = "decimal(18, 2)")]
         public decimal TotalPrice { get; set; }
 
-        public ICollection<GameCart> GamesCarts = new HashSet<GameCart>();
-        public ICollection<EventCart> EventsCarts = new HashSet<EventCart>();
+        public ICollection<GameCart> GamesCarts { get; set; } = new HashSet<GameCart>();
+        public ICollection<EventCart> EventsCarts { get; set; }= new HashSet<EventCart>();
     }
 }

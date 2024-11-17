@@ -126,7 +126,7 @@ namespace GameVerse.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Moderators", t =>
+                    b.ToTable("Moderators", null, t =>
                         {
                             t.HasComment("Moderator in GameVerse System");
                         });
@@ -148,7 +148,7 @@ namespace GameVerse.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Carts");
+                    b.ToTable("Carts", (string)null);
                 });
 
             modelBuilder.Entity("GameVerse.Data.Models.Carts.EventCart", b =>
@@ -174,7 +174,7 @@ namespace GameVerse.Data.Migrations
 
                     b.HasIndex("CartId");
 
-                    b.ToTable("EventsCarts");
+                    b.ToTable("EventsCarts", (string)null);
                 });
 
             modelBuilder.Entity("GameVerse.Data.Models.Carts.GameCart", b =>
@@ -200,7 +200,7 @@ namespace GameVerse.Data.Migrations
 
                     b.HasIndex("CartId");
 
-                    b.ToTable("GamesCarts");
+                    b.ToTable("GamesCarts", (string)null);
                 });
 
             modelBuilder.Entity("GameVerse.Data.Models.Events.Event", b =>
@@ -270,7 +270,7 @@ namespace GameVerse.Data.Migrations
 
                     b.HasIndex("PublisherId");
 
-                    b.ToTable("Events", t =>
+                    b.ToTable("Events", null, t =>
                         {
                             t.HasComment("Gaming Event");
                         });
@@ -291,7 +291,7 @@ namespace GameVerse.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("EventsRegistrations");
+                    b.ToTable("EventsRegistrations", (string)null);
                 });
 
             modelBuilder.Entity("GameVerse.Data.Models.Games.Game", b =>
@@ -359,7 +359,7 @@ namespace GameVerse.Data.Migrations
 
                     b.HasIndex("PublisherId");
 
-                    b.ToTable("Games", t =>
+                    b.ToTable("Games", null, t =>
                         {
                             t.HasComment("Game to Buy");
                         });
@@ -385,7 +385,7 @@ namespace GameVerse.Data.Migrations
 
                     b.HasIndex("GenreId");
 
-                    b.ToTable("GamesGenres", t =>
+                    b.ToTable("GamesGenres", null, t =>
                         {
                             t.HasComment("Established many-to-many relation between Game and Genre tables");
                         });
@@ -406,7 +406,7 @@ namespace GameVerse.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Genres", t =>
+                    b.ToTable("Genres", null, t =>
                         {
                             t.HasComment("Game Genre");
                         });
@@ -534,7 +534,7 @@ namespace GameVerse.Data.Migrations
 
                     b.HasIndex("PlatformId");
 
-                    b.ToTable("GamesPlatforms", t =>
+                    b.ToTable("GamesPlatforms", null, t =>
                         {
                             t.HasComment("Established many-to-many relation between Game and Platform tables");
                         });
@@ -555,7 +555,7 @@ namespace GameVerse.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Platforms", t =>
+                    b.ToTable("Platforms", null, t =>
                         {
                             t.HasComment("Game Platform");
                         });
@@ -683,7 +683,7 @@ namespace GameVerse.Data.Migrations
 
                     b.HasIndex("RestrictionId");
 
-                    b.ToTable("GamesRestrictions", t =>
+                    b.ToTable("GamesRestrictions", null, t =>
                         {
                             t.HasComment("Established many-to-many relation between Games and Restrictions Tables");
                         });
@@ -704,7 +704,7 @@ namespace GameVerse.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Restrictions", t =>
+                    b.ToTable("Restrictions", null, t =>
                         {
                             t.HasComment("Game Restriction");
                         });
@@ -818,7 +818,7 @@ namespace GameVerse.Data.Migrations
 
                     b.HasIndex("ReviewerId");
 
-                    b.ToTable("GameReviews", t =>
+                    b.ToTable("GameReviews", null, t =>
                         {
                             t.HasComment("Game Review");
                         });
@@ -839,7 +839,7 @@ namespace GameVerse.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserBoughtGames");
+                    b.ToTable("UserBoughtGames", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>

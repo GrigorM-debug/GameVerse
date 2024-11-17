@@ -1,5 +1,6 @@
 ﻿
 using GameVerse.Common.Enums;
+using GameVerse.Data.Models.Games;
 using GameVerse.Web.ViewModels.Game;
 using GameVerse.Web.ViewModels.Game.Details;
 using GameVerse.Web.ViewModels.Game.SelectLists;
@@ -12,6 +13,8 @@ namespace GameVerse.Services.Interfaces
     public interface IGameService
     {
         Task<bool> GameExistByIdAsync(string gameId);
+
+        Task<Game> GetGameByIdAsync(string gameId);
 
         Task<GameInputViewModel> AddGameGetAsync();
 

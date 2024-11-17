@@ -14,9 +14,9 @@
 <div class="container px-3 my-5 clearfix">
     <!-- Shopping cart table -->
     <div class="card">
-        <div class="card-header">
+        @* <div class="card-header">
             <h2>Shopping Cart</h2>
-        </div>
+        </div> *@
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-bordered m-0">
@@ -32,11 +32,11 @@
                     </thead>
                     <tbody>
                     
-                    @if (!Model.GameCartItems.Any() || !Model.EventCartItems.Any())
+                    @if (!Model.GameCartItems.Any() && !Model.EventCartItems.Any())
                     {
                         <tr>
                             <td class="p-4">
-                                    <h3>No products added</h3>
+                                <h3>No products added</h3>
                             </td>
                         </tr>
                     }
@@ -46,7 +46,7 @@
                         <tr>
                             <td class="p-4">
                                 <div class="media align-items-center">
-                                    <img src="@gameCartItem.Image" alt="Game Image">
+                                    <img src="@gameCartItem.Image" class="game-image" alt="Game Image">
                                     <div class="media-body">
                                         <a asp-area="" asp-controller="GameStore" asp-action="Details" asp-route-id="@gameCartItem.Id" class="d-block text-dark">@gameCartItem.Title</a>
                                         <small>
@@ -59,7 +59,7 @@
                                 </div>
                             </td>
                             <td class="text-right font-weight-semibold align-middle p-4">@gameCartItem.Price</td>
-                            <td class="align-middle p-4"><input type="text" class="form-control text-center" value="@gameCartItem.Quantity"></td>
+                                <td class="align-middle p-4 text-center">@gameCartItem.Quantity</td>
                             <td class="text-right font-weight-semibold align-middle p-4">@gameCartItem.TotalPrice</td>
                             <td class="text-center align-middle px-0"><a asp-area="" asp-controller="ShoppingCart" asp-action="RemoveGameFromCart" asp-route-gameId="@gameCartItem.Id" class="shop-tooltip close float-none text-danger" title="" data-original-title="Remove">×</a></td>
                         </tr>
@@ -70,7 +70,7 @@
                         <tr>
                             <td class="p-4">
                                 <div class="media align-items-center">
-                                    <img src="@eventCartItem.Image" class="d-block ui-w-40 ui-bordered mr-4" alt="Event Image">
+                                    <img src="@eventCartItem.Image" class="event-image" alt="Event Image">
                                     <div class="media-body">
                                         <a asp-area="" asp-controller="Event" asp-action="Details" asp-route-id="@eventCartItem.Id" class="d-block text-dark">@eventCartItem.Topic</a>
                                         <small>
@@ -83,9 +83,9 @@
                                 </div>
                             </td>
                             <td class="text-right font-weight-semibold align-middle p-4">@eventCartItem.TicketPrice</td>
-                            <td class="align-middle p-4"><input type="text" class="form-control text-center" value="@eventCartItem.TicketQuantity"></td>
+                            <td class="align-middle p-4 text-center">@eventCartItem.TicketQuantity</td>
                             <td class="text-right font-weight-semibold align-middle p-4">@eventCartItem.TotalPrice</td>
-                                <td class="text-center align-middle px-0"><a asp-area="" asp-controller="ShoppingCart" asp-action="RemoveEventFromCart" asp-route-eventId="@eventCartItem.Id" class="shop-tooltip close float-none text-danger" title="" data-original-title="Remove">×</a></td>
+                            <td class="text-center align-middle px-0"><a asp-area="" asp-controller="ShoppingCart" asp-action="RemoveEventFromCart" asp-route-eventId="@eventCartItem.Id" class="shop-tooltip close float-none text-danger" title="" data-original-title="Remove">×</a></td>
                         </tr>
                     }
                     </tbody>
@@ -112,6 +112,16 @@
 </div>
 
 <style>
+
+    .game-image, .event-image {
+        width: 70px; 
+        height: auto; 
+        object-fit: cover; 
+        border-radius: 5px; 
+        border: 1px solid #ddd; 
+        margin-right: 2em;
+    }
+
     .ui-w-40 {
         width: 40px !important;
         height: auto;
