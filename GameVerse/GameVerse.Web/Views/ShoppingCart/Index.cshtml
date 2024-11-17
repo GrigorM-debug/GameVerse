@@ -61,7 +61,11 @@
                             <td class="text-right font-weight-semibold align-middle p-4">@gameCartItem.Price</td>
                                 <td class="align-middle p-4 text-center">@gameCartItem.Quantity</td>
                             <td class="text-right font-weight-semibold align-middle p-4">@gameCartItem.TotalPrice</td>
-                            <td class="text-center align-middle px-0"><a asp-area="" asp-controller="ShoppingCart" asp-action="RemoveGameFromCart" asp-route-gameId="@gameCartItem.Id" class="shop-tooltip close float-none text-danger" title="" data-original-title="Remove">×</a></td>
+                        <td class="text-center align-middle px-0">
+                            <form method="post" asp-controller="ShoppingCart" asp-action="RemoveGameFromCart" asp-route-gameId="@gameCartItem.Id">
+                                        <input type="submit" asp-area="" asp-controller="ShoppingCart" asp-action="RemoveGameFromCart" asp-route-gameId="@gameCartItem.Id" class="shop-tooltip close float-none text-danger" title="" data-original-title="Remove" value="×" />
+                            </form>
+                        </td>
                         </tr>
                     }
                     
