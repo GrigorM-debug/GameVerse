@@ -237,9 +237,9 @@ namespace GameVerse.Services
         {
             Cart? cart = await GetOrCreateUserCart(userId);
 
-            IEnumerable<GameCart> gameCartItems = cart.GamesCarts.ToList();
+            IEnumerable<GameCart> gameCartItems = cart.GamesCarts.Where(gc => !gc.IsDeleted).ToList();
 
-            IEnumerable<EventCart> eventCartItems = cart.EventsCarts.ToList();
+            IEnumerable<EventCart> eventCartItems = cart.EventsCarts.Where(ec => !ec.IsDeleted).ToList();
 
             if (gameCartItems.Any())
             {
