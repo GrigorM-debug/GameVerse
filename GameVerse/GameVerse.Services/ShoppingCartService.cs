@@ -149,8 +149,12 @@ namespace GameVerse.Services
 
             GameCart? gameItem = cart.GamesCarts.FirstOrDefault(gc => gc.GameId.ToString() == gameId && gc.IsDeleted == false);
 
+            gameItem.Quantity--;
 
-            gameItem.IsDeleted = true;
+            if (gameItem.Quantity < 1)
+            {
+                gameItem.IsDeleted = true;
+            }
 
             cart.TotalPrice -= gameItem.Quantity * gamePrice;
 
@@ -163,7 +167,12 @@ namespace GameVerse.Services
 
             EventCart? eventItem = cart.EventsCarts.FirstOrDefault(gc => gc.EventId.ToString() == eventId && gc.IsDeleted == false);
 
-            eventItem.IsDeleted = true;
+            eventItem.TicketQuantity--;
+
+            if (eventItem.TicketQuantity < 1)
+            {
+                eventItem.IsDeleted = true;
+            }
 
             cart.TotalPrice -= eventItem.TicketQuantity * eventTicketPrice;
 
