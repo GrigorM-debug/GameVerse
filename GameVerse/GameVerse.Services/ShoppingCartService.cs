@@ -296,6 +296,7 @@ namespace GameVerse.Services
                     await _eventRegistrationRepository.AddAsync(eventRegistration);
                     await _eventRegistrationRepository.SaveChangesAsync();
                     await _eventRepository.SaveChangesAsync();
+                    await ClearCart(cart);
                 }
             }
         }

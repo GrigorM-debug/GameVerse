@@ -176,6 +176,34 @@ namespace GameVerse.Web.Controllers
             return RedirectToAction("Details", "Event", new {id = eventId});
         }
 
+        [HttpPost]
+        public async Task<IActionResult> PurchaseItemsInShoppingCart()
+        {
+            string? userId = User.GetId();
 
+            if (userId == null)
+            {
+                _notyf.Error("You don't have the permission to do this");
+                return Unauthorized();
+            }
+
+            try
+            {
+                await _shoppingCartService.PurchaseItemsInShoppingCart(userId);
+
+                Log.Information("User with {UserId} made an {Action} in {Controller}", userId, nameof(PurchaseItemsInShoppingCart), nameof(ShoppingCartController));
+
+                _notyf.Success("Items successfully purchased. You can see them in Bought Games and Event Registrations Pages");
+
+                return RedirectToAction("Index", "Home");
+            }
+            catch (InvalidOperationException ex)
+            {
+                _notyf.Error(ex.Message);
+                Log.Error("An error occur in {Action} from {Controller} with {Message}", nameof(PurchaseItemsInShoppingCart), nameof(ShoppingCartController), ex.Message);
+
+                return RedirectToAction(nameof(Index));
+            }
+        }
     }
 }
