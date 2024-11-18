@@ -8,6 +8,7 @@ using GameVerse.Services.Interfaces;
 using GameVerse.Web.ViewModels.ShoppingCart;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
+using System.Runtime.InteropServices.JavaScript;
 using static GameVerse.Common.ApplicationConstants.EventConstants;
 
 namespace GameVerse.Services
@@ -221,6 +222,97 @@ namespace GameVerse.Services
                 return true;
             }
             return false;
+        }
+
+        public async Task PurchaseItemsInShoppingCart(string userId)
+        {
+            Cart? cart = await GetOrCreateUserCart(userId);
+
+            IEnumerable<GameCart> gameCartItems = cart.GamesCarts.ToList();
+
+            IEnumerable<EventCart> eventCartItems = cart.EventsCarts.ToList();
+
+            if (gameCartItems.Any())
+            {
+                foreach (var gameCartItem in gameCartItems)
+                {
+                    Game? game = await _gameRepository.FirstOrDefaultAsync(g =>
+                        g.Id == gameCartItem.GameId && g.IsDeleted == false);
+
+                    if (game == null || game.QuantityInStock < gameCartItem.Quantity)
+                    {
+                        throw new InvalidOperationException("Not enough quantity in stock for game: " + gameCartItem.GameId);
+                    }
+
+                    //Decrease game quantity in stock. Is quantity drops to zero set game IsDeleted to true
+                    game.QuantityInStock -= gameCartItem.Quantity;
+
+                    //Mark the game as Removed if the QuantityInStock reaches zero
+                    if (game.QuantityInStock == 0)
+                    {
+                        game.IsDeleted = true;
+                    }
+
+                    UserBoughtGame userBoughtGame = new UserBoughtGame()
+                    {
+                        UserId = Guid.Parse(userId),
+                        GameId = gameCartItem.GameId,
+                        BoughtOn = DateTime.Now
+                    };
+
+                    await _userBoughtGamesRepository.AddAsync(userBoughtGame);
+                    await _userBoughtGamesRepository.SaveChangesAsync();
+                    await _gameRepository.SaveChangesAsync();
+                }
+            }
+
+            if (eventCartItems.Any())
+            {
+                foreach (var eventCartItem in eventCartItems)
+                {
+                    Event? e = await _eventRepository.FirstOrDefaultAsync(e =>
+                        e.Id == eventCartItem.EventId && e.IsDeleted == false);
+
+                    if (e == null || e.Seats < eventCartItem.TicketQuantity)
+                    {
+                        throw new InvalidOperationException("Not enough empty seats for event" + eventCartItem.EventId);
+                    }
+
+                    //Decrease the number of seats
+                    e.Seats -= eventCartItem.TicketQuantity;
+
+                    if (e.Seats == 0)
+                    {
+                        e.IsDeleted = true;
+                    }
+
+                    EventRegistration eventRegistration = new EventRegistration()
+                    {
+                        UserId = Guid.Parse(userId),
+                        EventId = eventCartItem.EventId,
+                        RegistrationDate = DateTime.Now
+                    };
+
+                    await _eventRegistrationRepository.AddAsync(eventRegistration);
+                    await _eventRegistrationRepository.SaveChangesAsync();
+                    await _eventRepository.SaveChangesAsync();
+                }
+            }
+        }
+
+        public async Task ClearCart(Cart cart)
+        {
+            foreach (var eventItem in cart.EventsCarts.Where(e => e.IsDeleted == false))
+            {
+                eventItem.IsDeleted = true;
+            }
+
+            foreach (var gameItem in cart.GamesCarts.Where(g => g.IsDeleted == false))
+            {
+                gameItem.IsDeleted = true;
+            }
+
+            await _cartRepository.SaveChangesAsync();
         }
     }
 }

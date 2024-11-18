@@ -176,5 +176,6 @@ namespace GameVerse.Web.Controllers
             return RedirectToAction("Details", "Event", new {id = eventId});
         }
 
+
     }
 }

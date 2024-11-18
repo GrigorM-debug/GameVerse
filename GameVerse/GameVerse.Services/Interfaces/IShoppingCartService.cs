@@ -24,5 +24,9 @@ namespace GameVerse.Services.Interfaces
         Task<bool> GameItemExistInTheShoppingCart(string gameId, string userId);
 
         Task<bool> EventItemExistInTheShoppingCart(string eventId, string userId);
+
+        Task PurchaseItemsInShoppingCart(string userId);
+
+        Task ClearCart(Cart cart);
     }
 }
