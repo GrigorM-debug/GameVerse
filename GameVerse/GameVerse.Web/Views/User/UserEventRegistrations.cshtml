@@ -1,7 +1,7 @@
-﻿@model IEnumerable<GameVerse.Web.ViewModels.Game.UserPagesViewModels.UserBoughtGamesViewModel>
+﻿@model IEnumerable<GameVerse.Web.ViewModels.Game.UserPagesViewModels.UserEventRegistrationsViewModel>
 
 @{
-    ViewData["Title"] = "Games you bought";
+    ViewData["Title"] = "Events you bought a ticket for";
     // var today = DateTime.Now.ToString("dd-MM-yyyy");
 }
 
@@ -21,38 +21,37 @@
                         <table class="table user-list">
                             <thead>
                             <tr>
-                                <th><span>Game</span></th>
-                                <th><span>Bought On</span></th>
-                                <th class="text-center"><span>Quantity</span></th>
+                                <th><span>Event</span></th>
+                                <th><span>Registration date</span></th>
+                                <th class="text-center"><span>Ticket Quantity</span></th>
                                 <th><span>Price</span></th>
                                 <th>&nbsp;</th>
                             </tr>
                             </thead>
                             <tbody>
-                                @if (!Model.Any())
-                                {
-                                    <h2>No Games Bought</h2>
-                                }
-                                @foreach (var gameBought in Model)
-                                {
-                                    <tr>
-                                        <td>
-                                            <img src="@gameBought.Image" alt="Game Image">
-                                            <a asp-area="" asp-controller="GameStore" asp-action="Details" asp-route-id="@gameBought.GameId" class="user-link">@gameBought.Title</a>
-                                            <span class="user-subhead">@gameBought.Type</span>
-                                        </td>
-                                        <td>@gameBought.BoughtOn</td>
-                                        <td class="text-center">
-                                            @gameBought.Quantity
-                                        </td>
-                                        <td class="text-center">
-                                            @gameBought.Price
-                                        </td>
-                                        <td style="width: 20%;">
-                                            <a asp-area="" asp-controller="GameStore" asp-action="Details" asp-route-id="@gameBought.GameId" class="btn btn-primary">Details</a>
-                                        </td>
-                                    </tr>
-                                }
+                            @if (!Model.Any())
+                            {
+                                <h2>No Tickets for Events Bought</h2>
+                            }
+                            @foreach (var eventTicketBought in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <img src="@eventTicketBought.Image" alt="Event Image">
+                                        <a asp-area="" asp-controller="Event" asp-action="Details" asp-route-id="@eventTicketBought.EventId" class="user-link">@eventTicketBought.Topic</a>
+                                    </td>
+                                    <td>@eventTicketBought.RegistrationDate</td>
+                                    <td class="text-center">
+                                        @eventTicketBought.TicketQuantity
+                                    </td>
+                                    <td class="text-center">
+                                        @eventTicketBought.Price
+                                    </td>
+                                    <td style="width: 20%;">
+                                        <a asp-area="" asp-controller="Event" asp-action="Details" asp-route-id="@eventTicketBought.EventId" class="btn btn-primary">Details</a>
+                                    </td>
+                                </tr>
+                            }
                             </tbody>
                         </table>
                     </div>
@@ -62,11 +61,11 @@
     </div>
 </div>
 
-
 <style>
     .main-box.no-header {
         padding-top: 20px;
     }
+
     .main-box {
         background: #FFFFFF;
         -webkit-box-shadow: 1px 1px 2px 0 #CCCCCC;
@@ -79,17 +78,20 @@
         -moz-border-radius: 3px;
         border-radius: 3px;
     }
+
     .user-list tbody td .user-subhead {
         font-size: 0.875em;
         font-style: italic;
     }
+
     .user-list tbody td .user-link {
         display: block;
         font-size: 1.25em;
         padding-top: 3px;
         margin-left: 60px;
     }
-    .user-list tbody td>img {
+
+    .user-list tbody td > img {
         position: relative;
         max-width: 50px;
         float: left;
@@ -100,13 +102,16 @@
         text-transform: uppercase;
         font-size: 0.875em;
     }
+
     .table thead tr th {
         border-bottom: 2px solid #e7ebee;
     }
+
     .table tbody tr td:first-child {
         font-size: 1.125em;
         font-weight: 300;
     }
+
     .table tbody tr td {
         font-size: 0.875em;
         vertical-align: middle;
