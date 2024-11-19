@@ -266,7 +266,8 @@ namespace GameVerse.Services
                     {
                         UserId = Guid.Parse(userId),
                         GameId = gameCartItem.GameId,
-                        BoughtOn = DateTime.Now
+                        BoughtOn = DateTime.Now,
+                        Quantity = gameCartItem.Quantity
                     };
 
                     await _userBoughtGamesRepository.AddAsync(userBoughtGame);
@@ -299,7 +300,8 @@ namespace GameVerse.Services
                     {
                         UserId = Guid.Parse(userId),
                         EventId = eventCartItem.EventId,
-                        RegistrationDate = DateTime.Now
+                        RegistrationDate = DateTime.Now,
+                        TicketQuantity = eventCartItem.TicketQuantity
                     };
 
                     await _eventRegistrationRepository.AddAsync(eventRegistration);
