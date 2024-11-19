@@ -11,7 +11,7 @@ namespace GameVerse.Web.ViewModels.Game.UserPagesViewModels
 
         public string RegistrationDate { get; set; } = null!;
 
-        public string TicketPrice { get; set; } = null!;
+        public string Price { get; set; } = null!;
 
         public int TicketQuantity { get; set; }
 
