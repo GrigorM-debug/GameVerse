@@ -29,5 +29,8 @@ namespace GameVerse.Data.Models.Games
 
         [Required]
         public DateTime BoughtOn { get; set; }
+
+        [Required]
+        public int Quantity { get; set; }
     }
 }

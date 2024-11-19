@@ -21,5 +21,8 @@ namespace GameVerse.Data.Models.Events
         public ApplicationUser User { get; set; } = null!;
         
         public DateTime RegistrationDate { get; set; }
+
+        [Required]
+        public int TicketQuantity { get; set; }
     }
 }
