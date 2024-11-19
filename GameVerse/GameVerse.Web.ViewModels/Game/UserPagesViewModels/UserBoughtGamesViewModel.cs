@@ -13,5 +13,9 @@ namespace GameVerse.Web.ViewModels.Game.UserPagesViewModels
         public string BoughtOn { get; set; } = null!;
 
         public string Price { get; set; } = null!;
+
+        public int Quantity { get; set; }
+
+        public string Type { get; set; } = null!;
     }
 }
