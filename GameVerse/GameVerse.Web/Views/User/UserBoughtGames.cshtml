@@ -1,4 +1,6 @@
-﻿@{
+﻿@model IEnumerable<GameVerse.Web.ViewModels.Game.UserPagesViewModels.UserBoughtGamesViewModel>
+
+@{
     ViewData["Title"] = "Games you bought";
     // var today = DateTime.Now.ToString("dd-MM-yyyy");
 }
@@ -19,117 +21,38 @@
                         <table class="table user-list">
                             <thead>
                             <tr>
-                                <th><span>Title</span></th>
+                                <th><span>Game</span></th>
                                 <th><span>Bought On</span></th>
                                 <th class="text-center"><span>Quantity</span></th>
-                                <th><span>Type</span></th>
                                 <th><span>Price</span></th>
                                 <th>&nbsp;</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td>
-                                    <img src="https://bootdey.com/img/Content/user_1.jpg" alt="">
-                                    <a href="#" class="user-link">Full name 1</a>
-                                    <span class="user-subhead">Member</span>
-                                </td>
-                                <td>2013/08/12</td>
-                                <td class="text-center">
-                                    <span class="label label-default">pending</span>
-                                </td>
-                                <td>
-                                    <a href="#">marlon@brando.com</a>
-                                </td>
-                                <td style="width: 20%;">
-                                    <a href="#" class="table-link text-warning">
-                                        <span class="fa-stack">
-                                            <i class="fa fa-square fa-stack-2x"></i>
-                                            <i class="fa fa-search-plus fa-stack-1x fa-inverse"></i>
-                                        </span>
-                                    </a>
-                                    <a href="#" class="table-link text-info">
-                                        <span class="fa-stack">
-                                            <i class="fa fa-square fa-stack-2x"></i>
-                                            <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
-                                        </span>
-                                    </a>
-                                    <a href="#" class="table-link danger">
-                                        <span class="fa-stack">
-                                            <i class="fa fa-square fa-stack-2x"></i>
-                                            <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
-                                        </span>
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <img src="https://bootdey.com/img/Content/user_3.jpg" alt="">
-                                    <a href="#" class="user-link">Full name 2</a>
-                                    <span class="user-subhead">Admin</span>
-                                </td>
-                                <td>2013/08/12</td>
-                                <td class="text-center">
-                                    <span class="label label-success">Active</span>
-                                </td>
-                                <td>
-                                    <a href="#">marlon@brando.com</a>
-                                </td>
-                                <td style="width: 20%;">
-                                    <a href="#" class="table-link  text-warning">
-                                        <span class="fa-stack">
-                                            <i class="fa fa-square fa-stack-2x"></i>
-                                            <i class="fa fa-search-plus fa-stack-1x fa-inverse"></i>
-                                        </span>
-                                    </a>
-                                    <a href="#" class="table-link  text-info">
-                                        <span class="fa-stack">
-                                            <i class="fa fa-square fa-stack-2x"></i>
-                                            <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
-                                        </span>
-                                    </a>
-                                    <a href="#" class="table-link danger">
-                                        <span class="fa-stack">
-                                            <i class="fa fa-square fa-stack-2x"></i>
-                                            <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
-                                        </span>
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <img src="https://bootdey.com/img/Content/user_2.jpg" alt="">
-                                    <a href="#" class="user-link">Full name 3</a>
-                                    <span class="user-subhead">Member</span>
-                                </td>
-                                <td>2013/08/12</td>
-                                <td class="text-center">
-                                    <span class="label label-danger">inactive</span>
-                                </td>
-                                <td>
-                                    <a href="#">marlon@brando.com</a>
-                                </td>
-                                <td style="width: 20%;">
-                                    <a href="#" class="table-link  text-warning">
-                                        <span class="fa-stack">
-                                            <i class="fa fa-square fa-stack-2x"></i>
-                                            <i class="fa fa-search-plus fa-stack-1x fa-inverse"></i>
-                                        </span>
-                                    </a>
-                                    <a href="#" class="table-link  text-info">
-                                        <span class="fa-stack">
-                                            <i class="fa fa-square fa-stack-2x"></i>
-                                            <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
-                                        </span>
-                                    </a>
-                                    <a href="#" class="table-link danger">
-                                        <span class="fa-stack">
-                                            <i class="fa fa-square fa-stack-2x"></i>
-                                            <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
-                                        </span>
-                                    </a>
-                                </td>
-                            </tr>
+                                @if (!Model.Any())
+                                {
+                                    <h2>No Games Bought</h2>
+                                }
+                                @foreach (var gameBought in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            <img src="@gameBought.Image" alt="Game Image">
+                                            <a asp-area="" asp-controller="GameStore" asp-action="Details" asp-route-id="@gameBought.Id" class="user-link">@gameBought.Title</a>
+                                            <span class="user-subhead">@gameBought.Type</span>
+                                        </td>
+                                        <td>@gameBought.BoughtOn</td>
+                                        <td class="text-center">
+                                            @gameBought.Quantity
+                                        </td>
+                                        <td class="text-center">
+                                            @gameBought.Price
+                                        </td>
+                                        <td style="width: 20%;">
+                                            <a asp-area="" asp-controller="GameStore" asp-action="Details" asp-route-id="@gameBought.Id" class="btn btn-primary">Details</a>
+                                        </td>
+                                    </tr>
+                                }
                             </tbody>
                         </table>
                     </div>
@@ -156,14 +79,6 @@
         -moz-border-radius: 3px;
         border-radius: 3px;
     }
-    .table a.table-link.danger {
-        color: #e74c3c;
-    }
-    .label {
-        border-radius: 3px;
-        font-size: 0.875em;
-        font-weight: 600;
-    }
     .user-list tbody td .user-subhead {
         font-size: 0.875em;
         font-style: italic;
@@ -173,10 +88,6 @@
         font-size: 1.25em;
         padding-top: 3px;
         margin-left: 60px;
-    }
-    a {
-        color: #3498db;
-        outline: none!important;
     }
     .user-list tbody td>img {
         position: relative;
@@ -201,8 +112,5 @@
         vertical-align: middle;
         border-top: 1px solid #e7ebee;
         padding: 12px 8px;
-    }
-    a:hover{
-        text-decoration:none;
     }
 </style>
