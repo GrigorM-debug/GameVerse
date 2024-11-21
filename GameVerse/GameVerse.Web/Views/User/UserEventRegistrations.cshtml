@@ -22,6 +22,8 @@
                             <thead>
                             <tr>
                                 <th><span>Event</span></th>
+                                <th><span>Event StartDate</span></th>
+                                <th><span>Event EndDate</span></th>
                                 <th><span>Registration date</span></th>
                                 <th class="text-center"><span>Ticket Quantity</span></th>
                                 <th><span>Price</span></th>
@@ -38,7 +40,13 @@
                                 <tr>
                                     <td>
                                         <img src="@eventTicketBought.Image" alt="Event Image">
-                                        <a asp-area="" asp-controller="Event" asp-action="Details" asp-route-id="@eventTicketBought.EventId" class="user-link">@eventTicketBought.Topic</a>
+                                        <h3>@eventTicketBought.Topic</h3>
+                                    </td>
+                                    <td>
+                                        @eventTicketBought.EventStartDate
+                                    </td>
+                                    <td>
+                                        @eventTicketBought.EventEndDate
                                     </td>
                                     <td>@eventTicketBought.RegistrationDate</td>
                                     <td class="text-center">
@@ -47,8 +55,8 @@
                                     <td class="text-center">
                                         @eventTicketBought.Price
                                     </td>
-                                    <td style="width: 20%;">
-                                        <a asp-area="" asp-controller="Event" asp-action="Details" asp-route-id="@eventTicketBought.EventId" class="btn btn-primary">Details</a>
+                                    <td>
+                                            <div id="map-@eventTicketBought.EventId" style="height: 60px; width: 100%;"></div>
                                     </td>
                                 </tr>
                             }
@@ -60,6 +68,25 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        @foreach (var eventModel in Model)
+        {
+            <text>
+                var map@eventModel.Id = L.map('map-@eventModel.EventId').setView([@eventModel.Latitude, @eventModel.Longitude], 13);
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(map@eventModel.Id);
+
+                var marker@eventModel.Id = L.marker([@eventModel.Latitude, @eventModel.Longitude]).addTo(map@eventModel.Id);
+                marker@eventModel.Id.bindPopup("<b>Event Location!</b>").openPopup();
+            </text>
+        }
+    });
+</script>
 
 <style>
     .main-box.no-header {
