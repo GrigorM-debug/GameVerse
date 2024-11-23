@@ -11,7 +11,7 @@ using Serilog;
 namespace GameVerse.Web.Areas.Administrator.Controllers
 {
     [Area("Administrator")]
-    [Authorize(Roles = "Administrator")]
+    [Authorize(Roles = "Admin")]
     public class UserManagementController : Controller
     {
         private readonly IUserManagementService _userManagementService;
