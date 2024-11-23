@@ -37,7 +37,9 @@ namespace GameVerse.Web.Areas.Administrator.Services
                 IEnumerable<string> roles = await _userManager.GetRolesAsync(user);
 
                 Data.Models.ApplicationUsers.Moderator? moderator =
-                    await _moderatorRepository.AllAsReadOnly().FirstOrDefaultAsync(m => m.UserId == user.Id);
+                    await _moderatorRepository
+                        .AllAsReadOnly()
+                        .FirstOrDefaultAsync(m => m.UserId == user.Id);
 
                 userViewModels.Add(new UserViewModel()
                 {
@@ -87,7 +89,7 @@ namespace GameVerse.Web.Areas.Administrator.Services
 
             bool isAlreadyInRole = await _userManager.IsInRoleAsync(user, "Admin");
 
-            if (!isAlreadyInRole)
+            if (user == null && !isAlreadyInRole)
             {
                 return false;
             }
