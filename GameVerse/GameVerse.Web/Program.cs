@@ -36,21 +36,11 @@ builder.Services.AddDbContext<GameVerseDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-//Reposity. 
+//Repository. 
 builder.Services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
 
 //Services
-builder.Services.AddScoped<IEventService, EventService>();
-builder.Services.AddScoped<IModeratorService, ModeratorService>();
-builder.Services.AddScoped<IGameService, GameService>();
-builder.Services.AddScoped<IReviewService, ReviewService>();
-builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IUserManagementService, UserManagementService>();
-builder.Services.AddScoped<ILogService, LogService>();
-builder.Services.AddScoped<IEventsRegistrationsService, EventsRegistrationsService>();
-builder.Services.AddScoped<IUsersBoughtGamesService, UsersBoughtGamesService>();
-
+builder.Services.AddServices(builder.Configuration);
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 {
