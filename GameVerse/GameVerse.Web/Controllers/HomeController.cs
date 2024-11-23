@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using GameVerse.Services.Interfaces;
+using GameVerse.Web.Extensions;
 using GameVerse.Web.ViewModels;
 using GameVerse.Web.ViewModels.Event;
 using GameVerse.Web.ViewModels.Game;
@@ -19,6 +20,11 @@ namespace GameVerse.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
+            if (User.IsAdmin())
+            {
+                return RedirectToAction("DashBoard", "Admin", new { area = "Administrator" });
+            }
+
             IEnumerable<EventIndexViewModel> latest3Events = await _eventService.GetLatest3EventsAsync();
             IEnumerable<GameIndexViewModel> last3Games = await _gameService.GetLast3GamesAsync();
 
