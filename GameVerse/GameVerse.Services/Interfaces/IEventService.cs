@@ -1,5 +1,6 @@
 ﻿
 using GameVerse.Common.Enums;
+using GameVerse.Data.Models.Events;
 using GameVerse.Web.ViewModels.Event;
 
 namespace GameVerse.Services.Interfaces
@@ -45,8 +46,9 @@ namespace GameVerse.Services.Interfaces
         /// </summary>
         /// <param name="eventId">The ID of the event to retrieve for editing.</param>
         /// <param name="moderatorId">The ID of the moderator requesting to edit.</param>
+        /// <param name="isAdmin">By this boolean we allow moderator edit events</param>
         /// <returns>An <see cref="EventInputViewModel"/> with event details if found; otherwise, <c>null</c>.</returns>
-        Task<EventInputViewModel?> EditEventGetAsync(string eventId, string moderatorId);
+        Task<EventInputViewModel?> EditEventGetAsync(string eventId, string moderatorId, bool isAdmin);
 
         /// <summary>
         /// Updates an event in the repository.
@@ -56,23 +58,26 @@ namespace GameVerse.Services.Interfaces
         /// <param name="moderatorId">The ID of the moderator performing the update.</param>
         /// <param name="startDate">The new start date of the event.</param>
         /// <param name="endDate">The new end date of the event.</param>
+        /// <param name="isAdmin">By this boolean we allow admin to edit events</param>
         /// <returns>The ID of the updated event as a string.</returns>
-        Task<string> EditEventPostAsync(EventInputViewModel inputModel, string eventId, string moderatorId, DateTime startDate, DateTime endDate);
+        Task<string> EditEventPostAsync(EventInputViewModel inputModel, string eventId, string moderatorId, DateTime startDate, DateTime endDate, bool isAdmin);
 
         /// <summary>
         /// Retrieves an event for deletion confirmation.
         /// </summary>
         /// <param name="eventId">The ID of the event to retrieve.</param>
         /// <param name="moderatorId">The ID of the moderator requesting deletion.</param>
+        /// <param name="isAdmin">By this boolean we allow admin to delete Events</param>
         /// <returns>A <see cref="EventDeleteViewModel"/> with event details if found; otherwise, <c>null</c>.</returns>
-        Task<EventDeleteViewModel?> DeleteEventGetAsync(string eventId, string moderatorId);
+        Task<EventDeleteViewModel?> DeleteEventGetAsync(string eventId, string moderatorId, bool isAdmin);
 
         /// <summary>
         /// Marks an event as deleted in the repository.
         /// </summary>
         /// <param name="eventId">The ID of the event to delete.</param>
-        /// <param name="userId">The ID of the user performing the deletion.</param>
-        Task DeleteEventPostAsync(string eventId, string userId);
+        /// <param name="moderatorId">The ID of the moderator performing the deletion.</param>
+        /// <param name="isAdmin">By this boolean we allow admins to delete events</param>
+        Task DeleteEventPostAsync(string eventId, string moderatorId, bool isAdmin);
 
         /// <summary>
         /// Retrieves detailed information for a specific event by its ID.
@@ -102,5 +107,7 @@ namespace GameVerse.Services.Interfaces
         /// <param name="eventId">The ID of the event to check.</param>
         /// <returns><c>true</c> if the event is associated with the specified moderator; otherwise, <c>false</c>.</returns>
         Task<bool> HasPublisherWithIdAsync(string moderatorId, string eventId);
+
+        Task<Event> GetEventByIdAsync(string eventId);
     }
 }
