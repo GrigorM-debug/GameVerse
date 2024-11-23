@@ -48,6 +48,8 @@ builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserManagementService, UserManagementService>();
 builder.Services.AddScoped<ILogService, LogService>();
+builder.Services.AddScoped<IEventsRegistrationsService, EventsRegistrationsService>();
+builder.Services.AddScoped<IUsersBoughtGamesService, UsersBoughtGamesService>();
 
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
