@@ -6,6 +6,6 @@
 
         public bool LogFileExists(string fileName);
 
-        List<string> GetLatestLogFiles(int numberOfFiles);
+        IEnumerable<string> GetLatestLogFiles(int numberOfFiles);
     }
 }
