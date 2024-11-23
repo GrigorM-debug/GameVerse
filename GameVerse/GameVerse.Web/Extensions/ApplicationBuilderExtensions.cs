@@ -1,7 +1,10 @@
-﻿using GameVerse.Services.Interfaces;
+﻿using GameVerse.Data;
+using GameVerse.Data.Models.ApplicationUsers;
+using GameVerse.Services.Interfaces;
 using GameVerse.Services;
 using GameVerse.Web.Areas.Administrator.Services.Interfaces;
 using GameVerse.Web.Areas.Administrator.Services;
+using Microsoft.AspNetCore.Identity;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -19,6 +22,23 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<ILogService, LogService>();
             services.AddScoped<IEventsRegistrationsService, EventsRegistrationsService>();
             services.AddScoped<IUsersBoughtGamesService, UsersBoughtGamesService>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddApplicationIdentity(this IServiceCollection services, IConfiguration config)
+        {
+            services.AddDefaultIdentity<ApplicationUser>(options =>
+                {
+                    options.SignIn.RequireConfirmedAccount = false;
+                    options.Password.RequireDigit = true;
+                    options.Password.RequireNonAlphanumeric = true;
+                    options.Password.RequireLowercase = true;
+                    options.Password.RequireUppercase = true;
+                    options.Password.RequiredLength = 8;
+                })
+                .AddRoles<IdentityRole<Guid>>()
+                .AddEntityFrameworkStores<GameVerseDbContext>();
 
             return services;
         }

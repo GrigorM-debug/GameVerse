@@ -30,7 +30,6 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.File("logs/GameVerseSystemLogs-.txt", rollingInterval: RollingInterval.Day)
     .CreateLogger();
 
-// Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("SqlServer") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<GameVerseDbContext>(options =>
     options.UseSqlServer(connectionString));
@@ -42,17 +41,8 @@ builder.Services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericReposito
 //Services
 builder.Services.AddServices(builder.Configuration);
 
-builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
-{
-    options.SignIn.RequireConfirmedAccount = false;
-    options.Password.RequireDigit = true;
-    options.Password.RequireNonAlphanumeric = true;
-    options.Password.RequireLowercase = true;
-    options.Password.RequireUppercase = true;
-    options.Password.RequiredLength = 8;
-})
-    .AddRoles<IdentityRole<Guid>>()
-    .AddEntityFrameworkStores<GameVerseDbContext>();
+//Add Identity
+builder.Services.AddApplicationIdentity(builder.Configuration);
 
 builder.Services.AddControllersWithViews(options =>
 {
