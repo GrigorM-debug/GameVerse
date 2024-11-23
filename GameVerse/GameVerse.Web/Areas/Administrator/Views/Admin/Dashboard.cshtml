@@ -104,10 +104,10 @@
     </div>
 
     @*Recent site Activities*@
+    <h2 class="mt-2">Recent Activities In Log Files</h2>
+    <hr/>
     <div class="row mt-5">
         <div class="col-md-12">
-            <h2>Recent Activities In Log Files</h2>
-            <hr/>
             <table class="table table-bordered table-hover">
                 <thead class="thead-dark">
                 <tr>
@@ -116,15 +116,19 @@
                 </tr>
                 </thead>
                 <tbody>
+                @if (!Model.RecentLogs.Any())
+                {
+                    <h3>No Log files</h3>
+                }
                 @foreach (var log in Model.RecentLogs)
                 {
                     <tr>
                         <td>@log</td>
                         <td>
-                            <a asp-area="Administrator" 
-                               asp-controller="Admin" 
-                               asp-action="DownloadLog" 
-                               asp-route-fileName="@log" 
+                            <a asp-area="Administrator"
+                               asp-controller="Admin"
+                               asp-action="DownloadLog"
+                               asp-route-fileName="@log"
                                class="btn btn-sm btn-primary">
                                 Download Log File
                             </a>
