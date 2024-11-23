@@ -1,6 +1,7 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using GameVerse.Data.Models.ApplicationUsers;
 using GameVerse.Services.Interfaces;
+using GameVerse.Web.Areas.Administrator.Models;
 using GameVerse.Web.Areas.Administrator.Services.Interfaces;
 using GameVerse.Web.Extensions;
 using Microsoft.AspNetCore.Authorization;
@@ -27,9 +28,11 @@ namespace GameVerse.Web.Areas.Administrator.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> ManageUsers()
         {
+            IEnumerable<UserViewModel> userViewModels = await _userManagementService.GetAllUsersWithDetailsAsync();
 
+            return View(userViewModels);
         }
 
         [HttpPost]
@@ -47,7 +50,7 @@ namespace GameVerse.Web.Areas.Administrator.Controllers
             if (isAlreadyModerator)
             {
                 _notyfService.Error("This user is already Moderator");
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(ManageUsers));
             }
 
             await _userManagementService.PromoteUserToModeratorAsync(userId);
@@ -56,7 +59,7 @@ namespace GameVerse.Web.Areas.Administrator.Controllers
 
             Log.Information("Admin with ID: {AdminId} made {Action} in {Controller}", User.GetId(), nameof(PromoteUserToModerator), nameof(UserManagementController));
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(ManageUsers));
         }
 
         [HttpPost]
@@ -82,7 +85,7 @@ namespace GameVerse.Web.Areas.Administrator.Controllers
 
             Log.Information("Admin with ID: {AdminId} made {Action} in {Controller}", User.GetId(), nameof(DemoteModeratorToUser), nameof(UserManagementController));
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(ManageUsers));
         }
 
         [HttpPost]
@@ -107,7 +110,7 @@ namespace GameVerse.Web.Areas.Administrator.Controllers
             if (isModeratorAlreadyAdministrator)
             {
                 _notyfService.Error("This user is already Administrator");
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(ManageUsers));
             }
 
             await _userManagementService.PromoteModeratorToAdministratorAsync(userId);
@@ -116,7 +119,7 @@ namespace GameVerse.Web.Areas.Administrator.Controllers
 
             Log.Information("Admin with ID: {AdminId} made {Action} in {Controller}", User.GetId(), nameof(PromoteModeratorToAdministrator), nameof(UserManagementController));
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(ManageUsers));
         }
     }
 }
