@@ -19,7 +19,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.6" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
     <PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
   </ItemGroup>
 
@@ -28,6 +28,16 @@
     <ProjectReference Include="..\GameVerse.Data\GameVerse.Data.csproj" />
     <ProjectReference Include="..\GameVerse.Services\GameVerse.Services.csproj" />
     <ProjectReference Include="..\GameVerse.Web.ViewModels\GameVerse.Web.ViewModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Administrator\Controllers\" />
+    <Folder Include="Areas\Administrator\Data\" />
+    <Folder Include="Areas\Administrator\Models\" />
+    <Folder Include="Areas\Administrator\Views\" />
+    <Folder Include="Areas\Moderator\Data\" />
+    <Folder Include="Areas\Moderator\Models\" />
+    <Folder Include="Areas\Moderator\Views\" />
   </ItemGroup>
 
 </Project>

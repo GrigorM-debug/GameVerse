@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using AspNetCoreHero.ToastNotification;
 using AspNetCoreHero.ToastNotification.Extensions;
+using GameVerse.Data.Models.Games;
 using GameVerse.Services.Interfaces;
 using GameVerse.Services;
 using Serilog;
@@ -39,7 +40,10 @@ builder.Services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericReposito
 //Services
 builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<IModeratorService, ModeratorService>();
-
+builder.Services.AddScoped<IGameService, GameService>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
+builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 {
@@ -108,5 +112,6 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
+
 
 app.Run();
