@@ -9,6 +9,6 @@
         public int TotalGames { get; set; }
         public int TotalBoughtGames { get; set; }
         public int TotalEventRegistrations { get; set; }
-        public List<string> RecentLogs { get; set; } = new List<string>();
+        public IEnumerable<string> RecentLogs { get; set; } = new List<string>();
     }
 }
