@@ -7,19 +7,25 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GameVerse.Web.Areas.Administrator.Services
 {
-    public class UserManagementService : IUserManagementService
+    /// <summary>
+    /// Service for managing user roles and retrieving user details, including administrators and moderators.
+    /// </summary>
+    public class UserManagementService(
+        UserManager<ApplicationUser> userManager,
+        IGenericRepository<ApplicationUser, Guid> userRepository,
+        IGenericRepository<Data.Models.ApplicationUsers.Moderator, Guid> moderatorRepository)
+        : IUserManagementService
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IGenericRepository<ApplicationUser, Guid> _userRepository;
-        private readonly IGenericRepository<Data.Models.ApplicationUsers.Moderator, Guid> _moderatorRepository;
+        private readonly UserManager<ApplicationUser> _userManager = userManager;
+        private readonly IGenericRepository<ApplicationUser, Guid> _userRepository = userRepository;
+        private readonly IGenericRepository<Data.Models.ApplicationUsers.Moderator, Guid> _moderatorRepository = moderatorRepository;
 
-        public UserManagementService(UserManager<ApplicationUser> userManager, IGenericRepository<ApplicationUser, Guid> userRepository, IGenericRepository<Data.Models.ApplicationUsers.Moderator, Guid> moderatorRepository)
-        {
-            _userManager = userManager;
-            _userRepository = userRepository;
-            _moderatorRepository = moderatorRepository;
-        }
-
+        /// <summary>
+        /// Retrieves a collection of all users with detailed information asynchronously.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="Task{TResult}"/> containing a collection of <see cref="UserViewModel"/> objects.
+        /// </returns>
         public async Task<IEnumerable<UserViewModel>> GetAllUsersWithDetailsAsync()
         {
             IEnumerable<ApplicationUser> users = await _userManager.Users.ToListAsync();
@@ -49,6 +55,13 @@ namespace GameVerse.Web.Areas.Administrator.Services
             return userViewModels;
         }
 
+        /// <summary>
+        /// Checks whether a user exists by their unique identifier asynchronously.
+        /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>
+        /// <c>true</c> if the user exists; otherwise, <c>false</c>.
+        /// </returns>
         public async Task<bool> UserExistByIdAsync(string userId)
         {
             ApplicationUser? user = await  _userManager.FindByIdAsync(userId);
@@ -61,6 +74,13 @@ namespace GameVerse.Web.Areas.Administrator.Services
             return true;
         }
 
+        /// <summary>
+        /// Checks whether an administrator exists by their unique identifier asynchronously.
+        /// </summary>
+        /// <param name="userId">The unique identifier of the administrator.</param>
+        /// <returns>
+        /// <c>true</c> if the user is an administrator; otherwise, <c>false</c>.
+        /// </returns>
         public async Task<bool> AdministratorExistByIdAsync(string userId)
         {
             ApplicationUser? user = await _userManager.FindByIdAsync(userId);
@@ -75,6 +95,11 @@ namespace GameVerse.Web.Areas.Administrator.Services
             return true;
         }
 
+        /// <summary>
+        /// Promotes a user to the role of moderator asynchronously.
+        /// </summary>
+        /// <param name="userId">The unique identifier of the user to promote.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task PromoteUserToModeratorAsync(string userId)
         {
             ApplicationUser? user = await _userManager.FindByIdAsync(userId);
@@ -102,6 +127,11 @@ namespace GameVerse.Web.Areas.Administrator.Services
             }
         }
 
+        /// <summary>
+        /// Demotes a moderator to a regular user asynchronously.
+        /// </summary>
+        /// <param name="userId">The unique identifier of the moderator to demote.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task DemoteModeratorToUserAsync(string userId)
         {
             ApplicationUser? user = await _userManager.FindByIdAsync(userId);
@@ -120,6 +150,11 @@ namespace GameVerse.Web.Areas.Administrator.Services
             }
         }
 
+        /// <summary>
+        /// Promotes a moderator to the role of administrator asynchronously.
+        /// </summary>
+        /// <param name="userId">The unique identifier of the moderator to promote.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task PromoteModeratorToAdministratorAsync(string userId)
         {
             ApplicationUser? user = await _userManager.FindByIdAsync(userId);
@@ -143,12 +178,24 @@ namespace GameVerse.Web.Areas.Administrator.Services
             }
         }
 
+        /// <summary>
+        /// Retrieves the total number of users asynchronously.
+        /// </summary>
+        /// <returns>
+        /// The total number of users as an <see cref="int"/>.
+        /// </returns>
         public async Task<int> GetTotalUsersCountAsync()
         {
             int totalUsersCount = await _userManager.Users.CountAsync();
             return totalUsersCount;
         }
 
+        /// <summary>
+        /// Retrieves the total number of moderators asynchronously.
+        /// </summary>
+        /// <returns>
+        /// The total number of moderators as an <see cref="int"/>.
+        /// </returns>
         public async Task<int> GetTotalModeratorsCountAsync()
         {
             IEnumerable<ApplicationUser> moderators = await _userManager.GetUsersInRoleAsync("Moderator");
@@ -158,6 +205,12 @@ namespace GameVerse.Web.Areas.Administrator.Services
             return totalModeratorsCount;
         }
 
+        /// <summary>
+        /// Retrieves the total number of administrators asynchronously.
+        /// </summary>
+        /// <returns>
+        /// The total number of administrators as an <see cref="int"/>.
+        /// </returns>
         public async Task<int> GetTotalAdministratorsCountAsync()
         {
             IEnumerable<ApplicationUser> administrators = await _userManager.GetUsersInRoleAsync("Admin");
