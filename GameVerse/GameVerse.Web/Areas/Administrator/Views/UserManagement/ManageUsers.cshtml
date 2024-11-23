@@ -1,0 +1,59 @@
+﻿@model IEnumerable<GameVerse.Web.Areas.Administrator.Models.UserViewModel>
+
+@{
+    ViewData["Title"] = "Manage Users";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3" style="margin-top: 20px;">
+    <h2>@ViewData["Title"]</h2>
+</div>
+<hr />
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Roles</th>
+            <th>Total Events Created</th> 
+            <th>Total Games Created</th> 
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.UserName</td>
+                <td>@user.Email</td>
+                <td>@user.FirstName</td>
+                <td>@user.LastName</td>
+                <td>@string.Join(", ", user.Roles)</td>
+                <td>@user.TotalEventsCreated</td> 
+                <td>@user.TotalGamesCreated</td> 
+                <td>
+                    <form asp-controller="UserManagement" asp-action="PromoteUserToModerator" method="post" style="display:inline">
+                        <input type="hidden" name="userId" value="@user.Id" />
+                        <button type="submit" class="btn btn-primary" @(user.Roles.Contains("Moderator") ? "disabled" : "")>
+                            Promote to Moderator
+                        </button>
+                    </form>
+                    <form asp-controller="UserManagement" asp-action="PromoteModeratorToAdministrator" method="post" style="display:inline">
+                        <input type="hidden" name="userId" value="@user.Id" />
+                        <button type="submit" class="btn btn-success" @(user.Roles.Contains("Administrator") ? "disabled" : "")>
+                            Promote to Administrator
+                        </button>
+                    </form>
+                    <form asp-controller="UserManagement" asp-action="DemoteModeratorToUser" method="post" style="display:inline">
+                        <input type="hidden" name="userId" value="@user.Id" />
+                        <button type="submit" class="btn btn-danger" @(user.Roles.Contains("Moderator") ? "" : "disabled")>
+                            Demote to User
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
