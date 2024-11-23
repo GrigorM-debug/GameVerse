@@ -31,27 +31,29 @@
                 <td>@user.FirstName</td>
                 <td>@user.LastName</td>
                 <td>@string.Join(", ", user.Roles)</td>
-                <td>@user.TotalEventsCreated</td> 
-                <td>@user.TotalGamesCreated</td> 
+                <td class="text-center">@user.TotalEventsCreated</td> 
+                <td class="text-center">@user.TotalGamesCreated</td> 
                 <td>
-                    <form asp-controller="UserManagement" asp-action="PromoteUserToModerator" method="post" style="display:inline">
-                        <input type="hidden" name="userId" value="@user.Id" />
-                        <button type="submit" class="btn btn-primary" @(user.Roles.Contains("Moderator") ? "disabled" : "")>
-                            Promote to Moderator
-                        </button>
-                    </form>
-                    <form asp-controller="UserManagement" asp-action="PromoteModeratorToAdministrator" method="post" style="display:inline">
-                        <input type="hidden" name="userId" value="@user.Id" />
-                        <button type="submit" class="btn btn-success" @(user.Roles.Contains("Administrator") ? "disabled" : "")>
-                            Promote to Administrator
-                        </button>
-                    </form>
-                    <form asp-controller="UserManagement" asp-action="DemoteModeratorToUser" method="post" style="display:inline">
-                        <input type="hidden" name="userId" value="@user.Id" />
-                        <button type="submit" class="btn btn-danger" @(user.Roles.Contains("Moderator") ? "" : "disabled")>
-                            Demote to User
-                        </button>
-                    </form>
+                    <div class="d-flex justify-content-evenly">
+                        <form asp-controller="UserManagement" asp-action="PromoteUserToModerator" method="post" style="display: inline">
+                            <input type="hidden" name="userId" value="@user.Id"/>
+                            <button type="submit" class="btn btn-primary" @(user.Roles.Contains("Moderator") ? "disabled" : "")>
+                                Promote to Moderator
+                            </button>
+                        </form>
+                        <form asp-controller="UserManagement" asp-action="PromoteModeratorToAdministrator" method="post" style="display: inline">
+                            <input type="hidden" name="userId" value="@user.Id"/>
+                            <button type="submit" class="btn btn-success" @(user.Roles.Contains("Admin") ? "disabled" : "")>
+                                Promote to Administrator
+                            </button>
+                        </form>
+                        <form asp-controller="UserManagement" asp-action="DemoteModeratorToUser" method="post" style="display: inline">
+                            <input type="hidden" name="userId" value="@user.Id"/>
+                            <button type="submit" class="btn btn-danger" @(user.Roles.Contains("Moderator") ? "" : "disabled")>
+                                Demote to User
+                            </button>
+                        </form>
+                    </div>
                 </td>
             </tr>
         }
