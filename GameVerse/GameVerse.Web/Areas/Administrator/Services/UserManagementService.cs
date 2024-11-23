@@ -1,5 +1,6 @@
 ﻿using GameVerse.Data.Models.ApplicationUsers;
 using GameVerse.Data.Repositories.Interfaces;
+using GameVerse.Web.Areas.Administrator.Models;
 using GameVerse.Web.Areas.Administrator.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +18,35 @@ namespace GameVerse.Web.Areas.Administrator.Services
             _userManager = userManager;
             _userRepository = userRepository;
             _moderatorRepository = moderatorRepository;
+        }
+
+        public async Task<IEnumerable<UserViewModel>> GetAllUsersWithDetailsAsync()
+        {
+            IEnumerable<ApplicationUser> users = await _userManager.Users.ToListAsync();
+
+            List<UserViewModel> userViewModels = new List<UserViewModel>();
+
+            foreach (ApplicationUser user in users)
+            {
+                IEnumerable<string> roles = await _userManager.GetRolesAsync(user);
+
+                Data.Models.ApplicationUsers.Moderator? moderator =
+                    await _moderatorRepository.AllAsReadOnly().FirstOrDefaultAsync(m => m.UserId == user.Id);
+
+                userViewModels.Add(new UserViewModel()
+                {
+                    Id = user.Id.ToString(),
+                    Email = user.Email,
+                    UserName = user.UserName,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Roles = roles.ToList(),
+                    TotalGamesCreated = moderator?.TotalGamesCreated ?? 0,
+                    TotalEventsCreated = moderator?.TotalEventsCreated ?? 0,
+                });
+            }
+
+            return userViewModels;
         }
 
         public async Task<bool> UserExistByIdAsync(string userId)
