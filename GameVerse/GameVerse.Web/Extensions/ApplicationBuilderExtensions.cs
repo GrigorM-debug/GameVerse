@@ -5,6 +5,7 @@ using GameVerse.Services;
 using GameVerse.Web.Areas.Administrator.Services.Interfaces;
 using GameVerse.Web.Areas.Administrator.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -39,6 +40,16 @@ namespace Microsoft.Extensions.DependencyInjection
                 })
                 .AddRoles<IdentityRole<Guid>>()
                 .AddEntityFrameworkStores<GameVerseDbContext>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration config)
+        {
+            var connectionString = config.GetConnectionString("SqlServer") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+            services.AddDbContext<GameVerseDbContext>(options =>
+                options.UseSqlServer(connectionString));
+            services.AddDatabaseDeveloperPageExceptionFilter();
 
             return services;
         }

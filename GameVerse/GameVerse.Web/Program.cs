@@ -30,10 +30,8 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.File("logs/GameVerseSystemLogs-.txt", rollingInterval: RollingInterval.Day)
     .CreateLogger();
 
-var connectionString = builder.Configuration.GetConnectionString("SqlServer") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-builder.Services.AddDbContext<GameVerseDbContext>(options =>
-    options.UseSqlServer(connectionString));
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+//Add Database
+builder.Services.AddDatabase(builder.Configuration);
 
 //Repository. 
 builder.Services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
