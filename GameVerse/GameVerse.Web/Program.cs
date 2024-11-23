@@ -13,6 +13,8 @@ using AspNetCoreHero.ToastNotification.Extensions;
 using GameVerse.Data.Models.Games;
 using GameVerse.Services.Interfaces;
 using GameVerse.Services;
+using GameVerse.Web.Areas.Administrator.Services;
+using GameVerse.Web.Areas.Administrator.Services.Interfaces;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -44,6 +46,9 @@ builder.Services.AddScoped<IGameService, GameService>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserManagementService, UserManagementService>();
+builder.Services.AddScoped<ILogService, LogService>();
+
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 {
@@ -108,9 +113,14 @@ app.UseAuthorization();
 
 app.UseNotyf();
 
+//app.MapControllerRoute(
+//    name: "areas",
+//    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
 app.MapControllerRoute(
-    name: "areas",
-    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+    name: "adminAreaRoute",
+    pattern: "Administrator/{controller=Administrator}/{action=Dashboard}/{id?}",
+    defaults: new { area = "Administrator" });
 
 app.MapControllerRoute(
     name: "default",
