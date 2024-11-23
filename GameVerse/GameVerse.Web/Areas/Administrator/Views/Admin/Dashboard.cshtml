@@ -4,6 +4,8 @@
     ViewData["Title"] = "Admin Dashboard";
 }
 
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
 <div class="container mt-5">
     <h1 class="mb-4 text-center">Welcome To Admin Dashboard</h1>
 
@@ -129,8 +131,8 @@
                                asp-controller="Admin"
                                asp-action="DownloadLog"
                                asp-route-fileName="@log"
-                               class="btn btn-sm btn-primary">
-                                Download Log File
+                               class="btn btn-sm btn-primary font-weight-bold">
+                                <i class="fas fa-download"></i> Download Log File
                             </a>
                         </td>
                     </tr>
