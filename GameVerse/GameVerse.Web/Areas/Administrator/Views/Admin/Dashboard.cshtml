@@ -8,6 +8,8 @@
     <h1 class="mb-4 text-center">Welcome To Admin Dashboard</h1>
 
     @* Statics *@
+    <h2>Statics</h2>
+    <hr/>
     <div class="row">
         <div class="col-md-3">
             <div class="card text-white bg-primary mb-3">
@@ -49,9 +51,28 @@
                 </div>
             </div>
         </div>
+        
+        <div class="col-md-3">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-header">Total Events Registrations</div>
+                <div class="card-body">
+                    <h3 class="card-title">@Model.TotalEventRegistrations</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-header">Total Bought Games</div>
+                <div class="card-body">
+                    <h3 class="card-title">@Model.TotalBoughtGames</h3>
+                </div>
+            </div>
+        </div>
     </div>
 
     @*Actions*@
+    <h2 class="mt-2">Actions</h2>
+    <hr/>
     <div class="row mt-4">
         <div class="col-md-4">
             <div class="card">
