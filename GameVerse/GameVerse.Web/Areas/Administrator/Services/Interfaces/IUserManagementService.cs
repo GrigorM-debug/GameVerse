@@ -1,4 +1,5 @@
 ﻿using GameVerse.Web.Areas.Administrator.Models;
+using Microsoft.Build.ObjectModelRemoting;
 
 namespace GameVerse.Web.Areas.Administrator.Services.Interfaces
 {
@@ -15,5 +16,9 @@ namespace GameVerse.Web.Areas.Administrator.Services.Interfaces
         Task DemoteModeratorToUserAsync(string userId);
 
         Task PromoteModeratorToAdministratorAsync(string userId);
+
+        Task<int> GetTotalUsersCountAsync();
+        Task<int> GetTotalModeratorsCountAsync();
+        Task<int> GetTotalAdministratorsCountAsync();
     }
 }

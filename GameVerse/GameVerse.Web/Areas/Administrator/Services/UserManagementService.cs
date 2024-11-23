@@ -65,7 +65,7 @@ namespace GameVerse.Web.Areas.Administrator.Services
         {
             ApplicationUser? user = await _userManager.FindByIdAsync(userId);
 
-            bool isAlreadyInRole = await _userManager.IsInRoleAsync(user, "Administrator");
+            bool isAlreadyInRole = await _userManager.IsInRoleAsync(user, "Admin");
 
             if (!isAlreadyInRole)
             {
@@ -131,7 +131,7 @@ namespace GameVerse.Web.Areas.Administrator.Services
                     await _userManager.RemoveFromRoleAsync(user, "Moderator");
                 }
 
-                await _userManager.AddToRoleAsync(user, "Administrator");
+                await _userManager.AddToRoleAsync(user, "Admin");
 
                 Data.Models.ApplicationUsers.Moderator? moderator =
                     await _moderatorRepository.FirstOrDefaultAsync(m => m.UserId.ToString() == userId);
@@ -141,6 +141,30 @@ namespace GameVerse.Web.Areas.Administrator.Services
                     await _moderatorRepository.DeleteAsync(moderator.Id);
                 }
             }
+        }
+
+        public async Task<int> GetTotalUsersCountAsync()
+        {
+            int totalUsersCount = await _userManager.Users.CountAsync();
+            return totalUsersCount;
+        }
+
+        public async Task<int> GetTotalModeratorsCountAsync()
+        {
+            IEnumerable<ApplicationUser> moderators = await _userManager.GetUsersInRoleAsync("Moderator");
+
+            int totalModeratorsCount = moderators.Count();
+
+            return totalModeratorsCount;
+        }
+
+        public async Task<int> GetTotalAdministratorsCountAsync()
+        {
+            IEnumerable<ApplicationUser> administrators = await _userManager.GetUsersInRoleAsync("Admin");
+
+            int totalAdministratorsCount = administrators.Count();
+
+            return totalAdministratorsCount;
         }
     }
 }
