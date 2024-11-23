@@ -47,18 +47,18 @@ namespace GameVerse.Web.Areas.Administrator.Controllers
             return View(model);
         }
 
-        //[HttpGet]
-        //public IActionResult DownloadLog(string fileName)
-        //{
-        //    var logFile = _logService.GetLogFile(fileName);
+        [HttpGet]
+        public IActionResult DownloadLog(string fileName)
+        {
+            var logFile = _logService.GetLogFile(fileName);
 
-        //    if (logFile == null)
-        //    {
-        //        _notyfService.Error("Log file not found.");
-        //        return NotFound("Log file not found.");
-        //    }
+            if (logFile == null)
+            {
+                _notyfService.Error("Log file not found.");
+                return NotFound("Log file not found.");
+            }
 
-        //    return File(logFile.Value.FileContent, logFile.Value.ContentType, logFile.Value.FileName);
-        //}
+            return File(logFile.Value.FileContent, logFile.Value.ContentType, logFile.Value.FileName);
+        }
     }
 }
