@@ -29,14 +29,17 @@ namespace Microsoft.Extensions.DependencyInjection
 
         public static IServiceCollection AddApplicationIdentity(this IServiceCollection services, IConfiguration config)
         {
+            IConfigurationSection passwordSettings = config.GetSection("IdentitySettings:Password");
+            IConfigurationSection signInSettings = config.GetSection("IdentitySettings:SignIn");
+
             services.AddDefaultIdentity<ApplicationUser>(options =>
                 {
-                    options.SignIn.RequireConfirmedAccount = false;
-                    options.Password.RequireDigit = true;
-                    options.Password.RequireNonAlphanumeric = true;
-                    options.Password.RequireLowercase = true;
-                    options.Password.RequireUppercase = true;
-                    options.Password.RequiredLength = 8;
+                    options.SignIn.RequireConfirmedAccount = bool.Parse(signInSettings["RequireConfirmedAccount"]);
+                    options.Password.RequireDigit = bool.Parse(passwordSettings["RequireDigit"]);
+                    options.Password.RequireNonAlphanumeric = bool.Parse(passwordSettings["RequireNonAlphanumeric"]);
+                    options.Password.RequireLowercase = bool.Parse(passwordSettings["RequireLowercase"]); 
+                    options.Password.RequireUppercase = bool.Parse(passwordSettings["RequireUppercase"]);
+                    options.Password.RequiredLength = int.Parse(passwordSettings["RequiredLength"]);
                 })
                 .AddRoles<IdentityRole<Guid>>()
                 .AddEntityFrameworkStores<GameVerseDbContext>();
