@@ -1,0 +1,117 @@
+﻿@model GameVerse.Web.Areas.Administrator.Models.AdminIndexViewModel
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container mt-5">
+    <h1 class="mb-4 text-center">Welcome To Admin Dashboard</h1>
+
+    @* Statics *@
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-header">Total Users</div>
+                <div class="card-body">
+                    <h3 class="card-title">@Model.TotalUsers</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-header">Total Moderators</div>
+                <div class="card-body">
+                    <h3 class="card-title">@Model.TotalModerators</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-danger mb-3">
+                <div class="card-header">Total Administrators</div>
+                <div class="card-body">
+                    <h3 class="card-title">@Model.TotalAdministrators</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-info mb-3">
+                <div class="card-header">Total Events</div>
+                <div class="card-body">
+                    <h3 class="card-title">@Model.TotalEvents</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-info mb-3">
+                <div class="card-header">Total Games</div>
+                <div class="card-body">
+                    <h3 class="card-title">@Model.TotalGames</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*Actions*@
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Manage Users</h5>
+                    <p class="card-text">View, promote, or demote users.</p>
+                    <a asp-area="Administrator" asp-controller="UserManagement" asp-action="ManageUsers" class="btn btn-primary">Go to Users</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Manage Events</h5>
+                    <p class="card-text">Create, update, or delete events.</p>
+                    <a asp-area="" asp-controller="Event" asp-action="Index" class="btn btn-primary">Go to Events</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Manage Games</h5>
+                    <p class="card-text">View, add, or remove games.</p>
+                    <a asp-area="" asp-controller="GameStore" asp-action="Index" class="btn btn-primary">Go to Games</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*Recent site Activities*@
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <h2>Recent Activities In Log Files</h2>
+            <hr/>
+            <table class="table table-bordered table-hover">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">File Name</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var log in Model.RecentLogs)
+                {
+                    <tr>
+                        <td>@log</td>
+                        <td>
+                            <a asp-area="Administrator" 
+                               asp-controller="Admin" 
+                               asp-action="DownloadLog" 
+                               asp-route-fileName="@log" 
+                               class="btn btn-sm btn-primary">
+                                Download Log File
+                            </a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
