@@ -1,0 +1,145 @@
+﻿@model GameVerse.Web.Areas.Moderator.Models.ModeratorIndexViewModel
+
+@{
+    ViewData["Title"] = "Moderator Dashboard";
+}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+<div class="container mt-3">
+    <h1 class="mb-4 text-center">Welcome To Moderator Dashboard</h1>
+
+    @* Statics *@
+    <h2>Statics</h2>
+    <hr />
+    <div class="row">
+        <div class="row justify-content-center">
+            <div class="col-md-3">
+                <div class="card text-white bg-info mb-3">
+                    <div class="card-header">Total Games Created</div>
+                    <div class="card-body">
+                        <h3 class="card-title">@Model.TotalGamesCreated</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-header">Total Events Created</div>
+                    <div class="card-body">
+                        <h3 class="card-title">@Model.TotalEventsCreated</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*Actions*@
+    <h2 class="mt-4">Actions</h2>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Manage Events</h5>
+                    <p class="card-text">View, Create, Update, or Delete events.</p>
+                    <a asp-area="" asp-controller="Event" asp-action="Index" class="btn btn-primary">Go to Events</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Manage Games</h5>
+                    <p class="card-text">View, Create, Update or Delete games.</p>
+                    <a asp-area="" asp-controller="GameStore" asp-action="Index" class="btn btn-primary">Go to Games</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*Latest Games Created*@
+    <h2 class="mt-3">Latest Games Created</h2>
+    <hr />
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-bordered table-hover">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">Created On</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Quantity In Stock</th>
+                </tr>
+                </thead>
+                <tbody>
+                @if (!Model.Last5CreatedGames.Any())
+                {
+                    <h3>No Games Created</h3>
+                }
+                @foreach (var game in Model.Last5CreatedGames)
+                {
+                    <tr>
+                        <td>@game.Title</td>
+                        <td>@game.CreatedOn</td>
+                        <td>@game.Price</td>
+                        <td>@game.QuantityInStock</td>
+                        <td>
+                            <a asp-area=""
+                               asp-controller="GameStore"
+                               asp-action="Details"
+                               asp-route-id="@game.Id"
+                               class="btn btn-sm btn-primary font-weight-bold">
+                                Details
+                            </a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    @*Latest Events Created*@
+    <h2 class="mt-3">Latest Events Created</h2>
+    <hr />
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-bordered table-hover">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Topic</th>
+                    <th scope="col">StartDate</th>
+                    <th scope="col">EndDate</th>
+                    <th scope="col">Seats</th>
+                    <th scope="col">Ticket Price</th>
+                </tr>
+                </thead>
+                <tbody>
+                @if (!Model.Last5CreatedEvents.Any())
+                {
+                    <h3>No Events Created</h3>
+                }
+                @foreach (var e in Model.Last5CreatedEvents)
+                {
+                    <tr>
+                        <td>@e.Topic</td>
+                        <td>@e.StartDate</td>
+                        <td>@e.EndDate</td>
+                        <td>@e.Seats</td>
+                        <td>@e.TicketPrice</td>
+                        <td>
+                            <a asp-area=""
+                               asp-controller="Event"
+                               asp-action="Details"
+                               asp-route-id="@e.Id"
+                               class="btn btn-sm btn-primary font-weight-bold">
+                                Details
+                            </a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
