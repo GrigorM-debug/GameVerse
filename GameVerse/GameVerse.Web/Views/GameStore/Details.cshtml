@@ -28,7 +28,7 @@
             </div>
 
             <div class="project-info-box mt-0 mb-0 d-flex justify-content-center">
-                <button type="button" class="btn btn-light btn-lg m-2 w-auto" asp-area="" asp-controller="GameStore" asp-action="Index">Back</button>
+                <button type="button" class="btn btn-light btn-lg m-2 w-auto mx-2" asp-area="" asp-controller="GameStore" asp-action="Index">Back</button>
                 
                 @* For logged user *@
                 @if (User?.Identity?.IsAuthenticated == true && !User.IsInRole("Moderator") && !User.IsInRole("Admin"))
@@ -41,8 +41,8 @@
                 @*For Admin or Moderator who is creator of the Event*@
                 @if ((User.IsInRole("Moderator") && User?.Identity?.Name == Model.Publisher) || User.IsInRole("Admin"))
                 {
-                    <a type="button" class="btn btn-warning btn-lg w-25" asp-area="" asp-controller="GameStore" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-                    <a type="button" class="btn btn-danger btn-lg w-25" asp-area="" asp-controller="GameStore" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+                    <a type="button" class="btn btn-warning btn-lg w-25 mx-2" asp-area="" asp-controller="GameStore" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+                    <a type="button" class="btn btn-danger btn-lg w-25 mx-2" asp-area="" asp-controller="GameStore" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
                 }
             </div>
         </div>
