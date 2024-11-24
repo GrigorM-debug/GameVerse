@@ -96,6 +96,7 @@ namespace GameVerse.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EventInputViewModel inputModel, string id)
         {
             bool isEventExist = await _eventService.EventExistById(id);
@@ -211,6 +212,7 @@ namespace GameVerse.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirm(string id)
         {
             bool isEventExist = await _eventService.EventExistById(id);
