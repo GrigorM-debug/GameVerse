@@ -128,6 +128,11 @@ namespace GameVerse.Web.Areas.Identity.Pages.Account
                         return RedirectToAction("DashBoard", "Admin", new { area = "Administrator" });
                     }
 
+                    if (roles.Contains("Moderator"))
+                    {
+                        return RedirectToAction("Dashboard", "Moderator", new { area = "Moderator" });
+                    }
+
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl);
                 }
