@@ -33,8 +33,6 @@
   <ItemGroup>
     <Folder Include="Areas\Administrator\Data\" />
     <Folder Include="Areas\Moderator\Data\" />
-    <Folder Include="Areas\Moderator\Models\" />
-    <Folder Include="Areas\Moderator\Views\" />
   </ItemGroup>
 
 </Project>
