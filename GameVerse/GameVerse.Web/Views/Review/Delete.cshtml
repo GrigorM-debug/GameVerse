@@ -28,11 +28,11 @@
                 <p class="card-text">Created On: @Model.CreatedOn</p>
             </div>
             <div class="card-footer">
-                <form asp-controller="Review" asp-action="DeleteConfirm" asp-route-id="@Model.Id" asp-route-gameId="@Model.GameId" method="post">
+                <form asp-area="" asp-controller="Review" asp-action="DeleteConfirm" asp-route-id="@Model.Id" asp-route-gameId="@Model.GameId" method="post">
                    @*  <input type="hidden" asp-for="Id" />
                     <input type="hidden" asp-for="ReviewerId" /> *@
                     <button type="submit" class="btn btn-danger">Confirm Delete</button>
-                    <a asp-controller="GameStore" asp-action="Details" asp-route-id="@Model.GameId" class="btn btn-warning">Cancel</a>
+                    <a asp-area="" asp-controller="GameStore" asp-action="Details" asp-route-id="@Model.GameId" class="btn btn-warning">Cancel</a>
                 </form>
             </div>
         </div>
