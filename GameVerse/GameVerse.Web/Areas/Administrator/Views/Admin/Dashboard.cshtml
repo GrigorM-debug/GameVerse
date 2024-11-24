@@ -6,7 +6,7 @@
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 
-<div class="container mt-5">
+<div class="container mt-3">
     <h1 class="mb-4 text-center">Welcome To Admin Dashboard</h1>
 
     @* Statics *@
@@ -45,37 +45,39 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card text-white bg-info mb-3">
-                <div class="card-header">Total Games</div>
-                <div class="card-body">
-                    <h3 class="card-title">@Model.TotalGames</h3>
-                </div>
-            </div>
-        </div>
         
-        <div class="col-md-3">
-            <div class="card text-white bg-primary mb-3">
-                <div class="card-header">Total Events Registrations</div>
-                <div class="card-body">
-                    <h3 class="card-title">@Model.TotalEventRegistrations</h3>
+        <div class="row justify-content-center">
+            <div class="col-md-3">
+                <div class="card text-white bg-info mb-3">
+                    <div class="card-header">Total Games</div>
+                    <div class="card-body">
+                        <h3 class="card-title">@Model.TotalGames</h3>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card text-white bg-primary mb-3">
-                <div class="card-header">Total Bought Games</div>
-                <div class="card-body">
-                    <h3 class="card-title">@Model.TotalBoughtGames</h3>
+            <div class="col-md-3">
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-header">Total Events Registrations</div>
+                    <div class="card-body">
+                        <h3 class="card-title">@Model.TotalEventRegistrations</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-header">Total Bought Games</div>
+                    <div class="card-body">
+                        <h3 class="card-title">@Model.TotalBoughtGames</h3>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     @*Actions*@
-    <h2 class="mt-2">Actions</h2>
+    <h2 class="mt-4">Actions</h2>
     <hr/>
-    <div class="row mt-4">
+    <div class="row">
         <div class="col-md-4">
             <div class="card">
                 <div class="card-body text-center">
@@ -106,9 +108,9 @@
     </div>
 
     @*Recent site Activities*@
-    <h2 class="mt-2">Recent Activities In Log Files</h2>
+    <h2 class="mt-3">Recent Activities In Log Files</h2>
     <hr/>
-    <div class="row mt-5">
+    <div class="row">
         <div class="col-md-12">
             <table class="table table-bordered table-hover">
                 <thead class="thead-dark">
