@@ -229,7 +229,6 @@ namespace GameVerse.Web.Controllers
             return RedirectToAction(nameof(Details), new { id = gameId });
         }
 
-        [MustBeModerator]
         [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
@@ -240,10 +239,12 @@ namespace GameVerse.Web.Controllers
                 return NotFound();
             }
 
+            bool isAdmin = User.IsAdmin();
+
             string? userId = User.GetId();
             string? moderatorId = await _moderatorService.GetModeratorIdByUserIdAsync(userId);
 
-            if (moderatorId == null)
+            if (moderatorId == null || isAdmin == false)
             {
                 _notyf.Warning("You don't have the permission to do this");
                 return Unauthorized();
@@ -251,18 +252,17 @@ namespace GameVerse.Web.Controllers
 
             bool isModeratorCreatorOfTheGame = await _gameService.HasPublisherWithIdAsync(moderatorId, id);
 
-            if (isModeratorCreatorOfTheGame == false)
+            if (isModeratorCreatorOfTheGame == false || isAdmin == false)
             {
                 _notyf.Warning("You are not the creator of the game");
                 return Unauthorized();
             }
 
-            GameInputViewModel model = await _gameService.EditGameGetAsync(id, moderatorId);
+            GameInputViewModel model = await _gameService.EditGameGetAsync(id, moderatorId, isAdmin);
 
             return View(model);
         }
 
-        [MustBeModerator]
         [HttpPost]
         public async Task<IActionResult> Edit(GameInputViewModel inputModel, string id)
         {
@@ -273,10 +273,12 @@ namespace GameVerse.Web.Controllers
                 return NotFound();
             }
 
+            bool isAdmin = User.IsAdmin();
+
             string? userId = User.GetId();
             string? moderatorId = await _moderatorService.GetModeratorIdByUserIdAsync(userId);
 
-            if (moderatorId == null)
+            if (moderatorId == null || isAdmin == false)
             {
                 _notyf.Warning("You don't have the permission to do this");
                 return Unauthorized();
@@ -284,7 +286,7 @@ namespace GameVerse.Web.Controllers
 
             bool isModeratorCreatorOfTheGame = await _gameService.HasPublisherWithIdAsync(moderatorId, id);
 
-            if (isModeratorCreatorOfTheGame == false)
+            if (isModeratorCreatorOfTheGame == false || isAdmin == false)
             {
                 _notyf.Warning("You are not the creator of the game");
                 return Unauthorized();
@@ -405,16 +407,22 @@ namespace GameVerse.Web.Controllers
             }
 
 
-            string? gameId = await _gameService.EditGamePostAsync(inputModel, createdOn,id, moderatorId);
+            string? gameId = await _gameService.EditGamePostAsync(inputModel, createdOn,id, moderatorId, isAdmin);
 
             _notyf.Success("Game was edited successfully!");
 
-            Log.Information("Moderator with ID {ModeratorId} perform an {Action} action in controller {Controller}", moderatorId, nameof(Edit), nameof(GameStoreController));
+            if (isAdmin)
+            {
+                Log.Information("Admin with ID {AdminId} perform an {Action} action in controller {Controller}", User.GetId(), nameof(Edit), nameof(GameStoreController));
+            }
+            else
+            {
+                Log.Information("Moderator with ID {ModeratorId} perform an {Action} action in controller {Controller}", moderatorId, nameof(Edit), nameof(GameStoreController));
+            }
 
             return RedirectToAction(nameof(Details), new { id = gameId });
         }
 
-        [MustBeModerator]
         [HttpGet]
         public async Task<IActionResult> Delete(string id)
         {
@@ -422,11 +430,14 @@ namespace GameVerse.Web.Controllers
 
             string? moderatorId = await _moderatorService.GetModeratorIdByUserIdAsync(userId);
 
-            if (moderatorId == null)
+            bool isAdmin = User.IsAdmin();
+
+            if (moderatorId == null || isAdmin == false)
             {
                 _notyf.Warning("You don't have the permission to do this");
                 return Unauthorized();
             }
+
 
             bool isGameExiting = await _gameService.GameExistByIdAsync(id);
 
@@ -437,18 +448,17 @@ namespace GameVerse.Web.Controllers
 
             bool isCreatorOfTheGame = await _gameService.HasPublisherWithIdAsync(moderatorId, id);
 
-            if (isCreatorOfTheGame == false)
+            if (isCreatorOfTheGame == false || isAdmin == false)
             {
                 _notyf.Warning("You are not the creator of the Game");
                 return Unauthorized();
             }
 
-            GameDeleteViewModel model = await _gameService.DeleteGameGetAsync(id, moderatorId);
+            GameDeleteViewModel model = await _gameService.DeleteGameGetAsync(id, moderatorId, isAdmin);
 
             return View(model);
         }
 
-        [MustBeModerator]
         [HttpPost]
         public async Task<IActionResult> DeleteConfirm(string id)
         {
@@ -456,7 +466,9 @@ namespace GameVerse.Web.Controllers
 
             string? moderatorId = await _moderatorService.GetModeratorIdByUserIdAsync(userId);
 
-            if (moderatorId == null)
+            bool isAdmin = User.IsAdmin();
+
+            if (moderatorId == null || isAdmin == false)
             {
                 _notyf.Warning("You don't have the permission to do this");
                 return Unauthorized();
@@ -471,19 +483,26 @@ namespace GameVerse.Web.Controllers
 
             bool isCreatorOfTheGame = await _gameService.HasPublisherWithIdAsync(moderatorId, id);
 
-            if (isCreatorOfTheGame == false)
+            if (isCreatorOfTheGame == false || isAdmin)
             {
                 _notyf.Warning("You are not the creator of the Game");
                 return Unauthorized();
             }
 
-            string? gameId = await _gameService.DeleteGamePostAsync(id, moderatorId);
+            string? gameId = await _gameService.DeleteGamePostAsync(id, moderatorId, isAdmin);
 
             await _moderatorService.DecreaseCreatedTotalGamesCount(moderatorId);
 
             _notyf.Success("Game was deleted successfully!");
 
-            Log.Information("Moderator with ID {ModeratorId} perform an {Action} action in controller {Controller}", moderatorId, nameof(DeleteConfirm), nameof(GameStoreController));
+            if (isAdmin)
+            {
+                Log.Information("Admin with ID {AdminId} perform an {Action} action in controller {Controller}", User.GetId(), nameof(DeleteConfirm), nameof(GameStoreController));
+            }
+            else
+            {
+                Log.Information("Moderator with ID {ModeratorId} perform an {Action} action in controller {Controller}", moderatorId, nameof(DeleteConfirm), nameof(GameStoreController));
+            }
 
             return RedirectToAction(nameof(Index));
         }
