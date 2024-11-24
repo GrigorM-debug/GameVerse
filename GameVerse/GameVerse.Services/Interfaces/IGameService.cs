@@ -20,13 +20,13 @@ namespace GameVerse.Services.Interfaces
 
         Task<string> AddGamePostAsync(GameInputViewModel inputModel, DateTime createdOn, string moderatorId);
 
-        Task<GameInputViewModel> EditGameGetAsync(string gameId, string moderatorId);
+        Task<GameInputViewModel> EditGameGetAsync(string gameId, string moderatorId, bool isAdmin);
 
-        Task<string> EditGamePostAsync(GameInputViewModel inputModel, DateTime createdOn,string gameId, string moderatorId);
+        Task<string> EditGamePostAsync(GameInputViewModel inputModel, DateTime createdOn,string gameId, string moderatorId, bool isAdmin);
 
-        Task<GameDeleteViewModel> DeleteGameGetAsync(string gameId, string moderatorId);
+        Task<GameDeleteViewModel> DeleteGameGetAsync(string gameId, string moderatorId, bool isAdmin);
 
-        Task<string> DeleteGamePostAsync(string gameId,string moderatorId);
+        Task<string> DeleteGamePostAsync(string gameId,string moderatorId, bool isAdmin);
 
         Task<GameDetailsViewModel> GetGameDetailsByIdAsync(string gameId);
 

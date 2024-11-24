@@ -29,13 +29,21 @@ namespace GameVerse.Services
         private readonly IGenericRepository<Restriction, Guid> _restrictionRepository;
       
         private readonly GameVerseDbContext _context;
-        public GameService(IGenericRepository<Game, Guid> gameRepository, IGenericRepository<Genre, Guid> genreRepository, IGenericRepository<Platform, Guid> platformRepository, IGenericRepository<Restriction, Guid> restrictionRepository, GameVerseDbContext context)
+        public GameService(IGenericRepository<Game, Guid> gameRepository, IGenericRepository<Genre, Guid> genreRepository, IGenericRepository<Platform, Guid> platformRepository, IGenericRepository<Restriction, Guid> restrictionRepository)
         {
             _gameRepository = gameRepository;
             _genreRepository = genreRepository;
             _platformRepository = platformRepository;
             _restrictionRepository = restrictionRepository;
-            _context = context;
+        }
+
+        public async Task<Game> GetGameByIdAsync(string gameId)
+        {
+            Game? game = await _gameRepository
+                .AllAsReadOnly()
+                .FirstOrDefaultAsync(g => g.Id.ToString() == gameId && g.IsDeleted == false);
+
+            return game;
         }
 
         public async Task<GameInputViewModel> AddGameGetAsync()
@@ -107,13 +115,13 @@ namespace GameVerse.Services
             return game.Id.ToString();
         }
 
-        public async Task<GameInputViewModel> EditGameGetAsync(string gameId, string moderatorId)
+        public async Task<GameInputViewModel> EditGameGetAsync(string gameId, string moderatorId, bool isAdmin)
         {
             Game? game = await _gameRepository
                 .GetWithIncludeAsync(g => g.GamesGenres, g=> g.GamesPlatforms, g => g.GamesRestrictions)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(g =>
-                    g.Id.ToString() == gameId && g.PublisherId.ToString() == moderatorId && g.IsDeleted == false);
+                    g.Id.ToString() == gameId && (g.PublisherId.ToString() == moderatorId || isAdmin) && g.IsDeleted == false);
 
             IEnumerable<GenreSelectList> genres = await GetGenresAsync();
             IEnumerable<PlatformSelectList> platforms = await GetPlatformsAsync();
@@ -145,12 +153,12 @@ namespace GameVerse.Services
             return model;
         }
 
-        public async Task<string> EditGamePostAsync(GameInputViewModel inputModel, DateTime createdOn,string gameId, string moderatorId)
+        public async Task<string> EditGamePostAsync(GameInputViewModel inputModel, DateTime createdOn,string gameId, string moderatorId, bool isAdmin)
         {
             Game? game = await _gameRepository
                 .GetWithIncludeAsync(g=> g.GamesGenres, g => g.GamesPlatforms, g => g.GamesRestrictions)
                 .FirstOrDefaultAsync(g =>
-                    g.Id.ToString() == gameId && g.PublisherId.ToString() == moderatorId && g.IsDeleted == false);
+                    g.Id.ToString() == gameId && (g.PublisherId.ToString() == moderatorId || isAdmin) && g.IsDeleted == false);
 
             game.Title = inputModel.Title;
             game.Description = inputModel.Description;
@@ -161,7 +169,7 @@ namespace GameVerse.Services
             game.Image = inputModel.Image;
             game.QuantityInStock = inputModel.QuantityInStock;
             game.Type = inputModel.Type;
-            game.PublisherId = Guid.Parse(moderatorId);
+            //game.PublisherId = Guid.Parse(moderatorId);
 
             var selectedGenreIds = inputModel.SelectedGenres.ToHashSet();
             foreach (var gameGenre in game.GamesGenres.ToList())
@@ -241,12 +249,12 @@ namespace GameVerse.Services
             return game.Id.ToString();
         }
 
-        public async Task<GameDeleteViewModel> DeleteGameGetAsync(string gameId, string moderatorId)
+        public async Task<GameDeleteViewModel> DeleteGameGetAsync(string gameId, string moderatorId, bool isAdmin)
         {
             Game? game = await _gameRepository
                 .GetWithIncludeAsync(g => g.Publisher.User)
                 .AsNoTracking()
-                .FirstOrDefaultAsync(g => g.Id.ToString() == gameId && g.PublisherId.ToString() == moderatorId &&
+                .FirstOrDefaultAsync(g => g.Id.ToString() == gameId && (g.PublisherId.ToString() == moderatorId || isAdmin) &&
                                           g.IsDeleted == false);
 
             GameDeleteViewModel model = new GameDeleteViewModel()
@@ -260,36 +268,15 @@ namespace GameVerse.Services
             return model;
         }
 
-        public async Task<string> DeleteGamePostAsync(string gameId, string moderatorId)
+        public async Task<string> DeleteGamePostAsync(string gameId, string moderatorId, bool isAdmin)
         {
             Game? game = await _gameRepository
-                .GetWithIncludeAsync(g => 
-                    g.GamesGenres.Where(g => g.IsDeleted == false),
-                    g => g.GamesPlatforms.Where(p => p.IsDeleted == false),
-                    g => g.GamesRestrictions.Where(r => r.IsDeleted == false)
-                    )
                 .FirstOrDefaultAsync(g =>
-                    g.Id.ToString() == gameId && g.PublisherId.ToString() == moderatorId && g.IsDeleted == false);
+                    g.Id.ToString() == gameId && (g.PublisherId.ToString() == moderatorId || isAdmin) && g.IsDeleted == false);
 
-            //Think about refactoring this
             if (game != null)
             {
                 game.IsDeleted = true;
-
-                foreach (var genre in game.GamesGenres.ToList())
-                {
-                    genre.IsDeleted = true;
-                }
-
-                foreach (var platform in game.GamesPlatforms.ToList())
-                {
-                    platform.IsDeleted = true;
-                }
-
-                foreach (var restriction in game.GamesRestrictions.ToList())
-                {
-                    restriction.IsDeleted = true;
-                }
 
                 await _gameRepository.SaveChangesAsync();
             }
@@ -313,18 +300,8 @@ namespace GameVerse.Services
 
         public async Task<GameDetailsViewModel> GetGameDetailsByIdAsync(string gameId)
         {
-            //Game? g = await _gameRepository
-            //    .GetWithIncludeAsync(
-            //        g=> g.Publisher.User,
-            //        g => g.GamesGenres, 
-            //        g => g.GamesPlatforms, 
-            //        g => g.GamesRestrictions,
-            //        g => g.Reviews
-            //        )
-            //    .AsNoTracking()
-            //    .FirstOrDefaultAsync(g => g.Id.ToString() == gameId && g.IsDeleted == false);
-
-            Game? g = await _context.Games
+            Game? g = await _gameRepository
+                .GetAllAttached()
                 .Include(g => g.Publisher.User)
                 .Include(g => g.GamesGenres).ThenInclude(x => x.Genre)
                 .Include(g => g.GamesPlatforms).ThenInclude(x => x.Platform)
@@ -332,6 +309,7 @@ namespace GameVerse.Services
                 .Include(g => g.Reviews).ThenInclude(r => r.Reviewer)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(g => g.Id.ToString() == gameId && g.IsDeleted == false);
+
 
             GameDetailsViewModel gameDetailsViewModel = new GameDetailsViewModel()
             {
