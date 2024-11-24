@@ -22,7 +22,7 @@
 
 <div class="row">
     <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
-        <form asp-action="Add" method="post" enctype="multipart/form-data">
+        <form asp-area="Moderator" asp-controller="ModeratorEvent" asp-action="Add" method="post" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-sm-6 mb-2">
                     <label asp-for="@Model.Topic" class="form-label-add-edit">Topic</label>
@@ -41,7 +41,7 @@
 
             <div class="mb-2">
                 <label asp-for="@Model.Seats" class="form-label-add-edit">Number of Seats</label>
-                <input asp-for="@Model.Seats" type="number" class="form-control" aria-required="true" rows="2"/>
+                <input asp-for="@Model.Seats" type="number" class="form-control" aria-required="true" rows="2" />
                 <span asp-validation-for="@Model.Seats" class="text-danger"></span>
             </div>
 
@@ -79,7 +79,7 @@
                          height="10%">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
                     </svg>
-                     @* <input type="file" class="form-control" aria-required="false" placeholder="Select image file (optional)" /> *@
+                    @* <input type="file" class="form-control" aria-required="false" placeholder="Select image file (optional)" /> *@
                     <input asp-for="@Model.Image" class="form-control" aria-required="true" value="@Model.Image" />
                 </div>
                 <span asp-validation-for="@Model.Image" class="text-danger"></span>
@@ -88,10 +88,10 @@
             <div class="row">
                 <label class="form-label-add-edit"> Location Coordinates</label>
                 <div class="col-sm-6 mb-2">
-                    <input type="text" id="latitude" name="Latitude" asp-for="Latitude" readonly aria-required="true"/>
+                    <input type="text" id="latitude" name="Latitude" asp-for="Latitude" readonly aria-required="true" />
                 </div>
                 <div class="col-sm-6 mb-2">
-                    <input type="text" id="longitude" name="Longitude" asp-for="Longitude" readonly aria-required="true"/>
+                    <input type="text" id="longitude" name="Longitude" asp-for="Longitude" readonly aria-required="true" />
                 </div>
             </div>
 
