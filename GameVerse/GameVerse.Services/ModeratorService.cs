@@ -28,38 +28,50 @@ namespace GameVerse.Services
 
         public async Task InCreaseCreatedTotalEventsCount(string moderatorId)
         {
-            Moderator moderator = await _moderatorRepository.FirstOrDefaultAsync(m => m.Id.ToString() == moderatorId);
+            Moderator? moderator = await _moderatorRepository.FirstOrDefaultAsync(m => m.Id.ToString() == moderatorId);
 
-            moderator.TotalEventsCreated += 1;
+            if (moderator != null)
+            {
+                moderator.TotalEventsCreated += 1;
 
-            await _moderatorRepository.SaveChangesAsync();
+                await _moderatorRepository.SaveChangesAsync();
+            }
         }
 
         public async Task IncreaseCreatedTotalGamesCount(string moderatorId)
         {
-            Moderator moderator = await _moderatorRepository.FirstOrDefaultAsync(m => m.Id.ToString() == moderatorId);
+            Moderator? moderator = await _moderatorRepository.FirstOrDefaultAsync(m => m.Id.ToString() == moderatorId);
 
-            moderator.TotalGamesCreated += 1;
+            if (moderator != null)
+            {
+                moderator.TotalGamesCreated += 1;
 
-            await _moderatorRepository.SaveChangesAsync();
+                await _moderatorRepository.SaveChangesAsync();
+            }
         }
 
         public async Task DecreaseCreatedTotalGamesCount(string moderatorId)
         {
-            Moderator moderator = await _moderatorRepository.FirstOrDefaultAsync(m => m.Id.ToString() == moderatorId);
+            Moderator? moderator = await _moderatorRepository.FirstOrDefaultAsync(m => m.Id.ToString() == moderatorId);
 
-            moderator.TotalGamesCreated -= 1;
+            if (moderator != null)
+            {
+                moderator.TotalGamesCreated -= 1;
 
-            await _moderatorRepository.SaveChangesAsync();
+                await _moderatorRepository.SaveChangesAsync();
+            }
         }
 
         public async Task DecreaseCreatedTotalEventsCount(string moderatorId)
         {
-            Moderator moderator = await _moderatorRepository.FirstOrDefaultAsync(m => m.Id.ToString() == moderatorId);
+            Moderator? moderator = await _moderatorRepository.FirstOrDefaultAsync(m => m.Id.ToString() == moderatorId);
 
-            moderator.TotalEventsCreated -= 1;
+            if (moderator != null)
+            {
+                moderator.TotalEventsCreated -= 1;
 
-            await _moderatorRepository.SaveChangesAsync();
+                await _moderatorRepository.SaveChangesAsync();
+            }
         }
 
 
@@ -76,5 +88,7 @@ namespace GameVerse.Services
 
             return true;
         }
+
+
     }
 }
