@@ -153,14 +153,6 @@ namespace GameVerse.Data.Models.Events
         [Comment("Soft Delete flag")]
         public bool IsDeleted { get; set; }
 
-        /// <summary>
-        /// Gets and sets the Event Status. When the Moderator creates Event the Status is Pending.
-        /// When the Admin approve the Event the status is set to Approved
-        /// If the admin reject the Event, the status is set to Rejected 
-        /// </summary>
-        [Required]
-        [Comment("Event status")]
-        public EntityStatus Status { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of shopping cart entries associated with the event.
