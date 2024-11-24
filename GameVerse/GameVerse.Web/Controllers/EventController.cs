@@ -14,7 +14,7 @@ using static GameVerse.Common.ApplicationConstants.EventConstants;
 
 namespace GameVerse.Web.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin, Moderator")]
     public class EventController(ILogger<EventController> logger, IEventService eventService, IModeratorService moderatorService, INotyfService notyf) : BaseController
     {
         private readonly ILogger<EventController> _logger = logger;
@@ -151,21 +151,23 @@ namespace GameVerse.Web.Controllers
             string? userId = User.GetId();
             string? moderatorId = await _moderatorService.GetModeratorIdByUserIdAsync(userId);
 
-            if(String.IsNullOrEmpty(moderatorId))
+            bool isAdmin = User.IsAdmin();
+
+            if(String.IsNullOrEmpty(moderatorId) && isAdmin == false)
             {
                 //You can also redirect to Login Page. 
                 _notyf.Warning("You don't have the permission to do this");
                 return Unauthorized();
             }
 
-            if (await _eventService.HasPublisherWithIdAsync(moderatorId, id) == false && User.IsAdmin() == false)
+            if (await _eventService.HasPublisherWithIdAsync(moderatorId, id) == false && isAdmin == false)
             {
                 //You can also redirect to Login Page.
                 _notyf.Warning("You are not the creator of the Event");
                 return Unauthorized();
             }
 
-            EventInputViewModel? model = await _eventService.EditEventGetAsync(id, moderatorId);
+            EventInputViewModel? model = await _eventService.EditEventGetAsync(id, moderatorId, isAdmin);
 
             return View(model);
         }
@@ -183,14 +185,16 @@ namespace GameVerse.Web.Controllers
             string? userId = User.GetId();
             string? moderatorId = await _moderatorService.GetModeratorIdByUserIdAsync(userId);
 
-            if(String.IsNullOrEmpty(moderatorId))
+            bool isAdmin = User.IsAdmin();
+
+            if(String.IsNullOrEmpty(moderatorId) || isAdmin == false)
             {
                 //You can also redirect to Login Page
                 _notyf.Warning("You don't have the permission to do this");
                 return Unauthorized();
             }
 
-            if (await _eventService.HasPublisherWithIdAsync(moderatorId, id) == false && User.IsAdmin() == false)
+            if (await _eventService.HasPublisherWithIdAsync(moderatorId, id) == false && isAdmin == false)
             {
                 //You can also redirect to Login Page
                 _notyf.Warning("You are not the creator of the Event");
@@ -232,11 +236,19 @@ namespace GameVerse.Web.Controllers
                 return View(inputModel);
             }
 
-            string eventId = await _eventService.EditEventPostAsync(inputModel, id, moderatorId, startDate, endDate);
+            string eventId = await _eventService.EditEventPostAsync(inputModel, id, moderatorId, startDate, endDate, isAdmin);
 
             _notyf.Success("Event was edited successfully!");
 
-            Log.Information("Moderator with ID {ModeratorId} perform an {Action} in controller {Controller}", moderatorId, nameof(Edit), nameof(EventController));
+            if (isAdmin)
+            {
+                Log.Information("Admin with ID {AdminId} perform an {Action} in controller {Controller}", User.GetId(), nameof(Edit), nameof(EventController));
+            }
+            else
+            {
+                Log.Information("Moderator with ID {ModeratorId} perform an {Action} in controller {Controller}", moderatorId, nameof(Edit), nameof(EventController));
+            }
+
 
             return RedirectToAction(nameof(Details), new { id = eventId });
         }
@@ -254,21 +266,23 @@ namespace GameVerse.Web.Controllers
             string? userId = User.GetId();
             string? moderatorId = await _moderatorService.GetModeratorIdByUserIdAsync(userId);
 
-            if (String.IsNullOrEmpty(moderatorId))
+            bool isAdmin = User.IsAdmin();
+
+            if (String.IsNullOrEmpty(moderatorId) || isAdmin == false)
             {
                 //You can also redirect to Login Page
                 _notyf.Warning("You don't have the permission to do this");
                 return Unauthorized();
             }
 
-            if (await _eventService.HasPublisherWithIdAsync(moderatorId, id) == false && User.IsAdmin() == false)
+            if (await _eventService.HasPublisherWithIdAsync(moderatorId, id) == false && isAdmin == false)
             {
                 //You can also redirect to Login Page
                 _notyf.Warning("You are not the creator of the Event");
                 return Unauthorized();
             }
 
-            EventDeleteViewModel? model = await _eventService.DeleteEventGetAsync(id, moderatorId);
+            EventDeleteViewModel? model = await _eventService.DeleteEventGetAsync(id, moderatorId, isAdmin);
 
             return View(model);
         }
@@ -285,6 +299,7 @@ namespace GameVerse.Web.Controllers
 
             string? userId = User.GetId();
             string? moderatorId = await _moderatorService.GetModeratorIdByUserIdAsync(userId);
+            bool isAdmin = User.IsAdmin();
 
             if (String.IsNullOrEmpty(moderatorId))
             {
@@ -293,20 +308,27 @@ namespace GameVerse.Web.Controllers
                 return Unauthorized();
             }
 
-            if (await _eventService.HasPublisherWithIdAsync(moderatorId, id) == false && User.IsAdmin() == false)
+            if (await _eventService.HasPublisherWithIdAsync(moderatorId, id) == false && isAdmin == false)
             {
                 //You can also redirect to Login Page
                 _notyf.Warning("You are not the creator of the Event");
                 return Unauthorized();
             }
 
-            await _eventService.DeleteEventPostAsync(id, moderatorId);
+            await _eventService.DeleteEventPostAsync(id, moderatorId, isAdmin);
 
             await _moderatorService.DecreaseCreatedTotalEventsCount(moderatorId);
 
             _notyf.Success("Event was deleted successfully !");
 
-            Log.Information("Moderator with ID {ModeratorId} perform an {Action} in controller {Controller}", moderatorId, nameof(Delete), nameof(EventController));
+            if (isAdmin)
+            {
+                Log.Information("Admin with ID {AdminId} perform an {Action} in controller {Controller}", User.GetId(), nameof(Delete), nameof(EventController));
+            }
+            else
+            {
+                Log.Information("Moderator with ID {ModeratorId} perform an {Action} in controller {Controller}", moderatorId, nameof(Delete), nameof(EventController));
+            }
 
             return RedirectToAction(nameof(Index));
         }
