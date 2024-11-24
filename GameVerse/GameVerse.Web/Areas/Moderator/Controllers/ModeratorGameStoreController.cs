@@ -36,6 +36,7 @@ namespace GameVerse.Web.Areas.Moderator.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(GameInputViewModel inputModel)
         {
             string? userId = User.GetId();
