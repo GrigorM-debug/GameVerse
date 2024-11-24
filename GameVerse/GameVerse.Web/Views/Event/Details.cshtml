@@ -36,7 +36,7 @@
                 @* For logged user *@
                 @if (User?.Identity?.IsAuthenticated == true && !User.IsInRole("Moderator") && !User.IsInRole("Admin"))
                 {
-                    <button type="button" class="btn btn-success btn-lg w-50" asp-area="" asp-controller="" asp-action="">Buy Ticket</button>
+                    <button type="button" class="btn btn-success btn-lg w-50" asp-area="" asp-controller="ShoppingCart" asp-action="AddEventToCart">Buy Ticket</button>
                 }
 
                 @*For Admin or Moderator who is creator of the Event*@

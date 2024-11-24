@@ -15,8 +15,8 @@
             Sort By: @Model.EventSelectedSortOrder
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <li><a asp-controller="Event" asp-action="Index" asp-route-eventSelectedSortOrder="@EntitySortOrder.Newest" class="dropdown-item font-weight-bold">Newest</a></li>
-            <li><a asp-controller="Event" asp-action="Index" asp-route-eventSelectedSortOrder="@EntitySortOrder.Oldest" class="dropdown-item font-weight-bold">Oldest</a></li>
+            <li><a asp-area="" asp-controller="Event" asp-action="Index" asp-route-eventSelectedSortOrder="@EntitySortOrder.Newest" class="dropdown-item font-weight-bold">Newest</a></li>
+            <li><a asp-area="" asp-controller="Event" asp-action="Index" asp-route-eventSelectedSortOrder="@EntitySortOrder.Oldest" class="dropdown-item font-weight-bold">Oldest</a></li>
         </ul>
     </div>
 </div>
@@ -37,7 +37,7 @@
                 <div class="blog-grid">
                     <div class="blog-grid-img position-relative"><img alt="Event Image" src="@e.Image"></div>
                     <div class="blog-grid-text p-4">
-                        <h3 class="h5 mb-3"><a asp-controller="Event" asp-action="Details" asp-route-id="@e.Id">Topic: @e.Topic</a></h3>
+                        <h3 class="h5 mb-3"><a asp-area="" asp-controller="Event" asp-action="Details" asp-route-id="@e.Id">Topic: @e.Topic</a></h3>
                         <p class="display-30">Ticket Price: @e.TicketPrice</p>
                         <div class="meta meta-style2">
                             <ul>
