@@ -18,12 +18,12 @@
                 <p class="card-text">Are you sure you want to Delete Event with Topic @Model.Title</p>
             </div>
             <div class="card-footer">
-                <form asp-controller="GameStore" asp-action="DeleteConfirm" method="post">
+                <form asp-area="" asp-controller="GameStore" asp-action="DeleteConfirm" method="post">
                      @* <input type="hidden" asp-for="Id" />
                      <input type="hidden" asp-for="Title" />
                      <input type="hidden" asp-for="PublisherId" /> *@
                     <button type="submit" class="btn btn-danger">Confirm Delete</button>
-                    <a asp-controller="Event" asp-action="Details" asp-route-id="@Model.Id" class="btn btn-warning">Cancel</a>
+                    <a asp-area="" asp-controller="Event" asp-action="Details" asp-route-id="@Model.Id" class="btn btn-warning">Cancel</a>
                 </form>
             </div>
         </div>

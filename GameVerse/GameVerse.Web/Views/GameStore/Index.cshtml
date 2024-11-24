@@ -11,7 +11,7 @@
     <div class="d-flex justify-content-between mt-2">
         <div class="input-group mt-2">
             <div class="form-outline" data-mdb-input-init>
-                <form asp-controller="GameStore" asp-action="Index" asp-route-searchString="@Model.SearchString" method="get" class="d-flex justify-content-center align-items-center">
+                <form asp-area="" asp-controller="GameStore" asp-action="Index" asp-route-searchString="@Model.SearchString" method="get" class="d-flex justify-content-center align-items-center">
                     <input asp-for="@Model.SearchString" type="search" name="searchString" class="form-control" placeholder="Search by Title" value="@Model.SearchString"/>
                     <input type="submit" class="btn btn-primary p-2 font-weight-bold" data-mdb-ripple-init value="Search"/>
                 </form>
@@ -22,7 +22,7 @@
                 Sort By: @Model.GameSelectedSortOrder
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <li><a asp-controller="GameStore" asp-action="Index" asp-route-gameSelectedSortOrder="@EntitySortOrder.Newest" class="dropdown-item font-weight-bold">Newest</a></li>
+                <li><a asp-area="" asp-controller="GameStore" asp-action="Index" asp-route-gameSelectedSortOrder="@EntitySortOrder.Newest" class="dropdown-item font-weight-bold">Newest</a></li>
                 <li><a asp-controller="GameStore" asp-action="Index" asp-route-gameSelectedSortOrder="@EntitySortOrder.Oldest" class="dropdown-item font-weight-bold">Oldest</a></li>
             </ul>
         </div>
@@ -31,9 +31,9 @@
                 Sort by Type: @Model.GameSelectedGameTypeSortOrder
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <li><a asp-controller="GameStore" asp-action="Index" asp-route-gameSelectedGameTypeSortOrder="" class="dropdown-item font-weight-bold">All</a></li>
-                <li><a asp-controller="GameStore" asp-action="Index" asp-route-gameSelectedGameTypeSortOrder="@GameType.DigitalKey" class="dropdown-item font-weight-bold">DigitalKey</a></li>
-                <li><a asp-controller="GameStore" asp-action="Index" asp-route-gameSelectedGameTypeSortOrder="@GameType.PhysicalCopy" class="dropdown-item font-weight-bold">PhysicalCopy</a></li>
+                <li><a asp-area="" asp-controller="GameStore" asp-action="Index" asp-route-gameSelectedGameTypeSortOrder="" class="dropdown-item font-weight-bold">All</a></li>
+                <li><a asp-area="" asp-controller="GameStore" asp-action="Index" asp-route-gameSelectedGameTypeSortOrder="@GameType.DigitalKey" class="dropdown-item font-weight-bold">DigitalKey</a></li>
+                <li><a asp-area="" asp-controller="GameStore" asp-action="Index" asp-route-gameSelectedGameTypeSortOrder="@GameType.PhysicalCopy" class="dropdown-item font-weight-bold">PhysicalCopy</a></li>
             </ul>
         </div>
     </div>
@@ -61,7 +61,7 @@
                             <h4><b>Created By: </b>@game.Publisher</h4>
                             <h4><b>Created On: </b>@game.CreatedOn</h4>
                             <ul class="social-icon-style1">
-                                <li><a asp-controller="GameStore" asp-action="Details" asp-route-id="@game.Id" type="button" class="btn btn-primary">Details</a></li>
+                                <li><a asp-area="" asp-controller="GameStore" asp-action="Details" asp-route-id="@game.Id" type="button" class="btn btn-primary">Details</a></li>
                             </ul>
                         </div>
                     </div>

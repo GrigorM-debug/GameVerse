@@ -33,7 +33,7 @@
                 @* For logged user *@
                 @if (User?.Identity?.IsAuthenticated == true && !User.IsInRole("Moderator") && !User.IsInRole("Admin"))
                 {
-                    <form asp-controller="ShoppingCart" asp-action="AddGameToCart" asp-route-gameId="@Model.Id" method="post" class="">
+                    <form asp-area="" asp-controller="ShoppingCart" asp-action="AddGameToCart" asp-route-gameId="@Model.Id" method="post" class="">
                         <input type="submit" class="btn btn-success btn-lg m-2" data-mdb-ripple-init value="Buy" />
                     </form>
                 }
@@ -117,8 +117,8 @@
                         @if (User?.Identity?.IsAuthenticated == true && reviews[i].Reviewer == currentUserName && !User.IsInRole("Admin") && !User.IsInRole("Moderator"))
                         {
                             <div class="d-flex justify-content-around">
-                                <a asp-action="Edit" asp-controller="Review" asp-route-id="@reviews[i].Id" asp-route-gameId="@Model.Id" type="button" class="btn btn-warning">Edit</a>
-                                <a asp-action="Delete" asp-controller="Review" asp-route-id="@reviews[i].Id" asp-route-gameId="@Model.Id" type="button" class="btn btn-danger">Delete</a>
+                                <a asp-area="" asp-action="Edit" asp-controller="Review" asp-route-id="@reviews[i].Id" asp-route-gameId="@Model.Id" type="button" class="btn btn-warning">Edit</a>
+                                <a asp-area="" asp-action="Delete" asp-controller="Review" asp-route-id="@reviews[i].Id" asp-route-gameId="@Model.Id" type="button" class="btn btn-danger">Delete</a>
                             </div>
                         }
                     </div>
