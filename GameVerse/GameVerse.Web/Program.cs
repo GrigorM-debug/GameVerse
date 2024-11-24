@@ -103,6 +103,11 @@ app.MapControllerRoute(
     defaults: new { area = "Administrator" });
 
 app.MapControllerRoute(
+    name: "moderatorAreaRoute",
+    pattern: "Moderator/{controller=Moderator}/{action=Dashboard}/{id?}",
+    defaults: new { area = "Moderator" });
+
+app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
