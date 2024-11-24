@@ -23,6 +23,9 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<ILogService, LogService>();
             services.AddScoped<IEventsRegistrationsService, EventsRegistrationsService>();
             services.AddScoped<IUsersBoughtGamesService, UsersBoughtGamesService>();
+            services
+                .AddScoped<GameVerse.Web.Areas.Moderator.Services.Interfaces.IModeratorService,
+                    GameVerse.Web.Areas.Moderator.Services.ModeratorService>();
 
             return services;
         }
