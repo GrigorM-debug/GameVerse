@@ -107,7 +107,7 @@ namespace GameVerse.Web.Controllers
                 Log.Information("User with ID {UserId} perform {Action} in controller {Controller}", userId, nameof(Add), nameof(ReviewController));
             }
 
-            return RedirectToAction("Details", "GameStore", new { id = gameId });
+            return RedirectToAction("Details", "GameStore", new { id = gameId, area = "" });
         }
 
         [HttpGet]
@@ -193,7 +193,7 @@ namespace GameVerse.Web.Controllers
                 Log.Information("User with ID {UserId} perform {Action} in controller {Controller}", userId, nameof(Edit), nameof(ReviewController));
             }
 
-            return RedirectToAction("Details", "GameStore", new { id = gameId });
+            return RedirectToAction("Details", "GameStore", new { id = gameId, area = "" });
         }
 
         [HttpGet]
@@ -267,7 +267,7 @@ namespace GameVerse.Web.Controllers
                 Log.Information("User with ID {UserId} perform {Action} in controller {Controller}", userId, nameof(DeleteConfirm), nameof(ReviewController));
             }
 
-            return RedirectToAction("Details", "GameStore", new { id = gameId });
+            return RedirectToAction("Details", "GameStore", new { id = gameId, area = "" });
         }
     }
 }

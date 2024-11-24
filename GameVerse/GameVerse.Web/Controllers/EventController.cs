@@ -173,7 +173,7 @@ namespace GameVerse.Web.Controllers
             }
 
 
-            return RedirectToAction(nameof(Details), new { id = eventId });
+            return RedirectToAction(nameof(Details), new { id = eventId, area = "" });
         }
 
         [HttpGet]
@@ -253,7 +253,7 @@ namespace GameVerse.Web.Controllers
                 Log.Information("Moderator with ID {ModeratorId} perform an {Action} in controller {Controller}", moderatorId, nameof(Delete), nameof(EventController));
             }
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "GameStore",new { area = ""});
         }
     }
 }

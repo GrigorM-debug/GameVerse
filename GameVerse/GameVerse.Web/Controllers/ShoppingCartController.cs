@@ -71,7 +71,7 @@ namespace GameVerse.Web.Controllers
 
             Log.Information("User with ID {UserId} made {Action} in {Controller}", userId, nameof(AddGameToCart), nameof(ShoppingCartController));
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "ShoppingCart", new { area = "" });
         }
 
         [HttpPost]
@@ -99,7 +99,7 @@ namespace GameVerse.Web.Controllers
 
             Log.Information("User with ID {UserId} made {Action} in {Controller}", userId, nameof(AddEventToCart), nameof(ShoppingCartController));
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "ShoppingCart", new{ area = "" });
         }
 
         [HttpPost]
@@ -127,7 +127,7 @@ namespace GameVerse.Web.Controllers
             if (!gameItemExistInTheShoppingCart)
             {
                 _notyf.Error("Item doesn't exist in your shopping cart");
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "ShoppingCart", new { area = "" });
             }
 
             await _shoppingCartService.RemoveGameFromCartAsync(gameId, userId, game.Price);
@@ -136,7 +136,7 @@ namespace GameVerse.Web.Controllers
 
             Log.Information("User with ID {UserId} perform {Action} in {Controller}", userId, nameof(RemoveGameFromCart), nameof(ShoppingCartController));
 
-            return RedirectToAction("Details", "GameStore", new{id = gameId});
+            return RedirectToAction("Details", "GameStore", new{id = gameId, area = "" });
         }
 
         [HttpPost]
@@ -164,7 +164,7 @@ namespace GameVerse.Web.Controllers
             if (!isEventItemExistInTheShoppingCart)
             {
                 _notyf.Error("Item doesn't exist in your shopping cart");
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "ShoppingCart", new { area = "" });
             }
 
             await _shoppingCartService.RemoveEventFromCartAsync(eventId, userId, e.TicketPrice);
