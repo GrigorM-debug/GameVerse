@@ -53,9 +53,13 @@
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="GameStore" asp-action="Index">All Games</a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="GameStore" asp-action="Add">Add Game</a>
-                                </li>
+
+                                @if (User?.Identity?.IsAuthenticated == true && User.IsInRole("Moderator"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="Moderator" asp-controller="ModeratorGameStore" asp-action="Add">Add Game</a>
+                                    </li>
+                                }
                             </ul>
                         </li>
 
@@ -67,9 +71,13 @@
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Event" asp-action="Index">All Events</a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Event" asp-action="Add">Add Event</a>
-                                </li>
+                                
+                                @if (User?.Identity?.IsAuthenticated == true && User.IsInRole("Moderator"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="Moderator" asp-controller="ModeratorEvent" asp-action="Add">Add Event</a>
+                                    </li>
+                                }
                             </ul>
                         </li>
                         
