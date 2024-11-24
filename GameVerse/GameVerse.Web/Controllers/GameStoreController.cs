@@ -99,6 +99,7 @@ namespace GameVerse.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(GameInputViewModel inputModel, string id)
         {
             bool isGameExisting = await _gameService.GameExistByIdAsync(id);
@@ -295,6 +296,7 @@ namespace GameVerse.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirm(string id)
         {
             string? userId = User.GetId();
