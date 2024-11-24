@@ -25,6 +25,11 @@ namespace GameVerse.Web.Controllers
                 return RedirectToAction("DashBoard", "Admin", new { area = "Administrator" });
             }
 
+            if (User.IsInRole("Moderator"))
+            {
+                return RedirectToAction("Dashboard", "Moderator", new { area = "Moderator" });
+            }
+
             IEnumerable<EventIndexViewModel> latest3Events = await _eventService.GetLatest3EventsAsync();
             IEnumerable<GameIndexViewModel> last3Games = await _gameService.GetLast3GamesAsync();
 
