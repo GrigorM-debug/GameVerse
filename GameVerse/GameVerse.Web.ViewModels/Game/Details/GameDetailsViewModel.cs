@@ -24,6 +24,8 @@
 
         public string Publisher { get; set; } = null!;
 
+        public double? AverageRating { get; set; }
+
         public IEnumerable<GenreIndexViewModel> Genres { get; set; } = new HashSet<GenreIndexViewModel>();
 
         public IEnumerable<GamePlatformsIndexViewModel> Platforms { get; set; } = new HashSet<GamePlatformsIndexViewModel>();
