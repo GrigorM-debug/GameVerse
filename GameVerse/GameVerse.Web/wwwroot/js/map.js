@@ -34,6 +34,13 @@ function initializeMap(defaultLatitute, defaultLongtitude) {
 function displayMapWithDetails(eventLat, eventLng) {
     const map = L.map('map').setView([eventLat, eventLng], 13);
 
+    map.addControl(new L.Control.Fullscreen({
+        title: {
+            'false': 'View Fullscreen',
+            'true': 'Exit Fullscreen'
+        }
+    }));
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
@@ -45,35 +52,11 @@ function displayMapWithDetails(eventLat, eventLng) {
         (position) => {
             const userLat = position.coords.latitude;
             const userLng = position.coords.longitude;
-
             const userMarker = L.marker([userLat, userLng]).addTo(map);
             userMarker.bindPopup("You are here!").openPopup();
 
             const userLocation = L.latLng(userLat, userLng);
             const eventLocation = L.latLng(eventLat, eventLng);
-
-            const distanceInMeters = userLocation.distanceTo(eventLocation);
-
-            const distanceInKilometers = (distanceInMeters / 1000).toFixed(2);
-
-            let distanceText;
-
-            if (distanceInMeters < 1000) {
-                distanceText = `${Math.round(distanceInMeters)} meters`;
-            } else {
-                distanceText = `${distanceInKilometers} km`;
-            }
-
-            //const latlngs = [
-            //    [userLat, userLng],
-            //    [eventLat, eventLng]
-            //];
-
-            //const pointsList = [userLocation, eventLocation];
-
-            //const polyline = L.polyline(pointsList, { color: 'blue', weight: 3 }).addTo(map);
-
-            //map.fitBounds(polyline.getBounds());
 
             L.Routing.control({
                 waypoints: [
@@ -82,12 +65,28 @@ function displayMapWithDetails(eventLat, eventLng) {
                 ],
                 routeWhileDragging: true,
                 language: 'en'
-            }).addTo(map);
+            })
+                .on('routesfound', function (e) {
+                    const routes = e.routes;
+                    alert(`Found ${routes.length} from your location to the Event location`)
+                })
+                .on('routeselected', function (e) {
+                    const route = e.route;
 
-            L.popup()
-                .setLatLng(eventLocation)
-                .setContent(`Distance from you to the event: ${distanceText}`)
-                .openOn(map);
+                    const summary = route.summary;
+                    const distance = summary.totalDistance;
+                    const time = summary.totalTime;
+
+                    const hours = Math.floor(time / 3600);
+                    const minutes = Math.floor((time % 3600) / 60);
+
+                    L.popup()
+                        .setLatLng(eventLocation)
+                        .setContent(`Route distance: ${(distance / 1000).toFixed(2)} km<br>
+                            Estimated time: ${hours} h ${minutes} min`)
+                        .openOn(map);
+                })
+                .addTo(map);
         },
         (error) => {
             alert("Failed to get your location")
