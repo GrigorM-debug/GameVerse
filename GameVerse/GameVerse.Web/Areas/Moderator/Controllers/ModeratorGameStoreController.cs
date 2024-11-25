@@ -19,13 +19,15 @@ namespace GameVerse.Web.Areas.Moderator.Controllers
         ILogger<ModeratorGameStoreController> logger,
         INotyfService notyf,
         IModeratorService moderatorService,
-        IGameService gameService
+        IGameService gameService,
+        IImageValidationService imageValidationService
         ) : Controller
     {
         private readonly ILogger<ModeratorGameStoreController> _logger = logger;
         private readonly INotyfService _notyf = notyf;
         private readonly IModeratorService _moderatorService = moderatorService;
         private readonly IGameService _gameService = gameService;
+        private readonly IImageValidationService _imageValidationService = imageValidationService;
 
         [HttpGet]
         public async Task<IActionResult> Add()
@@ -170,6 +172,18 @@ namespace GameVerse.Web.Areas.Moderator.Controllers
                 ModelState.AddModelError(nameof(inputModel.CreatedOn), InvalidDateTimeErrorMessage);
                 return View(inputModel);
             }
+
+            /*bool isImageValid = await _imageValidationService.ValidateImageWithApi(inputModel.Image);
+
+            if (!isImageValid)
+            {
+                inputModel.GenreSelectList = genres;
+                inputModel.PlatformSelectList = platforms;
+                inputModel.RestrictionSelectList = restrictions;
+                inputModel.GameTypes = types;
+                ModelState.AddModelError(nameof(inputModel.Image), "The image contains irrelevant content.");
+                return View(inputModel);
+            }*/
 
             if (ModelState.IsValid == false)
             {
