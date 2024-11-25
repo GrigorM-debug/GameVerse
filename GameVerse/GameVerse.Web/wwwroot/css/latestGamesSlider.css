@@ -1,0 +1,41 @@
+﻿#carouselExampleIndicators {
+    height: 50vh;
+}
+
+.carousel-item {
+    height: 50vh;
+}
+
+.carousel-item img {
+    object-fit: cover;
+    height: 500px;
+    width: 100%;
+}
+
+.carousel-caption {
+    bottom: 20px;
+    margin-bottom: 1em;
+}
+
+.carousel-caption h5,
+.carousel-caption p {
+    margin-bottom: 0.5em;
+    padding: 0 15px;
+}
+
+.carousel-item {
+    position: relative;
+}
+
+.carousel-caption {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    border: 2px solid rgba(128, 0, 128, 0.8);
+    border-radius: 10px;
+    padding: 10px;
+    background-color: black;
+}
+
+.carousel-item:hover .carousel-caption {
+    opacity: 1;
+}
