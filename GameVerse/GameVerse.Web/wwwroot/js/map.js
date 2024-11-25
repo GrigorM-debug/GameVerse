@@ -1,4 +1,4 @@
-﻿const { error } = require("jquery");
+﻿const { error, event } = require("jquery");
 
 function initializeMap(defaultLatitute, defaultLongtitude) {
     // Initialize the map
@@ -65,16 +65,25 @@ function displayMapWithDetails(eventLat, eventLng) {
                 distanceText = `${distanceInKilometers} km`;
             }
 
-            const latlngs = [
-                [userLat, userLng],
-                [eventLat, eventLng]
-            ];
+            //const latlngs = [
+            //    [userLat, userLng],
+            //    [eventLat, eventLng]
+            //];
 
-            const pointsList = [userLocation, eventLocation];
+            //const pointsList = [userLocation, eventLocation];
 
-            const polyline = L.polyline(pointsList, { color: 'blue', weight: 3 }).addTo(map);
+            //const polyline = L.polyline(pointsList, { color: 'blue', weight: 3 }).addTo(map);
 
-            map.fitBounds(polyline.getBounds());
+            //map.fitBounds(polyline.getBounds());
+
+            L.Routing.control({
+                waypoints: [
+                    L.latLng(userLat, userLng),
+                    L.latLng(eventLat, eventLng)
+                ],
+                routeWhileDragging: true,
+                language: 'en'
+            }).addTo(map);
 
             L.popup()
                 .setLatLng(eventLocation)
