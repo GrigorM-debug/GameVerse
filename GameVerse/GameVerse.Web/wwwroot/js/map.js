@@ -1,5 +1,4 @@
-﻿const { error, event } = require("jquery");
-
+﻿
 function initializeMap(defaultLatitute, defaultLongtitude) {
     // Initialize the map
     let map = L.map('map').setView([defaultLatitude, defaultLongitude], 13); // Starting position (Sofia)
