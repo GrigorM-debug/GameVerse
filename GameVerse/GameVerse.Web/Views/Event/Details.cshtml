@@ -4,6 +4,8 @@
 @{
     ViewData["Title"] = "Event Details";
 }
+
+<link rel="stylesheet" href="~/css/eventDetails.css">
 <!-- Leaflet CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
 
@@ -64,97 +66,9 @@
 
 <script src="/js/map.js" asp-append-version="true"></script>
 <script>
-    // var map = L.map('map').setView([@Model.Latitude, @Model.Longitude], 13);
-
-    // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    //     maxZoom: 19,
-    //     attribution: '© OpenStreetMap contributors'
-    // }).addTo(map);
-
-    // var marker = L.marker([@Model.Latitude, @Model.Longitude]).addTo(map);
-    // marker.bindPopup("<b>@Model.Topic</b>").openPopup();
-
     let latitute = @Model.Latitude;
     let longtitute = @Model.Longitude;
 
     displayMapWithDetails(latitute, longtitute);
 </script>
 
-<style>
-
-    /*------- portfolio -------*/
-    .project {
-        margin: 15px 0;
-    }
-
-    .no-gutter .project {
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-
-    .has-spacer {
-        margin-left: 30px;
-        margin-right: 30px;
-        margin-bottom: 30px;
-    }
-
-    .has-spacer-extra-space {
-        margin-left: 30px;
-        margin-right: 30px;
-        margin-bottom: 30px;
-    }
-
-    .has-side-spacer {
-        margin-left: 30px;
-        margin-right: 30px;
-    }
-
-    .project-title {
-        font-size: 1.25rem;
-    }
-
-    .project-skill {
-        font-size: 0.9rem;
-        font-weight: 400;
-        letter-spacing: 0.06rem;
-    }
-
-    .project-info-box {
-        margin: 15px 0;
-        background-color: #fff;
-        padding: 30px 40px;
-        border-radius: 5px;
-    }
-
-    .project-info-box p {
-        margin-bottom: 15px;
-        padding-bottom: 15px;
-        border-bottom: 1px solid #d5dadb;
-    }
-
-    .project-info-box p:last-child {
-        margin-bottom: 0;
-        padding-bottom: 0;
-        border-bottom: none;
-    }
-
-    .game-details-img {
-        width: 100%;
-        max-width: 100%;
-        height: auto;
-        -webkit-backface-visibility: hidden;
-    }
-
-    .rounded {
-        border-radius: 5px !important;
-    }
-
-    .btn-xs.btn-icon {
-        width: 34px;
-        height: 34px;
-        max-width: 34px !important;
-        max-height: 34px !important;
-        font-size: 10px;
-        line-height: 34px;
-    }
-</style>
