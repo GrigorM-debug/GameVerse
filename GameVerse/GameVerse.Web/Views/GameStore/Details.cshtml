@@ -23,6 +23,35 @@
                 <p><b>Publisher:</b> @Model.Publisher</p>
                 <p><b>Created On:</b> @Model.CreatedOn</p>
                 <p><b>Type:</b> @Model.Type</p>
+                <p><b>Average Rating: </b>
+                    @if (Model.AverageRating.HasValue)
+                    {
+                        int fullStars = (int)Model.AverageRating.Value; 
+                        var halfStar = Model.AverageRating.Value % 1 >= 0.5; 
+                        var emptyStars = 5 - fullStars - (halfStar ? 1 : 0); 
+
+                        for (int i = 0; i < fullStars; i++)
+                        {
+                            <span class="fa fa-star checked"></span>
+                        }
+
+                        // Render half star if applicable
+                        if (halfStar)
+                        {
+                            <span class="fa fa-star-half-alt checked"></span>
+                        }
+
+                        // Render empty stars
+                        for (int i = 0; i < emptyStars; i++)
+                        {
+                            <span class="fa fa-star"></span>
+                        }
+                    }
+                    else
+                    {
+                        <span>No Ratings Available</span>
+                    }
+                </p>
                 <p><b>Quantity In Stock:</b> @Model.QuantityInStock</p>
                 <p class="mb-0"><b>Price:</b> @Model.Price</p>
             </div>
@@ -53,7 +82,11 @@
                 <p><b>Genres:</b> @String.Join(", ", Model.Genres.Select(g => g.Name))</p>
                 <p><b>Platforms:</b> @String.Join(", ", Model.Platforms.Select(p => p.Name))</p>
                 <p><b>Restrictions:</b> @String.Join(", ", Model.Restrictions.Select(r => r.Name))</p>
-                <a href="https://www.systemrequirementslab.com/cyri" type="button" class="btn btn-primary font-weight-bold">Can You Run It</a>
+                
+                @if (!User.IsInRole("Moderator") && !User.IsInRole("Admin"))
+                {
+                    <a href="https://www.systemrequirementslab.com/cyri" type="button" class="btn btn-primary font-weight-bold">Can You Run It</a>
+                }
             </div>
         </div>
     </div>
@@ -225,5 +258,12 @@
         max-height: 34px !important;
         font-size: 10px;
         line-height: 34px;
+    }
+
+    .checked {
+        color: gold;
+    }
+    .fa-star, .fa-star-half-alt {
+        font-size: 20px;
     }
 </style>
