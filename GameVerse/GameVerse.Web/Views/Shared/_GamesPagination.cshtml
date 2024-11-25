@@ -6,6 +6,7 @@
     int nextPage = Model.CurrentPage < totalPages ? Model.CurrentPage + 1 : totalPages;
 }
 
+<link rel="stylesheet" href="~/css/gamePagination.css">
 <div class="row mt-6 wow fadeInUp" data-wow-delay=".6s" style="visibility: visible; animation-delay: 0.6s; animation-name: fadeInUp;">
     <div class="col-12">
         <div class="pagination text-small text-uppercase text-extra-dark-gray">
@@ -32,69 +33,3 @@
     </div>
 </div>
 
-<style>
-    .pagination {
-        border-radius: 0;
-        padding: 0;
-        margin: 0
-    }
-
-    .pagination ul {
-        display: inline-block;
-        *display: inline;
-        *zoom: 1;
-        margin: 0 auto;
-        padding: 0
-    }
-
-    .pagination li {
-        display: inline
-    }
-
-    .pagination a {
-        float: left;
-        padding: 0 18px;
-        line-height: 40px;
-        text-decoration: none;
-        border: 1px solid #dbdbdb;
-        border-left-width: 0;
-        background: #fff
-    }
-
-    .pagination a:hover {
-        background-color: #1d184a;
-        color: #fff
-    }
-
-    .pagination .active a {
-        background-color: #f7f7f7;
-        color: #999;
-        cursor: default
-    }
-
-    .pagination .disabled span {
-        color: #999;
-        background-color: transparent;
-        cursor: default
-    }
-
-    .pagination .disabled a {
-        color: #999;
-        background-color: transparent;
-        cursor: default
-    }
-
-    .pagination .disabled a:hover {
-        color: #999;
-        background-color: transparent;
-        cursor: default
-    }
-
-    .pagination li:first-child a {
-        border-left-width: 1px
-    }
-
-    .mt-6, .my-6 {
-        margin-top: 3.5rem;
-    }
-</style>
