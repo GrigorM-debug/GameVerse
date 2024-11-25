@@ -64,7 +64,9 @@ function displayMapWithDetails(eventLat, eventLng) {
                     L.latLng(eventLat, eventLng)
                 ],
                 routeWhileDragging: true,
-                language: 'en'
+                language: 'en',
+                altLineOptions: { color: 'blue', opacity: 0.7 },
+                showAlternatives: true
             })
                 .on('routesfound', function (e) {
                     const routes = e.routes;
@@ -79,6 +81,27 @@ function displayMapWithDetails(eventLat, eventLng) {
 
                     const hours = Math.floor(time / 3600);
                     const minutes = Math.floor((time % 3600) / 60);
+
+                    const coordinates = route.coordinates;
+
+                    const waypoints = coordinates
+                        .filter((_, index) => index % 10 === 0) 
+                        .slice(1, -1) 
+                        .map(coord => `${coord.lat},${coord.lng}`)
+                        .join('|'); 
+
+
+                    const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${coordinates[0].lat},${coordinates[0].lng}&destination=${coordinates[coordinates.length - 1].lat},${coordinates[coordinates.length - 1].lng}&waypoints=${waypoints}&travelmode=driving`;
+
+                    const navigateButton = L.control({ position: 'bottomright' });
+
+                    navigateButton.onAdd = function () {
+                        const divElement = L.DomUtil.create('div', 'navigate-button');
+                        divElement.innerHTML = `<a href="${googleMapsUrl}" target="_blank" class="btn btn-primary">Open in Google Maps</a>`;
+                        return divElement;
+                    }
+
+                    navigateButton.addTo(map);
 
                     L.popup()
                         .setLatLng(eventLocation)
