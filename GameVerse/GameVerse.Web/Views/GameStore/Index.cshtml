@@ -4,6 +4,7 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model GameVerse.Web.ViewModels.Game.AllGamesQueryModel
 
+<link rel="stylesheet" href="~/css/gameCatalog.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <div class="container"></div>
 <div class="section-heading mb-4 d-flex justify-content-between">
@@ -23,7 +24,7 @@
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 <li><a asp-area="" asp-controller="GameStore" asp-action="Index" asp-route-gameSelectedSortOrder="@EntitySortOrder.Newest" class="dropdown-item font-weight-bold">Newest</a></li>
-                <li><a asp-controller="GameStore" asp-action="Index" asp-route-gameSelectedSortOrder="@EntitySortOrder.Oldest" class="dropdown-item font-weight-bold">Oldest</a></li>
+                <li><a asp-area="" asp-controller="GameStore" asp-action="Index" asp-route-gameSelectedSortOrder="@EntitySortOrder.Oldest" class="dropdown-item font-weight-bold">Oldest</a></li>
             </ul>
         </div>
         <div class="dropdown m-lg-2">
@@ -73,111 +74,3 @@
 
 <partial name="_GamesPagination", model="Model"/>
 
-<style>
-    .team-style1 {
-        position: relative;
-        display: block;
-        overflow: hidden
-    }
-
-    .team-style1 .team-info {
-        bottom: 15px;
-        left: 15px;
-        right: 15px;
-        border-radius: 5px;
-        transform: translate3d(0px, 0%, 0px);
-        transition: all 800ms ease 0.35s;
-        padding: 25px 30px;
-        box-shadow: 0px 5px 24.25px 0.75px rgba(0,0,0,0.1);
-        background: #ffffff;
-        position: absolute
-    }
-
-    .team-style1 img {
-        width: 480px;
-        height: 480px;
-        object-fit: cover;
-    }
-
-    .team-style1 .team-overlay {
-        left: 15px;
-        right: 15px;
-        opacity: 1;
-        padding: 0 20px;
-        position: absolute;
-        top: 15px;
-        bottom: 15px;
-        transform: translate3d(0px, -110%, 0px);
-        transition: all 700ms ease 0.35s;
-        box-shadow: 0px 5px 24.25px 0.75px rgba(0,0,0,0.1)
-    }
-
-    .team-style1:hover .team-overlay {
-        transform: translate3d(0px, 0, 0px);
-        transition-delay: 0.1s;
-        background: rgba(47,191,167,0.9);
-        border-radius: 5px;
-    }
-
-    .team-overlay h4 {
-        color: #ffffff
-    }
-
-    .team-style1:hover .team-info {
-        transform: translate3d(0px, 130px, 0px);
-        transition-delay: 0.2s
-    }
-
-    .team-style1 .social-icon-style1 {
-        border-top: 2px dotted rgba(255,255,255,0.3);
-        margin-top: 15px;
-        padding-top: 20px
-    }
-
-    .team-bg-shape img {
-        position: absolute;
-        top: -40px;
-        right: -40px;
-        z-index: 0;
-    }
-
-    @@media (max-width: 991px) {
-        .team-style1 .team-info {
-            padding: 20px;
-        }
-    }
-
-    .team-style1 .social-icon-style1 {
-        border-top: 2px dotted rgba(255,255,255,0.3);
-        margin-top: 15px;
-        padding-top: 20px;
-    }
-
-    .social-icon-style1 {
-        margin: 0;
-        list-style-type: none;
-        padding-left: 0;
-    }
-
-    .social-icon-style1 li {
-        display: inline-block;
-        margin-right: 5px;
-    }
-
-    .social-icon-style1 li a {
-        border-radius: 5px;
-        display: inline-block;
-        font-size: 16px;
-        font-weight: bold;
-        height: 50px;
-        width: 80px;
-        line-height: 34px;
-        text-align: center;
-        color: lightskyblue;
-        background-color: #ffffff;
-    }
-
-    a {
-    text-decoration:none;    
-    }
-</style>
