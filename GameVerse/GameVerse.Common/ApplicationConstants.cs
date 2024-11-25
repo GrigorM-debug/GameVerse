@@ -64,6 +64,7 @@
 
             //Game Type
             public const string InvalidGameTypeErrorMessage = "Invalid game type.";
+            public const string NoGameTypeSelectedErrorMessage = "Please select Game Type";
         }
 
         public static class GenreConstants

@@ -45,7 +45,7 @@ namespace GameVerse.Web.ViewModels.Game
         [Range(QuantityInStockMinValue, QuantityInStockMaxValue, ErrorMessage = RangeErrorMessage)]
         public int QuantityInStock { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = NoGameTypeSelectedErrorMessage)]
         [EnumDataType(typeof(GameType), ErrorMessage = InvalidGameTypeErrorMessage)]
         public GameType Type { get; set; }
 
