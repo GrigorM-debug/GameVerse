@@ -6,8 +6,12 @@
 }
 <!-- Leaflet CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+
 <!-- Leaflet JavaScript -->
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
 
 <h2 class="text-start mt-5 mb-3">Event Details</h2>
 <hr />
@@ -56,16 +60,22 @@
     </div>
 </div>
 
+<script src="/js/map.js" asp-append-version="true"></script>
 <script>
-    var map = L.map('map').setView([@Model.Latitude, @Model.Longitude], 13);
+    // var map = L.map('map').setView([@Model.Latitude, @Model.Longitude], 13);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
+    // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    //     maxZoom: 19,
+    //     attribution: '© OpenStreetMap contributors'
+    // }).addTo(map);
 
-    var marker = L.marker([@Model.Latitude, @Model.Longitude]).addTo(map);
-    marker.bindPopup("<b>@Model.Topic</b>").openPopup();
+    // var marker = L.marker([@Model.Latitude, @Model.Longitude]).addTo(map);
+    // marker.bindPopup("<b>@Model.Topic</b>").openPopup();
+
+    let latitute = @Model.Latitude;
+    let longtitute = @Model.Longitude;
+
+    displayMapWithDetails(latitute, longtitute);
 </script>
 
 <style>
