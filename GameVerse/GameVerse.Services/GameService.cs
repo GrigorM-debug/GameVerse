@@ -351,7 +351,12 @@ namespace GameVerse.Services
                         Rating = r.Rating,
                         CreatedOn = r.CreatedOn.ToString(DateTimeFormat, CultureInfo.InvariantCulture),
                         Reviewer = r.Reviewer.UserName
-                    }).ToList()
+                    }).ToList(),
+                AverageRating = g.Reviews
+                    .Where(r => r.IsDeleted == false)
+                    .Select(r => r.Rating)
+                    .DefaultIfEmpty()
+                    .Average()
             };
 
             return gameDetailsViewModel;
