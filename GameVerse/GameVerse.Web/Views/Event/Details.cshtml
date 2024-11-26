@@ -39,12 +39,15 @@
             </div>
 
             <div class="project-info-box mt-0 mb-0">
-                <a type="button" class="btn btn-light btn-lg m-2 w-auto" asp-area="" asp-controller="Event" asp-action="Index">Back</a>
+                <a type="button" class="btn btn-light btn-lg m-2 w-auto mx-2" asp-area="" asp-controller="Event" asp-action="Index">Back</a>
 
                 @* For logged user *@
                 @if (User?.Identity?.IsAuthenticated == true && !User.IsInRole("Moderator") && !User.IsInRole("Admin"))
                 {
-                    <button type="button" class="btn btn-success btn-lg w-50" asp-area="" asp-controller="ShoppingCart" asp-action="AddEventToCart">Buy Ticket</button>
+                    <form asp-area="" asp-controller="ShoppingCart" asp-action="AddEventToCart" asp-route-eventId="@Model.Id" method="post" class="">
+                        <input type="submit" class="btn btn-success btn-lg m-2" data-mdb-ripple-init value="Buy Ticket" />
+                    </form>
+                    
                 }
 
                 @*For Admin or Moderator who is creator of the Event*@
