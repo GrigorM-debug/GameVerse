@@ -65,6 +65,12 @@ namespace GameVerse.Web.Controllers
                 return NotFound();
             }
 
+            if (game.QuantityInStock == 0)
+            {
+                _notyf.Error("This game is currently out of stock");
+                return RedirectToAction("Details", "GameStore", new { id = gameId, area = "" });
+            }
+
             await _shoppingCartService.AddGameToCartAsync(gameId, userId, game);
 
             _notyf.Success("Game added successfully in the Shopping Cart");
@@ -173,7 +179,7 @@ namespace GameVerse.Web.Controllers
 
             Log.Information("User with ID {UserId} perform {Action} in {Controller}", userId, nameof(RemoveEventFromCart), nameof(ShoppingCartController));
 
-            return RedirectToAction("Details", "Event", new {id = eventId});
+            return RedirectToAction("Details", "Event", new {id = eventId, area=""});
         }
 
         [HttpPost]
@@ -195,14 +201,14 @@ namespace GameVerse.Web.Controllers
 
                 _notyf.Success("Items successfully purchased. You can see them in Bought Games and Event Registrations Pages");
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home", new {area=""});
             }
             catch (InvalidOperationException ex)
             {
                 _notyf.Error(ex.Message);
                 Log.Error("An error occur in {Action} from {Controller} with {Message}", nameof(PurchaseItemsInShoppingCart), nameof(ShoppingCartController), ex.Message);
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Home", new {area = ""});
             }
         }
     }
