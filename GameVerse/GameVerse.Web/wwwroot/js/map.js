@@ -116,3 +116,66 @@ function displayMapWithDetails(eventLat, eventLng) {
         }
     )
 }
+
+function displaySpecificEventMap(eventId, eventLat, eventLng) {
+    const mapContainerId = `map-${eventId}`;
+    const map = L.map(mapContainerId).setView([eventLat, eventLng], 13);
+
+    map.addControl(new L.Control.Fullscreen({
+        title: {
+            'false': 'View Fullscreen',
+            'true': 'Exit Fullscreen'
+        }
+    }));
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    const eventMarker = L.marker([eventLat, eventLng]).addTo(map);
+    eventMarker.bindPopup("Event Location!").openPopup();
+
+    navigator.geolocation.getCurrentPosition(
+        (position) => {
+            const userLat = position.coords.latitude;
+            const userLng = position.coords.longitude;
+
+            const userMarker = L.marker([userLat, userLng]).addTo(map);
+            userMarker.bindPopup("You are here!").openPopup();
+
+            L.Routing.control({
+                waypoints: [
+                    L.latLng(userLat, userLng),
+                    L.latLng(eventLat, eventLng)
+                ],
+                routeWhileDragging: true,
+                language: 'en',
+                altLineOptions: { color: 'green', opacity: 0.8 },
+                showAlternatives: false
+            })
+                .on('routesfound', function (e) {
+                    const routes = e.routes;
+                    console.log(`Found ${routes.length} route(s)`);
+                })
+                .on('routeselected', function (e) {
+                    const route = e.route;
+                    const summary = route.summary;
+                    const distance = summary.totalDistance;
+                    const time = summary.totalTime;
+
+                    const hours = Math.floor(time / 3600);
+                    const minutes = Math.floor((time % 3600) / 60);
+
+                    // Display route details
+                    L.popup()
+                        .setLatLng(L.latLng(eventLat, eventLng))
+                        .setContent(`Route distance: ${(distance / 1000).toFixed(2)} km<br>Estimated time: ${hours} h ${minutes} min`)
+                        .openOn(map);
+                })
+                .addTo(map);
+        },
+        (error) => {
+            alert("Failed to get your location")
+        }
+    );
+}
