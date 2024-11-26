@@ -1,0 +1,32 @@
+﻿@model GameVerse.Web.Areas.Moderator.Models.AddQuantityInStockInputViewModel;
+
+@{
+    ViewData["Title"] = "Add quantity in stock for Game";
+}
+
+<h2 class="text-start mt-5 mb-3">Delete Event</h2>
+<hr />
+<div class="mb-4"></div>
+
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">Title: @Model.Title</h3>
+                <p class="card-text">Added By: @Model.CreatedOn</p>
+            </div>
+            <div class="card-footer">
+                <form asp-area="Moderator" asp-controller="ModeratorGameStore" asp-action="AddGameQuantityInStock" method="post">
+                    <input type="hidden" name="GameId" value="@Model.GameId" />
+                    <input type="hidden" name="Title" value="@Model.Title" />
+                    <input type="hidden" name="CreatedOn" value="@Model.CreatedOn" />
+                    <label asp-for="@Model.QuantityInStock" class="form-label-add-edit">Quantity In Stock</label>
+                    <input asp-for="@Model.QuantityInStock" class="form-control" aria-required="true" type="number" step="1" min="0"/>
+                    <span asp-validation-for="@Model.QuantityInStock" class="text-danger"></span>
+                    <input class="btn btn-primary btn-dark-white w-100 py-2 fw-bold rounded mt-2" type="submit" value="Save"/>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
