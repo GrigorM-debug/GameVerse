@@ -16,6 +16,8 @@ namespace GameVerse.Services.Interfaces
 
         Task<Game> GetGameByIdAsync(string gameId);
 
+        Task<Game> GetGameByIdAsTrackingAsync(string gameId);
+
         Task<GameInputViewModel> AddGameGetAsync();
 
         Task<string> AddGamePostAsync(GameInputViewModel inputModel, DateTime createdOn, string moderatorId);
@@ -47,5 +49,7 @@ namespace GameVerse.Services.Interfaces
         Task<IEnumerable<PlatformSelectList>> GetPlatformsAsync();
 
         Task<IEnumerable<RestrictionSelectList>> GetRestrictionsAsync();
+
+        Task UpdateGameQuantityInStockAsync(string gameId, int quantityInStock);
     }
 }

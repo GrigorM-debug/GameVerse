@@ -46,6 +46,14 @@ namespace GameVerse.Services
             return game;
         }
 
+        public async Task<Game> GetGameByIdAsTrackingAsync(string gameId)
+        {
+            Game? game =
+                await _gameRepository.FirstOrDefaultAsync(g => g.Id.ToString() == gameId && g.IsDeleted == false);
+
+            return game;
+        }
+
         public async Task<GameInputViewModel> AddGameGetAsync()
         {
             IEnumerable<GenreSelectList> genres = await GetGenresAsync();
@@ -507,6 +515,18 @@ namespace GameVerse.Services
                 .ToListAsync();
 
             return restrictions;
+        }
+
+        public async Task UpdateGameQuantityInStockAsync(string gameId, int quantityInStock)
+        {
+            Game? game =
+                await _gameRepository.FirstOrDefaultAsync(g => g.Id.ToString() == gameId && g.IsDeleted == false);
+
+            if (game != null)
+            {
+                game.QuantityInStock += quantityInStock;
+                await _gameRepository.SaveChangesAsync();
+            }
         }
     }
 }
