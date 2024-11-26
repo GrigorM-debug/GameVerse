@@ -225,6 +225,14 @@ namespace GameVerse.Web.Areas.Moderator.Controllers
                 return NotFound();
             }
 
+            bool isCreatorOfTheGame = await _gameService.HasPublisherWithIdAsync(moderatorId, gameId);
+
+            if (!isCreatorOfTheGame)
+            {
+                _notyf.Error("You are not the creator of the game.");
+                return RedirectToAction("Details", "GameStore", new { id = gameId, area = "" });
+            }
+
             if (game.QuantityInStock > 0)
             {
                 _notyf.Error("You cannot add stock to a game that is not out of stock.");
@@ -242,6 +250,7 @@ namespace GameVerse.Web.Areas.Moderator.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddGameQuantityInStock(AddQuantityInStockInputViewModel inputModel)
         {
             string? userId = User.GetId();
@@ -259,6 +268,15 @@ namespace GameVerse.Web.Areas.Moderator.Controllers
                 return NotFound();
             }
 
+            string gameId = game.Id.ToString();
+            bool isCreatorOfTheGame = await _gameService.HasPublisherWithIdAsync(moderatorId, gameId);
+
+            if (!isCreatorOfTheGame)
+            {
+                _notyf.Error("You are not the creator of the game.");
+                return RedirectToAction("Details", "GameStore", new { id = gameId, area = "" });
+            }
+
             if (game.QuantityInStock > 0)
             {
                 _notyf.Error("You cannot add stock to a game that is not out of stock.");
@@ -270,7 +288,6 @@ namespace GameVerse.Web.Areas.Moderator.Controllers
                 return View(inputModel);
             }
 
-            string gameId = game.Id.ToString();
 
             await _gameService.UpdateGameQuantityInStockAsync(gameId, inputModel.QuantityInStock);
 
