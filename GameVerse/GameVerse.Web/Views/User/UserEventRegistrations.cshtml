@@ -5,13 +5,19 @@
     // var today = DateTime.Now.ToString("dd-MM-yyyy");
 }
 
+<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
+
 <div class="d-flex justify-content-between align-items-center mb-3" style="margin-top: 20px;">
     <h2>@ViewData["Title"]</h2>
 </div>
 <hr />
 
-<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
-<hr>
 <div class="container bootstrap snippets bootdey">
     <div class="row">
         <div class="col-lg-12">
@@ -33,7 +39,11 @@
                             <tbody>
                             @if (!Model.Any())
                             {
-                                <h2>No Tickets for Events Bought</h2>
+                                <tr>
+                                    <td>
+                                        <h3>No tickets bought</h3>
+                                    </td>
+                                </tr>
                             }
                             @foreach (var eventTicketBought in Model)
                             {
@@ -68,21 +78,13 @@
         </div>
     </div>
 </div>
-
+<script src="/js/map.js" asp-append-version="true"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         @foreach (var eventModel in Model)
         {
             <text>
-                var map@eventModel.Id = L.map('map-@eventModel.EventId').setView([@eventModel.Latitude, @eventModel.Longitude], 13);
-
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    maxZoom: 19,
-                    attribution: '© OpenStreetMap contributors'
-                }).addTo(map@eventModel.Id);
-
-                var marker@eventModel.Id = L.marker([@eventModel.Latitude, @eventModel.Longitude]).addTo(map@eventModel.Id);
-                marker@eventModel.Id.bindPopup("<b>Event Location!</b>").openPopup();
+                displayEventSpecificMap('@eventModel.EventId', @eventModel.Latitude, @eventModel.Longitude);
             </text>
         }
     });
