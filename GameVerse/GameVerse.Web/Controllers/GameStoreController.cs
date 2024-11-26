@@ -79,7 +79,7 @@ namespace GameVerse.Web.Controllers
             string? userId = User.GetId();
             string? moderatorId = await _moderatorService.GetModeratorIdByUserIdAsync(userId);
 
-            if (moderatorId == null || isAdmin == false)
+            if (moderatorId == null && isAdmin == false)
             {
                 _notyf.Warning("You don't have the permission to do this");
                 return Unauthorized();
@@ -87,7 +87,7 @@ namespace GameVerse.Web.Controllers
 
             bool isModeratorCreatorOfTheGame = await _gameService.HasPublisherWithIdAsync(moderatorId, id);
 
-            if (isModeratorCreatorOfTheGame == false || isAdmin == false)
+            if (isModeratorCreatorOfTheGame == false && isAdmin == false)
             {
                 _notyf.Warning("You are not the creator of the game");
                 return Unauthorized();
@@ -114,7 +114,7 @@ namespace GameVerse.Web.Controllers
             string? userId = User.GetId();
             string? moderatorId = await _moderatorService.GetModeratorIdByUserIdAsync(userId);
 
-            if (moderatorId == null || isAdmin == false)
+            if (moderatorId == null && isAdmin == false)
             {
                 _notyf.Warning("You don't have the permission to do this");
                 return Unauthorized();
@@ -122,7 +122,7 @@ namespace GameVerse.Web.Controllers
 
             bool isModeratorCreatorOfTheGame = await _gameService.HasPublisherWithIdAsync(moderatorId, id);
 
-            if (isModeratorCreatorOfTheGame == false || isAdmin == false)
+            if (isModeratorCreatorOfTheGame == false && isAdmin == false)
             {
                 _notyf.Warning("You are not the creator of the game");
                 return Unauthorized();
@@ -268,7 +268,7 @@ namespace GameVerse.Web.Controllers
 
             bool isAdmin = User.IsAdmin();
 
-            if (moderatorId == null || isAdmin == false)
+            if (moderatorId == null && isAdmin == false)
             {
                 _notyf.Warning("You don't have the permission to do this");
                 return Unauthorized();
@@ -284,7 +284,7 @@ namespace GameVerse.Web.Controllers
 
             bool isCreatorOfTheGame = await _gameService.HasPublisherWithIdAsync(moderatorId, id);
 
-            if (isCreatorOfTheGame == false || isAdmin == false)
+            if (isCreatorOfTheGame == false && isAdmin == false)
             {
                 _notyf.Warning("You are not the creator of the Game");
                 return Unauthorized();
@@ -305,7 +305,7 @@ namespace GameVerse.Web.Controllers
 
             bool isAdmin = User.IsAdmin();
 
-            if (moderatorId == null || isAdmin == false)
+            if (moderatorId == null && isAdmin == false)
             {
                 _notyf.Warning("You don't have the permission to do this");
                 return Unauthorized();
@@ -320,7 +320,7 @@ namespace GameVerse.Web.Controllers
 
             bool isCreatorOfTheGame = await _gameService.HasPublisherWithIdAsync(moderatorId, id);
 
-            if (isCreatorOfTheGame == false || isAdmin)
+            if (isCreatorOfTheGame == false && isAdmin)
             {
                 _notyf.Warning("You are not the creator of the Game");
                 return Unauthorized();
