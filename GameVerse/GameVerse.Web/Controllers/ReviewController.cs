@@ -47,7 +47,7 @@ namespace GameVerse.Web.Controllers
             if (isReviewForGameAlreadyExist)
             {
                 _notyf.Error("You have already added review for this game");
-                return RedirectToAction("Details", "GameStore", new { id = gameId });
+                return RedirectToAction("Details", "GameStore", new { id = gameId, area="" });
             }
 
             ReviewInputViewModel model = new ReviewInputViewModel();
@@ -83,7 +83,7 @@ namespace GameVerse.Web.Controllers
             if (isReviewForGameAlreadyExist)
             {
                 _notyf.Error("You have already added review for this game");
-                return RedirectToAction("Details", "GameStore", new { id = gameId });
+                return RedirectToAction("Details", "GameStore", new { id = gameId, area="" });
             }
 
             if (!DateTime.TryParseExact(inputModel.CreatedOn, DateTimeFormat, CultureInfo.InvariantCulture,
@@ -135,7 +135,7 @@ namespace GameVerse.Web.Controllers
             if (!isReviewForGameAlreadyExist)
             {
                 _notyf.Error("Review for this game doesn't exist");
-                return RedirectToAction("Details", "GameStore", new { id = gameId });
+                return RedirectToAction("Details", "GameStore", new { id = gameId, area="" });
             }
 
             ReviewInputViewModel model = await _reviewService.EditViewGetAsync(id, gameId, userId);
@@ -169,7 +169,7 @@ namespace GameVerse.Web.Controllers
             if (!isReviewForGameAlreadyExist)
             {
                 _notyf.Error("Review for this game doesn't exist");
-                return RedirectToAction("Details", "GameStore", new { id = gameId });
+                return RedirectToAction("Details", "GameStore", new { id = gameId, area="" });
             }
 
             if (!DateTime.TryParseExact(inputModel.CreatedOn, DateTimeFormat, CultureInfo.InvariantCulture,
@@ -221,7 +221,7 @@ namespace GameVerse.Web.Controllers
             if (!isReviewForGameAlreadyExist)
             {
                 _notyf.Error("Review for this game doesn't exist");
-                return RedirectToAction("Details", "GameStore", new { id = gameId });
+                return RedirectToAction("Details", "GameStore", new { id = gameId, area="" });
             }
 
             ReviewDeleteViewModel model = await _reviewService.DeleteReviewGetAsync(id, userId, gameId);
@@ -255,7 +255,7 @@ namespace GameVerse.Web.Controllers
             if (!isReviewForGameAlreadyExist)
             {
                 _notyf.Error("Review for this game doesn't exist");
-                return RedirectToAction("Details", "GameStore", new { id = gameId });
+                return RedirectToAction("Details", "GameStore", new { id = gameId, area="" });
             }
 
             bool isDeletedSuccessfully = await _reviewService.DeleteReviewPostAsync(id, userId, gameId);
