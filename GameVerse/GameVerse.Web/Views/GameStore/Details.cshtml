@@ -53,15 +53,25 @@
                         <span>No Ratings Available</span>
                     }
                 </p>
-                <p><b>Quantity In Stock:</b> @Model.QuantityInStock</p>
+                <p><b>Quantity In Stock:</b> 
+                    @if (@Model.QuantityInStock == 0)
+                    {
+                        <span class="badge rounded-pill bg-danger">Out of stock</span>
+                    }
+                    else
+                    {
+                        @Model.QuantityInStock
+                    }
+                    </p>
                 <p class="mb-0"><b>Price:</b> @Model.Price</p>
             </div>
 
             <div class="project-info-box mt-0 mb-0 d-flex justify-content-center">
-                <button type="button" class="btn btn-light btn-lg m-2 w-auto mx-2" asp-area="" asp-controller="GameStore" asp-action="Index">Back</button>
+                
+                <a type="button" class="btn btn-light btn-lg m-2 w-20 mx-2" asp-area="" asp-controller="GameStore" asp-action="Index">Back</a>
                 
                 @* For logged user *@
-                @if (User?.Identity?.IsAuthenticated == true && !User.IsInRole("Moderator") && !User.IsInRole("Admin"))
+                @if (User?.Identity?.IsAuthenticated == true && !User.IsInRole("Moderator") && !User.IsInRole("Admin") && @Model.QuantityInStock > 0)
                 {
                     <form asp-area="" asp-controller="ShoppingCart" asp-action="AddGameToCart" asp-route-gameId="@Model.Id" method="post" class="">
                         <input type="submit" class="btn btn-success btn-lg m-2" data-mdb-ripple-init value="Buy" />
@@ -71,10 +81,11 @@
                 @*For Admin or Moderator who is creator of the Event*@
                 @if ((User.IsInRole("Moderator") && User?.Identity?.Name == Model.Publisher) || User.IsInRole("Admin"))
                 {
-                    <a type="button" class="btn btn-warning btn-lg w-25 mx-2" asp-area="" asp-controller="GameStore" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-                    <a type="button" class="btn btn-danger btn-lg w-25 mx-2" asp-area="" asp-controller="GameStore" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+                    <a type="button" class="btn btn-warning btn-lg w-20 mx-2" asp-area="" asp-controller="GameStore" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+                    <a type="button" class="btn btn-danger btn-lg w-20 mx-2" asp-area="" asp-controller="GameStore" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
                 }
             </div>
+            
         </div>
 
         <div class="col-md-7">
@@ -87,6 +98,11 @@
                 @if (!User.IsInRole("Moderator") && !User.IsInRole("Admin"))
                 {
                     <a href="https://www.systemrequirementslab.com/cyri" type="button" class="btn btn-primary font-weight-bold">Can You Run It</a>
+                }
+                
+                @if (User.IsInRole("Moderator") && User?.Identity?.Name == Model.Publisher && Model.QuantityInStock == 0)
+                {
+                    <a type="button" class="btn btn-primary btn-lg w-20 mt-2" asp-area="Moderator" asp-controller="ModeratorGameStore" asp-action="AddGameQuantityInStock" asp-route-gameId="@Model.Id">Add Quantity In Stock</a>
                 }
             </div>
         </div>
