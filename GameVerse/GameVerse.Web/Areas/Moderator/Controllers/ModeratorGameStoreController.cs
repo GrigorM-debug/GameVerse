@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using Serilog;
 using System.Globalization;
+using GameVerse.Data.Models.Games;
+using GameVerse.Web.Areas.Moderator.Models;
 using static GameVerse.Common.ApplicationConstants;
 
 namespace GameVerse.Web.Areas.Moderator.Controllers
@@ -203,6 +205,80 @@ namespace GameVerse.Web.Areas.Moderator.Controllers
             Log.Information("Moderator with ID {ModeratorId} perform an {Action} action in controller {Controller}", moderatorId, nameof(Add), nameof(GameStoreController));
 
             return RedirectToAction("Details", "GameStore", new { id = gameId, area = "" });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddGameQuantityInStock(string gameId)
+        {
+            string? userId = User.GetId();
+            string? moderatorId = await _moderatorService.GetModeratorIdByUserIdAsync(userId);
+
+            if (moderatorId == null)
+            {
+                return Unauthorized();
+            }
+
+            Game? game = await _gameService.GetGameByIdAsTrackingAsync(gameId);
+
+            if (game == null)
+            {
+                return NotFound();
+            }
+
+            if (game.QuantityInStock > 0)
+            {
+                _notyf.Error("You cannot add stock to a game that is not out of stock.");
+                return RedirectToAction("Details", "GameStore", new { id = gameId, area = "" });
+            }
+
+            AddQuantityInStockInputViewModel model = new AddQuantityInStockInputViewModel()
+            {
+                GameId = game.Id.ToString(),
+                CreatedOn = game.CreatedOn.ToString(DateTimeFormat, CultureInfo.InvariantCulture),
+                Title = game.Title
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddGameQuantityInStock(AddQuantityInStockInputViewModel inputModel)
+        {
+            string? userId = User.GetId();
+            string? moderatorId = await _moderatorService.GetModeratorIdByUserIdAsync(userId);
+
+            if (moderatorId == null)
+            {
+                return Unauthorized();
+            }
+
+            Game? game = await _gameService.GetGameByIdAsTrackingAsync(inputModel.GameId);
+
+            if (game == null)
+            {
+                return NotFound();
+            }
+
+            if (game.QuantityInStock > 0)
+            {
+                _notyf.Error("You cannot add stock to a game that is not out of stock.");
+                return View(inputModel);
+            }
+
+            if (ModelState.IsValid == false)
+            {
+                return View(inputModel);
+            }
+
+            string gameId = game.Id.ToString();
+
+            await _gameService.UpdateGameQuantityInStockAsync(gameId, inputModel.QuantityInStock);
+
+            _notyf.Success("Quantity successfully added to the stock.");
+
+            Log.Information("Moderator with ID {ModeratorID} perform {Action} in {Controller}", moderatorId, nameof(AddGameQuantityInStock), nameof(ModeratorGameStoreController));
+
+            return RedirectToAction("Details", "GameStore", new { id = gameId, area="" });
         }
     }
 }
