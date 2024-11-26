@@ -241,6 +241,11 @@ namespace GameVerse.Services
 
             IEnumerable<EventCart> eventCartItems = cart.EventsCarts.Where(ec => !ec.IsDeleted).ToList();
 
+            if (!gameCartItems.Any() && !eventCartItems.Any())
+            {
+                throw new InvalidOperationException("Your shopping cart is empty");
+            }
+
             if (gameCartItems.Any())
             {
                 foreach (var gameCartItem in gameCartItems)
@@ -248,7 +253,7 @@ namespace GameVerse.Services
                     Game? game = await _gameRepository.FirstOrDefaultAsync(g =>
                         g.Id == gameCartItem.GameId && g.IsDeleted == false);
 
-                    if (game == null || game.QuantityInStock < gameCartItem.Quantity)
+                    if (game == null || game.QuantityInStock < gameCartItem.Quantity || game.QuantityInStock == 0)
                     {
                         throw new InvalidOperationException("Not enough quantity in stock for game: " + gameCartItem.GameId);
                     }
@@ -256,11 +261,6 @@ namespace GameVerse.Services
                     //Decrease game quantity in stock. Is quantity drops to zero set game IsDeleted to true
                     game.QuantityInStock -= gameCartItem.Quantity;
 
-                    //Mark the game as Removed if the QuantityInStock reaches zero
-                    if (game.QuantityInStock == 0)
-                    {
-                        game.IsDeleted = true;
-                    }
 
                     UserBoughtGame userBoughtGame = new UserBoughtGame()
                     {
@@ -273,6 +273,7 @@ namespace GameVerse.Services
                     await _userBoughtGamesRepository.AddAsync(userBoughtGame);
                     await _userBoughtGamesRepository.SaveChangesAsync();
                     await _gameRepository.SaveChangesAsync();
+                    await ClearCart(cart);
                 }
             }
 
@@ -314,14 +315,20 @@ namespace GameVerse.Services
 
         public async Task ClearCart(Cart cart)
         {
-            foreach (var eventItem in cart.EventsCarts.Where(e => e.IsDeleted == false))
+            if (cart.EventsCarts.Any())
             {
-                eventItem.IsDeleted = true;
+                foreach (var eventItem in cart.EventsCarts.Where(e => e.IsDeleted == false))
+                {
+                    eventItem.IsDeleted = true;
+                }
             }
 
-            foreach (var gameItem in cart.GamesCarts.Where(g => g.IsDeleted == false))
+            if (cart.GamesCarts.Any())
             {
-                gameItem.IsDeleted = true;
+                foreach (var gameItem in cart.GamesCarts.Where(g => g.IsDeleted == false))
+                {
+                    gameItem.IsDeleted = true;
+                }
             }
 
             await _cartRepository.SaveChangesAsync();
