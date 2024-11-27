@@ -112,7 +112,7 @@
 @* Game reviews section. Think about making it in partial view *@
  <div class="d-flex justify-content-between">
     <h2 class="text-start mt-5 mb-3">Game Reviews</h2>
-    @if (User?.Identity?.IsAuthenticated == true && !User.IsInRole("Moderator") && !User.IsInRole("Admin"))
+    @if (User?.Identity?.IsAuthenticated == true && !User.IsInRole("Moderator") && !User.IsInRole("Admin") && !@Model.Reviews.Select(r=> r.Reviewer).Contains(User.Identity.Name))
     {
         <a type="button" class="btn btn-primary btn-sm fw-bold mt-5 align-content-center" asp-area="" asp-controller="Review" asp-action="Add" asp-route-gameId="@Model.Id">Add Review</a>
     }
