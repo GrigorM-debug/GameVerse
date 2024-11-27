@@ -11,10 +11,21 @@ using static System.Net.WebRequestMethods;
 
 namespace GameVerse.Services
 {
+    /// <summary>
+    /// Provides functionality for validating images using an external NSFW detection API.
+    /// </summary>
     public class ImageValidationService(IConfiguration configuration) : IImageValidationService
     {
         private readonly IConfiguration _configuration = configuration;
 
+        /// <summary>
+        /// Validates an image by sending its URL to an external API to detect NSFW content.
+        /// </summary>
+        /// <param name="imageUrl">The URL of the image to validate.</param>
+        /// <returns>
+        /// A task containing a <c>true</c> value if the image is deemed safe; otherwise, <c>false</c>.
+        /// </returns>
+        /// <exception cref="Exception">Thrown if the API request fails or returns an unsuccessful status code.</exception>
         public async Task<bool> ValidateImageWithApi(string imageUrl)
         {
             //string apiUrl = "https://nsfw-images-detection-and-classification.p.rapidapi.com/adult-content";
