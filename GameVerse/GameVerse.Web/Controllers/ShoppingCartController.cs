@@ -99,6 +99,12 @@ namespace GameVerse.Web.Controllers
                 return NotFound();
             }
 
+            if (e.Seats == 0)
+            {
+                _notyf.Error("No available tickets for the Event");
+                return RedirectToAction("Details", "Event", new { id = eventId, area = "" });
+            }
+
             await _shoppingCartService.AddEventToCartAsync(eventId, userId, e);
 
             _notyf.Success("Event ticket added successfully in the Shopping Cart");
@@ -208,7 +214,7 @@ namespace GameVerse.Web.Controllers
                 _notyf.Error(ex.Message);
                 Log.Error("An error occur in {Action} from {Controller} with {Message}", nameof(PurchaseItemsInShoppingCart), nameof(ShoppingCartController), ex.Message);
 
-                return RedirectToAction("Index", "Home", new {area = ""});
+                return RedirectToAction("Index", "ShoppingCart", new {area = ""});
             }
         }
     }
