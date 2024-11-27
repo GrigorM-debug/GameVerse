@@ -309,6 +309,13 @@ namespace GameVerse.Services
             return true;
         }
 
+        /// <summary>
+        /// Retrieves an event by its ID if it exists and is not marked as deleted.
+        /// </summary>
+        /// <param name="eventId">The unique ID of the event.</param>
+        /// <returns>
+        /// A task containing the event if found; otherwise, <c>null</c>.
+        /// </returns>
         public async Task<Event> GetEventByIdAsync(string eventId)
         {
             Event? e = await _eventRepository

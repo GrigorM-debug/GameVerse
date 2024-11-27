@@ -108,6 +108,13 @@ namespace GameVerse.Services.Interfaces
         /// <returns><c>true</c> if the event is associated with the specified moderator; otherwise, <c>false</c>.</returns>
         Task<bool> HasPublisherWithIdAsync(string moderatorId, string eventId);
 
+        /// <summary>
+        /// Retrieves an event by its ID if it exists and is not marked as deleted.
+        /// </summary>
+        /// <param name="eventId">The unique ID of the event.</param>
+        /// <returns>
+        /// A task containing the event if found; otherwise, <c>null</c>.
+        /// </returns>
         Task<Event> GetEventByIdAsync(string eventId);
     }
 }
