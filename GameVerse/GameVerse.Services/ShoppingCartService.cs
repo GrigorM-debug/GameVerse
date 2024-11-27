@@ -261,19 +261,32 @@ namespace GameVerse.Services
                         throw new InvalidOperationException("Not enough quantity in stock for game: " + gameCartItem.Game.Title);
                     }
 
-                    //Decrease game quantity in stock. Is quantity drops to zero set game IsDeleted to true
-                    game.QuantityInStock -= gameCartItem.Quantity;
+                    UserBoughtGame? alreadyBoughtGameByUser =
+                        await _userBoughtGamesRepository.FirstOrDefaultAsync(g =>
+                            g.UserId.ToString() == userId && g.GameId == game.Id);
 
-
-                    UserBoughtGame userBoughtGame = new UserBoughtGame()
+                    if (alreadyBoughtGameByUser == null)
                     {
-                        UserId = Guid.Parse(userId),
-                        GameId = gameCartItem.GameId,
-                        BoughtOn = DateTime.Now,
-                        Quantity = gameCartItem.Quantity
-                    };
+                        //Decrease game quantity in stock. Is quantity drops to zero set game IsDeleted to true
+                        game.QuantityInStock -= gameCartItem.Quantity;
 
-                    await _userBoughtGamesRepository.AddAsync(userBoughtGame);
+
+                        UserBoughtGame userBoughtGame = new UserBoughtGame()
+                        {
+                            UserId = Guid.Parse(userId),
+                            GameId = gameCartItem.GameId,
+                            BoughtOn = DateTime.Now,
+                            Quantity = gameCartItem.Quantity
+                        };
+
+                        await _userBoughtGamesRepository.AddAsync(userBoughtGame);
+                    }
+                    else
+                    {
+                        alreadyBoughtGameByUser.Quantity = gameCartItem.Quantity;
+                        alreadyBoughtGameByUser.BoughtOn = DateTime.Now;
+                    }
+
                     await _userBoughtGamesRepository.SaveChangesAsync();
                     await _gameRepository.SaveChangesAsync();
                     await ClearCart(cart);
@@ -292,22 +305,36 @@ namespace GameVerse.Services
                         throw new InvalidOperationException("Not enough empty seats for event" + eventCartItem.EventId);
                     }
 
-                    //Decrease the number of seats
-                    e.Seats -= eventCartItem.TicketQuantity;
-
                     string qrCodeData = $"EventId:{e.Id.ToString()};UserId:{userId};Date:{DateTime.Now}";
                     string qrCodeAsBase64String = _qrCodeService.GenerateQrCode(qrCodeData);
 
-                    EventRegistration eventRegistration = new EventRegistration()
-                    {
-                        UserId = Guid.Parse(userId),
-                        EventId = eventCartItem.EventId,
-                        RegistrationDate = DateTime.Now,
-                        TicketQuantity = eventCartItem.TicketQuantity,
-                        QrCode = qrCodeAsBase64String
-                    };
+                    EventRegistration? existingEventRegistration = await _eventRegistrationRepository.FirstOrDefaultAsync(er =>
+                        er.UserId == Guid.Parse(userId) && er.EventId == eventCartItem.EventId);
 
-                    await _eventRegistrationRepository.AddAsync(eventRegistration);
+                    if (existingEventRegistration == null)
+                    {
+                        //Decrease the number of seats
+                        e.Seats -= eventCartItem.TicketQuantity;
+
+                        EventRegistration eventRegistration = new EventRegistration()
+                        {
+                            UserId = Guid.Parse(userId),
+                            EventId = eventCartItem.EventId,
+                            RegistrationDate = DateTime.Now,
+                            TicketQuantity = eventCartItem.TicketQuantity,
+                            QrCode = qrCodeAsBase64String
+                        };
+
+                        await _eventRegistrationRepository.AddAsync(eventRegistration);
+                    }
+                    else
+                    {
+                        existingEventRegistration.TicketQuantity = eventCartItem.TicketQuantity;
+                        existingEventRegistration.RegistrationDate = DateTime.Now;
+                        existingEventRegistration.QrCode = qrCodeAsBase64String;
+                    }
+
+                    
                     await _eventRegistrationRepository.SaveChangesAsync();
                     await _eventRepository.SaveChangesAsync();
                     await ClearCart(cart);
