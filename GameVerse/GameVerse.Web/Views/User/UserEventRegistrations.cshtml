@@ -5,13 +5,9 @@
     // var today = DateTime.Now.ToString("dd-MM-yyyy");
 }
 
+<link rel="stylesheet" href="~/css/userEventsRegistrations.css">
 <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
-<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
-<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
+
 
 <div class="d-flex justify-content-between align-items-center mb-3" style="margin-top: 20px;">
     <h2>@ViewData["Title"]</h2>
@@ -28,11 +24,10 @@
                             <thead>
                             <tr>
                                 <th><span>Event</span></th>
-                                <th><span>Event StartDate</span></th>
-                                <th><span>Event EndDate</span></th>
                                 <th><span>Registration date</span></th>
                                 <th class="text-center"><span>Ticket Quantity</span></th>
                                 <th><span>Price</span></th>
+                                <th><span>QrCode</span></th>
                                 <th>&nbsp;</th>
                             </tr>
                             </thead>
@@ -50,13 +45,7 @@
                                 <tr>
                                     <td>
                                         <img src="@eventTicketBought.Image" alt="Event Image">
-                                        <h3>@eventTicketBought.Topic</h3>
-                                    </td>
-                                    <td>
-                                        @eventTicketBought.EventStartDate
-                                    </td>
-                                    <td>
-                                        @eventTicketBought.EventEndDate
+                                        <a asp-area="" asp-controller="Event" asp-action="Details" asp-route-id="@eventTicketBought.EventId" class="user-link">@eventTicketBought.Topic</a>
                                     </td>
                                     <td>@eventTicketBought.RegistrationDate</td>
                                     <td class="text-center">
@@ -66,7 +55,10 @@
                                         @eventTicketBought.Price
                                     </td>
                                     <td>
-                                            <div id="map-@eventTicketBought.EventId" style="height: 60px; width: 100%;"></div>
+                                        <img class="qr-image" src="data:image/png;base64,@eventTicketBought.QrCodeAsBase64String" alt="QR Code" />
+                                    </td>
+                                    <td>
+                                        <a type="button" class="btn btn-primary" asp-area="" asp-controller="Event" asp-action="Details" asp-route-id="@eventTicketBought.EventId">Details</a>
                                     </td>
                                 </tr>
                             }
@@ -77,74 +69,11 @@
             </div>
         </div>
     </div>
+    <div id="qrModal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="qrModalImg">
+        <div id="caption"></div>
+    </div>
 </div>
-<script src="/js/map.js" asp-append-version="true"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        @foreach (var eventModel in Model)
-        {
-            <text>
-                displayEventSpecificMap('@eventModel.EventId', @eventModel.Latitude, @eventModel.Longitude);
-            </text>
-        }
-    });
-</script>
 
-<style>
-    .main-box.no-header {
-        padding-top: 20px;
-    }
-
-    .main-box {
-        background: #FFFFFF;
-        -webkit-box-shadow: 1px 1px 2px 0 #CCCCCC;
-        -moz-box-shadow: 1px 1px 2px 0 #CCCCCC;
-        -o-box-shadow: 1px 1px 2px 0 #CCCCCC;
-        -ms-box-shadow: 1px 1px 2px 0 #CCCCCC;
-        box-shadow: 1px 1px 2px 0 #CCCCCC;
-        margin-bottom: 16px;
-        -webikt-border-radius: 3px;
-        -moz-border-radius: 3px;
-        border-radius: 3px;
-    }
-
-    .user-list tbody td .user-subhead {
-        font-size: 0.875em;
-        font-style: italic;
-    }
-
-    .user-list tbody td .user-link {
-        display: block;
-        font-size: 1.25em;
-        padding-top: 3px;
-        margin-left: 60px;
-    }
-
-    .user-list tbody td > img {
-        position: relative;
-        max-width: 50px;
-        float: left;
-        margin-right: 15px;
-    }
-
-    .table thead tr th {
-        text-transform: uppercase;
-        font-size: 0.875em;
-    }
-
-    .table thead tr th {
-        border-bottom: 2px solid #e7ebee;
-    }
-
-    .table tbody tr td:first-child {
-        font-size: 1.125em;
-        font-weight: 300;
-    }
-
-    .table tbody tr td {
-        font-size: 0.875em;
-        vertical-align: middle;
-        border-top: 1px solid #e7ebee;
-        padding: 12px 8px;
-    }
-</style>
+<script src="/js/qrCodeModal.js" asp-append-version="true"></script>
