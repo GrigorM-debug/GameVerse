@@ -26,7 +26,16 @@
                             <ul>
                                 <li><i class="fas fa-calendar-alt"></i>@e.StartDate - @e.EndDate</li>
                                 <li><i class="fas fa-user"></i> @e.PublisherName</li>
-                                <li><i class="fas fa-chair"></i> Empty Seats: @e.Seats</li>
+                                <li><i class="fas fa-chair"></i> Empty Seats: 
+                                    @if (@e.Seats == 0)
+                                    {
+                                        <span class="badge rounded-pill bg-danger">All tickets sold</span>
+                                    }
+                                    else
+                                    {
+                                        @e.Seats
+                                    }
+                                    </li>
                             </ul>
                         </div>
 
