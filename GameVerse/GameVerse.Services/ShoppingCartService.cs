@@ -9,6 +9,7 @@ using GameVerse.Web.ViewModels.ShoppingCart;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.Runtime.InteropServices.JavaScript;
+using QRCoder;
 using static GameVerse.Common.ApplicationConstants.EventConstants;
 
 namespace GameVerse.Services
@@ -18,7 +19,8 @@ namespace GameVerse.Services
         IGenericRepository<Game, Guid> gameRespository,
         IGenericRepository<Event, Guid> eventRepository,
         IGenericRepository<EventRegistration, object> eventRegistrationRepository,
-        IGenericRepository<UserBoughtGame, object> userBoughtGamesRepository
+        IGenericRepository<UserBoughtGame, object> userBoughtGamesRepository,
+        IQrCodeService qrCodeService
         ) : BaseService, IShoppingCartService
     {
 
@@ -27,6 +29,7 @@ namespace GameVerse.Services
         private readonly IGenericRepository<Event, Guid> _eventRepository = eventRepository;
         private readonly IGenericRepository<EventRegistration, object> _eventRegistrationRepository = eventRegistrationRepository;
         private readonly IGenericRepository<UserBoughtGame, object> _userBoughtGamesRepository = userBoughtGamesRepository;
+        private readonly IQrCodeService _qrCodeService = qrCodeService;
 
         public async Task<ShoppingCartViewModel> GetShoppingCartItemsAsync(string userId)
         {
@@ -255,7 +258,7 @@ namespace GameVerse.Services
 
                     if (game == null || game.QuantityInStock < gameCartItem.Quantity || game.QuantityInStock == 0)
                     {
-                        throw new InvalidOperationException("Not enough quantity in stock for game: " + gameCartItem.GameId);
+                        throw new InvalidOperationException("Not enough quantity in stock for game: " + gameCartItem.Game.Title);
                     }
 
                     //Decrease game quantity in stock. Is quantity drops to zero set game IsDeleted to true
@@ -284,7 +287,7 @@ namespace GameVerse.Services
                     Event? e = await _eventRepository.FirstOrDefaultAsync(e =>
                         e.Id == eventCartItem.EventId && e.IsDeleted == false);
 
-                    if (e == null || e.Seats < eventCartItem.TicketQuantity)
+                    if (e == null || e.Seats < eventCartItem.TicketQuantity || e.Seats == 0)
                     {
                         throw new InvalidOperationException("Not enough empty seats for event" + eventCartItem.EventId);
                     }
@@ -292,17 +295,16 @@ namespace GameVerse.Services
                     //Decrease the number of seats
                     e.Seats -= eventCartItem.TicketQuantity;
 
-                    if (e.Seats == 0)
-                    {
-                        e.IsDeleted = true;
-                    }
+                    string qrCodeData = $"EventId:{e.Id.ToString()};UserId:{userId};Date:{DateTime.Now}";
+                    string qrCodeAsBase64String = _qrCodeService.GenerateQrCode(qrCodeData);
 
                     EventRegistration eventRegistration = new EventRegistration()
                     {
                         UserId = Guid.Parse(userId),
                         EventId = eventCartItem.EventId,
                         RegistrationDate = DateTime.Now,
-                        TicketQuantity = eventCartItem.TicketQuantity
+                        TicketQuantity = eventCartItem.TicketQuantity,
+                        QrCode = qrCodeAsBase64String
                     };
 
                     await _eventRegistrationRepository.AddAsync(eventRegistration);
