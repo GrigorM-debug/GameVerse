@@ -9,8 +9,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
+    /// <summary>
+    /// Provides extension methods for configuring application services, identity, and database connections.
+    /// </summary>
     public static class ApplicationBuilderExtensions
     {
+        /// <summary>
+        /// Registers application services in the dependency injection container.
+        /// </summary>
+        /// <param name="services">The service collection to which the services will be added.</param>
+        /// <param name="config">The application configuration containing settings for services.</param>
+        /// <returns>
+        /// The updated <see cref="IServiceCollection"/> with the registered services.
+        /// </returns>
         public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration config)
         {
             services.AddScoped<IEventService, EventService>();
@@ -32,6 +43,14 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
+        /// <summary>
+        /// Configures and registers application identity services with custom settings for password policies and sign-in requirements.
+        /// </summary>
+        /// <param name="services">The service collection to which the identity services will be added.</param>
+        /// <param name="config">The application configuration containing identity settings.</param>
+        /// <returns>
+        /// The updated <see cref="IServiceCollection"/> with the registered identity services.
+        /// </returns>
         public static IServiceCollection AddApplicationIdentity(this IServiceCollection services, IConfiguration config)
         {
             IConfigurationSection passwordSettings = config.GetSection("IdentitySettings:Password");
@@ -52,6 +71,17 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
+        /// <summary>
+        /// Configures and registers the application's database context using a SQL Server connection.
+        /// </summary>
+        /// <param name="services">The service collection to which the database context will be added.</param>
+        /// <param name="config">The application configuration containing the connection string.</param>
+        /// <returns>
+        /// The updated <see cref="IServiceCollection"/> with the registered database context.
+        /// </returns>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown if the connection string for the database is not found in the configuration.
+        /// </exception>
         public static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration config)
         {
             var connectionString = config.GetConnectionString("SqlServer") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
