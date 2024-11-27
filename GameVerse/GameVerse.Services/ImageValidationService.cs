@@ -17,8 +17,13 @@ namespace GameVerse.Services
 
         public async Task<bool> ValidateImageWithApi(string imageUrl)
         {
-            string apiUrl = "https://nsfw-images-detection-and-classification.p.rapidapi.com/adult-content";
-            string apiKey = "eef38abf0emsh6661c57d682594fp10ed0cjsn841fc5b63cfb";
+            //string apiUrl = "https://nsfw-images-detection-and-classification.p.rapidapi.com/adult-content";
+            //string apiKey = "eef38abf0emsh6661c57d682594fp10ed0cjsn841fc5b63cfb";
+
+            IConfiguration nfwsImageDetectionApiSection = configuration.GetSection("NSFWImageDetectionApi");
+
+            string apiKey = nfwsImageDetectionApiSection["ApiKey"];
+            string apiUrl = nfwsImageDetectionApiSection["ApiUrl"];
 
             using (HttpClient client = new HttpClient())
             {
