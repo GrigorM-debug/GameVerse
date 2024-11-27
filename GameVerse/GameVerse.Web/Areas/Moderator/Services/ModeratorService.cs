@@ -9,11 +9,23 @@ using static GameVerse.Common.ApplicationConstants.EventConstants;
 
 namespace GameVerse.Web.Areas.Moderator.Services
 {
+    /// <summary>
+    /// Provides functionality for retrieving and managing information about games and events created by moderators.
+    /// </summary>
     public class ModeratorService(
         IGenericRepository<Data.Models.ApplicationUsers.Moderator, Guid> moderatorRepository
         ) : IModeratorService
     {
         private readonly IGenericRepository<Data.Models.ApplicationUsers.Moderator, Guid> _moderatorRepository = moderatorRepository;
+
+        /// <summary>
+        /// Retrieves the last 5 events created by the specified moderator.
+        /// </summary>
+        /// <param name="userId">The unique ID of the moderator.</param>
+        /// <returns>
+        /// A task containing a collection of <see cref="ModeratorEventIndexViewModel"/> 
+        /// representing the last 5 events created by the moderator.
+        /// </returns>
         public async Task<IEnumerable<ModeratorEventIndexViewModel>> GetLast5CreatedEventsAsync(string userId)
         {
             IEnumerable<ModeratorEventIndexViewModel> moderatorLast5CreatedEvents = await _moderatorRepository
@@ -37,6 +49,13 @@ namespace GameVerse.Web.Areas.Moderator.Services
             return moderatorLast5CreatedEvents;
         }
 
+        /// <summary>
+        /// Retrieves the total number of games created by the specified moderator.
+        /// </summary>
+        /// <param name="userId">The unique ID of the moderator.</param>
+        /// <returns>
+        /// A task containing the total count of games created by the moderator.
+        /// </returns>
         public async Task<int> TotalGamesCreatedAsync(string userId)
         {
             int totalGamesCreatedCount = await _moderatorRepository
@@ -48,6 +67,13 @@ namespace GameVerse.Web.Areas.Moderator.Services
             return totalGamesCreatedCount;
         }
 
+        /// <summary>
+        /// Retrieves the total number of events created by the specified moderator.
+        /// </summary>
+        /// <param name="userId">The unique ID of the moderator.</param>
+        /// <returns>
+        /// A task containing the total count of events created by the moderator.
+        /// </returns>
         public async Task<int> TotalEventsCreatedAsync(string userId)
         {
             int totalEventsCreated = await _moderatorRepository
@@ -59,6 +85,14 @@ namespace GameVerse.Web.Areas.Moderator.Services
             return totalEventsCreated;
         }
 
+        /// <summary>
+        /// Retrieves the last 5 games created by the specified moderator.
+        /// </summary>
+        /// <param name="userId">The unique ID of the moderator.</param>
+        /// <returns>
+        /// A task containing a collection of <see cref="ModeratorGameIndexViewModel"/> 
+        /// representing the last 5 games created by the moderator.
+        /// </returns>
         public async Task<IEnumerable<ModeratorGameIndexViewModel>> GetLast5CreatedGamesAsync(string userId)
         {
             IEnumerable<ModeratorGameIndexViewModel> moderatorsLast5CreatedGames = await _moderatorRepository
