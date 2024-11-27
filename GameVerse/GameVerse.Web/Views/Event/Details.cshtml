@@ -34,7 +34,16 @@
                 <p><b>Publisher:</b> @Model.PublisherName</p>
                 <p><b>Start Date:</b> @Model.StartDate</p>
                 <p><b>End Date:</b> @Model.EndDate</p>
-                <p><b>Seats:</b> @Model.Seats</p>
+                <p><b>Empty Seats:</b> 
+                    @if (@Model.Seats == 0)
+                    {
+                        <span class="badge rounded-pill bg-danger">All tickets sold</span>
+                    }
+                    else
+                    {
+                        @Model.Seats
+                    }
+                </p>
                 <p class="mb-0"><b>Ticket Price: </b>@Model.TicketPrice</p>
             </div>
 
@@ -42,7 +51,7 @@
                 <a type="button" class="btn btn-light btn-lg m-2 w-auto mx-2" asp-area="" asp-controller="Event" asp-action="Index">Back</a>
 
                 @* For logged user *@
-                @if (User?.Identity?.IsAuthenticated == true && !User.IsInRole("Moderator") && !User.IsInRole("Admin"))
+                @if (User?.Identity?.IsAuthenticated == true && !User.IsInRole("Moderator") && !User.IsInRole("Admin") && @Model.Seats > 0)
                 {
                     <form asp-area="" asp-controller="ShoppingCart" asp-action="AddEventToCart" asp-route-eventId="@Model.Id" method="post" class="">
                         <input type="submit" class="btn btn-success btn-lg m-2" data-mdb-ripple-init value="Buy Ticket" />
