@@ -27,6 +27,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddScoped<GameVerse.Web.Areas.Moderator.Services.Interfaces.IModeratorService,
                     GameVerse.Web.Areas.Moderator.Services.ModeratorService>();
             services.AddScoped<IImageValidationService, ImageValidationService>();
+            services.AddScoped<IQrCodeService, QrCodeService>();
 
             return services;
         }
