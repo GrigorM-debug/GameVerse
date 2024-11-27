@@ -20,23 +20,27 @@ using static GameVerse.Common.ApplicationConstants;
 
 namespace GameVerse.Services
 {
-    public class GameService : IGameService
+    /// <summary>
+    /// Provides functionality for managing games, including adding, editing, deleting, and retrieving game details.
+    /// </summary>
+    public class GameService(
+        IGenericRepository<Game, Guid> gameRepository,
+        IGenericRepository<Genre, Guid> genreRepository,
+        IGenericRepository<Platform, Guid> platformRepository,
+        IGenericRepository<Restriction, Guid> restrictionRepository)
+        : IGameService
     {
-        private readonly IGenericRepository<Game, Guid> _gameRepository;
+        private readonly IGenericRepository<Game, Guid> _gameRepository = gameRepository;
         private readonly IGenericRepository<Genre, Guid>
-            _genreRepository;
-        private readonly IGenericRepository<Platform, Guid> _platformRepository;
-        private readonly IGenericRepository<Restriction, Guid> _restrictionRepository;
-      
-        private readonly GameVerseDbContext _context;
-        public GameService(IGenericRepository<Game, Guid> gameRepository, IGenericRepository<Genre, Guid> genreRepository, IGenericRepository<Platform, Guid> platformRepository, IGenericRepository<Restriction, Guid> restrictionRepository)
-        {
-            _gameRepository = gameRepository;
             _genreRepository = genreRepository;
-            _platformRepository = platformRepository;
-            _restrictionRepository = restrictionRepository;
-        }
+        private readonly IGenericRepository<Platform, Guid> _platformRepository = platformRepository;
+        private readonly IGenericRepository<Restriction, Guid> _restrictionRepository = restrictionRepository;
 
+        /// <summary>
+        /// Retrieves a game by its ID if it exists and is not marked as deleted.
+        /// </summary>
+        /// <param name="gameId">The unique ID of the game.</param>
+        /// <returns>The game if found; otherwise, <c>null</c>.</returns>
         public async Task<Game> GetGameByIdAsync(string gameId)
         {
             Game? game = await _gameRepository
@@ -46,6 +50,11 @@ namespace GameVerse.Services
             return game;
         }
 
+        /// <summary>
+        /// Retrieves a game by its ID with tracking enabled.
+        /// </summary>
+        /// <param name="gameId">The unique ID of the game.</param>
+        /// <returns>The tracked game if found; otherwise, <c>null</c>.</returns>
         public async Task<Game> GetGameByIdAsTrackingAsync(string gameId)
         {
             Game? game =
@@ -54,6 +63,10 @@ namespace GameVerse.Services
             return game;
         }
 
+        /// <summary>
+        /// Prepares the necessary data for adding a new game.
+        /// </summary>
+        /// <returns>A view model containing the required data for adding a game.</returns
         public async Task<GameInputViewModel> AddGameGetAsync()
         {
             IEnumerable<GenreSelectList> genres = await GetGenresAsync();
@@ -71,6 +84,13 @@ namespace GameVerse.Services
             return model;
         }
 
+        /// <summary>
+        /// Adds a new game to the system.
+        /// </summary>
+        /// <param name="inputModel">The data for the new game.</param>
+        /// <param name="createdOn">The date the game was created.</param>
+        /// <param name="moderatorId">The ID of the moderator adding the game.</param>
+        /// <returns>The ID of the newly created game.</returns>
         public async Task<string> AddGamePostAsync(GameInputViewModel inputModel, DateTime createdOn, string moderatorId)
         {
             Game game = new Game()
@@ -123,6 +143,13 @@ namespace GameVerse.Services
             return game.Id.ToString();
         }
 
+        /// <summary>
+        /// Retrieves game details for editing.
+        /// </summary>
+        /// <param name="gameId">The ID of the game to edit.</param>
+        /// <param name="moderatorId">The ID of the moderator performing the edit.</param>
+        /// <param name="isAdmin">Indicates whether the user is an admin.</param>
+        /// <returns>A view model containing the game details for editing.</returns>
         public async Task<GameInputViewModel> EditGameGetAsync(string gameId, string moderatorId, bool isAdmin)
         {
             Game? game = await _gameRepository
@@ -161,6 +188,15 @@ namespace GameVerse.Services
             return model;
         }
 
+        /// <summary>
+        /// Updates a game with new details.
+        /// </summary>
+        /// <param name="inputModel">The updated game data.</param>
+        /// <param name="createdOn">The modification date.</param>
+        /// <param name="gameId">The ID of the game being updated.</param>
+        /// <param name="moderatorId">The ID of the moderator performing the update.</param>
+        /// <param name="isAdmin">Indicates whether the user is an admin.</param>
+        /// <returns>The ID of the updated game.</returns>
         public async Task<string> EditGamePostAsync(GameInputViewModel inputModel, DateTime createdOn,string gameId, string moderatorId, bool isAdmin)
         {
             Game? game = await _gameRepository
@@ -257,6 +293,13 @@ namespace GameVerse.Services
             return game.Id.ToString();
         }
 
+        /// <summary>
+        /// Retrieves game details for deletion confirmation.
+        /// </summary>
+        /// <param name="gameId">The ID of the game to delete.</param>
+        /// <param name="moderatorId">The ID of the moderator performing the deletion.</param>
+        /// <param name="isAdmin">Indicates whether the user is an admin.</param>
+        /// <returns>A view model containing the game details for deletion.</returns>
         public async Task<GameDeleteViewModel> DeleteGameGetAsync(string gameId, string moderatorId, bool isAdmin)
         {
             Game? game = await _gameRepository
@@ -276,6 +319,13 @@ namespace GameVerse.Services
             return model;
         }
 
+        /// <summary>
+        /// Deletes a game from the system.
+        /// </summary>
+        /// <param name="gameId">The ID of the game to delete.</param>
+        /// <param name="moderatorId">The ID of the moderator performing the deletion.</param>
+        /// <param name="isAdmin">Indicates whether the user is an admin.</param>
+        /// <returns>The ID of the deleted game.</returns>
         public async Task<string> DeleteGamePostAsync(string gameId, string moderatorId, bool isAdmin)
         {
             Game? game = await _gameRepository
@@ -292,6 +342,11 @@ namespace GameVerse.Services
             return game.Id.ToString();
         }
 
+        /// <summary>
+        /// Checks if a game exists by its ID.
+        /// </summary>
+        /// <param name="gameId">The unique ID of the game.</param>
+        /// <returns><c>true</c> if the game exists; otherwise, <c>false</c>.</returns>
         public async Task<bool> GameExistByIdAsync(string gameId)
         {
             Game? game = await _gameRepository
@@ -306,6 +361,11 @@ namespace GameVerse.Services
             return true;
         }
 
+        /// <summary>
+        /// Retrieves detailed information about a specific game.
+        /// </summary>
+        /// <param name="gameId">The ID of the game.</param>
+        /// <returns>A view model containing the game details.</returns>
         public async Task<GameDetailsViewModel> GetGameDetailsByIdAsync(string gameId)
         {
             Game? g = await _gameRepository
@@ -370,6 +430,12 @@ namespace GameVerse.Services
             return gameDetailsViewModel;
         }
 
+        /// <summary>
+        /// Checks if a specific moderator is associated with a game's publisher.
+        /// </summary>
+        /// <param name="moderatorId">The ID of the moderator.</param>
+        /// <param name="gameId">The ID of the game.</param>
+        /// <returns><c>true</c> if the moderator is associated with the game's publisher; otherwise, <c>false</c>.</returns>
         public async Task<bool> HasPublisherWithIdAsync(string moderatorId, string gameId)
         {
             Game? game = await _gameRepository.AllAsReadOnly().FirstOrDefaultAsync(g =>
@@ -383,6 +449,12 @@ namespace GameVerse.Services
             return true;
         }
 
+        /// <summary>
+        /// Checks if a game exists with the specified title and type.
+        /// </summary>
+        /// <param name="title">The title of the game.</param>
+        /// <param name="type">The type of the game.</param>
+        /// <returns><c>true</c> if the game exists; otherwise, <c>false</c>.</returns>
         public async Task<bool> GameExistByTitleAndTypeAsync(string title, GameType type)
         {
             Game? game = await _gameRepository.AllAsReadOnly()
@@ -396,6 +468,15 @@ namespace GameVerse.Services
             return true;
         }
 
+        /// <summary>
+        /// Retrieves a paginated list of games, with optional sorting and filtering.
+        /// </summary>
+        /// <param name="currentPage">The current page number.</param>
+        /// <param name="gamesPerPage">The number of games per page.</param>
+        /// <param name="sortOrder">The sorting order of the games.</param>
+        /// <param name="searchString">An optional search term to filter games.</param>
+        /// <param name="gameSelectedGameTypeSortOrder">An optional filter for the game type.</param>
+        /// <returns>A collection of games as view models.</returns>
         public async Task<IEnumerable<GameIndexViewModel>> GetAllGamesAsync(int currentPage, int gamesPerPage, EntitySortOrder sortOrder, string? searchString, GameType? gameSelectedGameTypeSortOrder)
         {
             IQueryable<Game> query =  _gameRepository
@@ -434,6 +515,10 @@ namespace GameVerse.Services
             return gameIndexViewModels;
         }
 
+        /// <summary>
+        /// Retrieves the last three added games.
+        /// </summary>
+        /// <returns>A collection of the last three games as view models.</returns>
         public async Task<IEnumerable<GameIndexViewModel>> GetLast3GamesAsync()
         {
             IEnumerable<GameIndexViewModel> last3Games = await _gameRepository
@@ -455,6 +540,10 @@ namespace GameVerse.Services
             return last3Games;
         }
 
+        /// <summary>
+        /// Retrieves the total number of games in the system.
+        /// </summary>
+        /// <returns>The total number of games.</returns>
         public async Task<int> GetTotalGamesCountAsync()
         {
             int totalGamesCount = await _gameRepository.AllAsReadOnly().CountAsync(g => g.IsDeleted == false);
@@ -462,6 +551,10 @@ namespace GameVerse.Services
             return totalGamesCount;
         }
 
+        /// <summary>
+        /// Retrieves a collection of all available game types.
+        /// </summary>
+        /// <returns>A collection of game type view models.</returns>
         public IEnumerable<GameTypeViewModel> GetGameTypes()
         {
             IEnumerable<GameTypeViewModel> gameTypes = Enum
@@ -476,6 +569,10 @@ namespace GameVerse.Services
             return gameTypes;
         }
 
+        /// <summary>
+        /// Retrieves a list of all available genres for games.
+        /// </summary>
+        /// <returns>A collection of genres as select list items.</returns>
         public async Task<IEnumerable<GenreSelectList>> GetGenresAsync()
         {
             IEnumerable<GenreSelectList> genres = await _genreRepository
@@ -489,6 +586,10 @@ namespace GameVerse.Services
             return genres;
         }
 
+        /// <summary>
+        /// Retrieves a list of all available platforms for games.
+        /// </summary>
+        /// <returns>A collection of platforms as select list items.</returns>
         public async Task<IEnumerable<PlatformSelectList>> GetPlatformsAsync()
         {
             IEnumerable<PlatformSelectList> platforms = await _platformRepository
@@ -503,6 +604,10 @@ namespace GameVerse.Services
             return platforms;
         }
 
+        /// <summary>
+        /// Retrieves a list of all available age restrictions for games.
+        /// </summary>
+        /// <returns>A collection of restrictions as select list items.</returns>
         public async Task<IEnumerable<RestrictionSelectList>> GetRestrictionsAsync()
         {
             IEnumerable<RestrictionSelectList> restrictions = await _restrictionRepository
@@ -517,6 +622,12 @@ namespace GameVerse.Services
             return restrictions;
         }
 
+        /// <summary>
+        /// Updates the quantity of a game in stock.
+        /// </summary>
+        /// <param name="gameId">The ID of the game.</param>
+        /// <param name="quantityInStock">The new quantity to add to stock.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         public async Task UpdateGameQuantityInStockAsync(string gameId, int quantityInStock)
         {
             Game? game =
