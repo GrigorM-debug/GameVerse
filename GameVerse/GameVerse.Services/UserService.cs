@@ -11,6 +11,9 @@ using static GameVerse.Common.ApplicationConstants.EventConstants;
 
 namespace GameVerse.Services
 {
+    /// <summary>
+    /// Provides services for retrieving user-specific data, including purchased games and event registrations.
+    /// </summary>
     public class UserService(
         IGenericRepository<UserBoughtGame, object> userBoughtGamesRepository,
         IGenericRepository<EventRegistration, object> eventRegistrationsRepository
@@ -19,6 +22,14 @@ namespace GameVerse.Services
         private readonly IGenericRepository<UserBoughtGame, object> _userBoughtGames = userBoughtGamesRepository;
         private readonly IGenericRepository<EventRegistration, object> _eventRegistrationsRepository = eventRegistrationsRepository;
 
+        /// <summary>
+        /// Retrieves the list of games purchased by the specified user.
+        /// </summary>
+        /// <param name="userId">The unique ID of the user.</param>
+        /// <returns>
+        /// A task containing a collection of <see cref="UserBoughtGamesViewModel"/> 
+        /// representing the user's purchased games.
+        /// </returns>
         public async Task<IEnumerable<UserBoughtGamesViewModel>> GetUserBoughtGamesAsync(string userId)
         {
             IEnumerable<UserBoughtGamesViewModel> userBoughtGamesViewModels = await _userBoughtGames
@@ -38,6 +49,14 @@ namespace GameVerse.Services
             return userBoughtGamesViewModels;
         }
 
+        /// <summary>
+        /// Retrieves the list of event registrations for the specified user.
+        /// </summary>
+        /// <param name="userId">The unique ID of the user.</param>
+        /// <returns>
+        /// A task containing a collection of <see cref="UserEventRegistrationsViewModel"/> 
+        /// representing the user's event registrations.
+        /// </returns>
         public async Task<IEnumerable<UserEventRegistrationsViewModel>> GetUserEventRegistrationsAsync(string userId)
         {
             IEnumerable<UserEventRegistrationsViewModel> eventRegistrationsViewModels =
