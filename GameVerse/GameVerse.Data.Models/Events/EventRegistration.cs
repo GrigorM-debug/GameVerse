@@ -24,5 +24,8 @@ namespace GameVerse.Data.Models.Events
 
         [Required]
         public int TicketQuantity { get; set; }
+
+        [Required] 
+        public string QrCode { get; set; } = null!;
     }
 }
