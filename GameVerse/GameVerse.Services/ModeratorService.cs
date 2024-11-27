@@ -8,10 +8,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GameVerse.Services
 {
+    /// <summary>
+    /// Provides services for managing moderators, including checking their existence, 
+    /// retrieving IDs, and updating counts for created games and events.
+    /// </summary>
     public class ModeratorService(IGenericRepository<Moderator, Guid> moderatorRepository) : IModeratorService
     {
         private readonly IGenericRepository<Moderator, Guid> _moderatorRepository = moderatorRepository;
 
+        /// <summary>
+        /// Retrieves the moderator ID associated with the specified user ID.
+        /// </summary>
+        /// <param name="userId">The unique ID of the user.</param>
+        /// <returns>
+        /// A task containing the moderator ID if found; otherwise, <c>null</c>.
+        /// </returns>
         public async Task<string?> GetModeratorIdByUserIdAsync(string? userId)
         {
             Moderator? moderator = await _moderatorRepository
@@ -26,6 +37,11 @@ namespace GameVerse.Services
             return moderator.Id.ToString();
         }
 
+        /// <summary>
+        /// Increases the total number of events created by the specified moderator.
+        /// </summary>
+        /// <param name="moderatorId">The unique ID of the moderator.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         public async Task InCreaseCreatedTotalEventsCount(string moderatorId)
         {
             Moderator? moderator = await _moderatorRepository.FirstOrDefaultAsync(m => m.Id.ToString() == moderatorId);
@@ -38,6 +54,11 @@ namespace GameVerse.Services
             }
         }
 
+        /// <summary>
+        /// Increases the total number of games created by the specified moderator.
+        /// </summary>
+        /// <param name="moderatorId">The unique ID of the moderator.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         public async Task IncreaseCreatedTotalGamesCount(string moderatorId)
         {
             Moderator? moderator = await _moderatorRepository.FirstOrDefaultAsync(m => m.Id.ToString() == moderatorId);
@@ -50,6 +71,11 @@ namespace GameVerse.Services
             }
         }
 
+        /// <summary>
+        /// Decreases the total number of games created by the specified moderator.
+        /// </summary>
+        /// <param name="moderatorId">The unique ID of the moderator.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         public async Task DecreaseCreatedTotalGamesCount(string moderatorId)
         {
             Moderator? moderator = await _moderatorRepository.FirstOrDefaultAsync(m => m.Id.ToString() == moderatorId);
@@ -62,6 +88,11 @@ namespace GameVerse.Services
             }
         }
 
+        /// <summary>
+        /// Decreases the total number of events created by the specified moderator.
+        /// </summary>
+        /// <param name="moderatorId">The unique ID of the moderator.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         public async Task DecreaseCreatedTotalEventsCount(string moderatorId)
         {
             Moderator? moderator = await _moderatorRepository.FirstOrDefaultAsync(m => m.Id.ToString() == moderatorId);
@@ -74,7 +105,13 @@ namespace GameVerse.Services
             }
         }
 
-
+        /// <summary>
+        /// Checks if a moderator exists for the specified user ID.
+        /// </summary>
+        /// <param name="userId">The unique ID of the user.</param>
+        /// <returns>
+        /// A task containing a <c>true</c> value if the moderator exists; otherwise, <c>false</c>.
+        /// </returns>
         public async Task<bool> ModeratorExistByUserIdAsync(string userId)
         {
             Moderator? moderator = await _moderatorRepository
@@ -88,7 +125,6 @@ namespace GameVerse.Services
 
             return true;
         }
-
 
     }
 }
