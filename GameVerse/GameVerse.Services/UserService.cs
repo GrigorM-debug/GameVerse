@@ -53,10 +53,7 @@ namespace GameVerse.Services
                             e.RegistrationDate.ToString(EventDateTimeFormat, CultureInfo.InvariantCulture),
                         TicketQuantity = e.TicketQuantity,
                         Price = (e.TicketQuantity * e.Event.TicketPrice).ToString("C"),
-                        EventStartDate = e.Event.StartDate.ToString(EventDateTimeFormat, CultureInfo.InvariantCulture),
-                        EventEndDate = e.Event.EndDate.ToString(EventDateTimeFormat, CultureInfo.InvariantCulture),
-                        Longitude = e.Event.Longitude,
-                        Latitude = e.Event.Latitude
+                        QrCodeAsBase64String = e.QrCode
                     }).ToListAsync();
 
             return eventRegistrationsViewModels;
