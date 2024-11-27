@@ -15,13 +15,6 @@ namespace GameVerse.Web.ViewModels.Game.UserPagesViewModels
 
         public int TicketQuantity { get; set; }
 
-        public string EventStartDate { get; set; } = null!;
-
-        public string EventEndDate { get; set; } = null!;
-
-        public double Latitude { get; set; }
-
-        public double Longitude { get; set; }
-
+        public string QrCodeAsBase64String { get; set; } = null!;
     }
 }
