@@ -14,6 +14,10 @@ using static GameVerse.Common.ApplicationConstants.EventConstants;
 
 namespace GameVerse.Services
 {
+    /// <summary>
+    /// Provides functionality for managing shopping carts, including adding, removing, 
+    /// and purchasing games and events, as well as handling cart operations for users.
+    /// </summary>
     public class ShoppingCartService(
         IGenericRepository<Cart, Guid> cartRepository,
         IGenericRepository<Game, Guid> gameRespository,
@@ -31,6 +35,13 @@ namespace GameVerse.Services
         private readonly IGenericRepository<UserBoughtGame, object> _userBoughtGamesRepository = userBoughtGamesRepository;
         private readonly IQrCodeService _qrCodeService = qrCodeService;
 
+        /// <summary>
+        /// Retrieves the shopping cart items for the specified user.
+        /// </summary>
+        /// <param name="userId">The unique ID of the user.</param>
+        /// <returns>
+        /// A task containing a <see cref="ShoppingCartViewModel"/> with the details of the shopping cart.
+        /// </returns>
         public async Task<ShoppingCartViewModel> GetShoppingCartItemsAsync(string userId)
         {
             Cart? cart = await GetOrCreateUserCart(userId);
@@ -71,6 +82,13 @@ namespace GameVerse.Services
             return model;
         }
 
+        /// <summary>
+        /// Adds a game to the user's shopping cart.
+        /// </summary>
+        /// <param name="gameId">The unique ID of the game.</param>
+        /// <param name="userId">The unique ID of the user.</param>
+        /// <param name="game">The game object to add to the cart.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         public async Task AddGameToCartAsync(string gameId, string userId, Game game)
         {
             Cart cart = await GetOrCreateUserCart(userId);
@@ -109,6 +127,13 @@ namespace GameVerse.Services
             await _cartRepository.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Adds an event to the user's shopping cart.
+        /// </summary>
+        /// <param name="eventId">The unique ID of the event.</param>
+        /// <param name="userId">The unique ID of the user.</param>
+        /// <param name="e">The event object to add to the cart.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         public async Task AddEventToCartAsync(string eventId, string userId, Event e)
         {
             Cart cart = await GetOrCreateUserCart(userId);
@@ -146,6 +171,13 @@ namespace GameVerse.Services
             await _cartRepository.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Removes a game from the user's shopping cart.
+        /// </summary>
+        /// <param name="gameId">The unique ID of the game to remove.</param>
+        /// <param name="userId">The unique ID of the user.</param>
+        /// <param name="gamePrice">The price of the game being removed.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         public async Task RemoveGameFromCartAsync(string gameId, string userId, decimal gamePrice)
         {
             Cart cart = await GetOrCreateUserCart(userId);
@@ -164,6 +196,13 @@ namespace GameVerse.Services
             await _cartRepository.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Removes an event from the user's shopping cart.
+        /// </summary>
+        /// <param name="eventId">The unique ID of the event to remove.</param>
+        /// <param name="userId">The unique ID of the user.</param>
+        /// <param name="eventTicketPrice">The price of the event ticket being removed.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         public async Task RemoveEventFromCartAsync(string eventId, string userId, decimal eventTicketPrice)
         {
             Cart cart = await GetOrCreateUserCart(userId);
@@ -182,6 +221,11 @@ namespace GameVerse.Services
             await _cartRepository.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Retrieves the user's shopping cart or creates a new one if it does not exist.
+        /// </summary>
+        /// <param name="userId">The unique ID of the user.</param>
+        /// <returns>A task containing the <see cref="Cart"/> object for the user.</returns>
         public async Task<Cart> GetOrCreateUserCart(string userId)
         {
             Cart? cart = await _cartRepository
@@ -209,6 +253,14 @@ namespace GameVerse.Services
             return cart;
         }
 
+        /// <summary>
+        /// Checks if a specific game exists in the user's shopping cart.
+        /// </summary>
+        /// <param name="gameId">The unique ID of the game.</param>
+        /// <param name="userId">The unique ID of the user.</param>
+        /// <returns>
+        /// A task containing <c>true</c> if the game exists in the shopping cart; otherwise, <c>false</c>.
+        /// </returns>
         public async Task<bool> GameItemExistInTheShoppingCart(string gameId, string userId)
         {
             Cart cart = await GetOrCreateUserCart(userId);
@@ -223,6 +275,14 @@ namespace GameVerse.Services
             return false;
         }
 
+        /// <summary>
+        /// Checks if a specific event exists in the user's shopping cart.
+        /// </summary>
+        /// <param name="eventId">The unique ID of the event.</param>
+        /// <param name="userId">The unique ID of the user.</param>
+        /// <returns>
+        /// A task containing <c>true</c> if the event exists in the shopping cart; otherwise, <c>false</c>.
+        /// </returns>
         public async Task<bool> EventItemExistInTheShoppingCart(string eventId, string userId)
         {
             Cart cart = await GetOrCreateUserCart(userId);
@@ -235,6 +295,15 @@ namespace GameVerse.Services
             }
             return false;
         }
+
+        /// <summary>
+        /// Purchases all items in the user's shopping cart.
+        /// </summary>
+        /// <param name="userId">The unique ID of the user.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown if the shopping cart is empty or an item cannot be purchased due to insufficient stock or seats.
+        /// </exception>
 
         public async Task PurchaseItemsInShoppingCart(string userId)
         {
@@ -342,6 +411,11 @@ namespace GameVerse.Services
             }
         }
 
+        /// <summary>
+        /// Clears all items from the specified shopping cart.
+        /// </summary>
+        /// <param name="cart">The shopping cart to clear.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         public async Task ClearCart(Cart cart)
         {
             if (cart.EventsCarts.Any())
