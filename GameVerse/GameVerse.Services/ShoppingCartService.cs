@@ -267,7 +267,7 @@ namespace GameVerse.Services
 
                     if (alreadyBoughtGameByUser == null)
                     {
-                        //Decrease game quantity in stock. Is quantity drops to zero set game IsDeleted to true
+                        //Decrease game quantity in stock. 
                         game.QuantityInStock -= gameCartItem.Quantity;
 
 
