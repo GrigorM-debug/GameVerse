@@ -35,7 +35,7 @@
                     <h5>@games[i].Title</h5>
                     <p><b>Created On: </b>@games[i].CreatedOn</p>
                     <p><b>Published By: </b>@games[i].Publisher</p>
-                    <a asp-controller="GameStore" asp-action="Details" asp-route-id="@games[i].Id" type="button" class="btn btn-primary">Details</a>
+                    <a asp-area="" asp-controller="GameStore" asp-action="Details" asp-route-id="@games[i].Id" type="button" class="btn btn-primary">Details</a>
                 </div>
             </div>
         }
