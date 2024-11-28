@@ -99,13 +99,14 @@ namespace GameVerse.Services
             {
                 if (gameItem.IsDeleted == false)
                 {
-                    cart.TotalPrice -= gameItem.Quantity * game.Price;
+                    cart.TotalPrice += gameItem.Quantity * game.Price;
                     gameItem.Quantity++;
                 }
                 else
                 {
                     gameItem.IsDeleted = false;
                     gameItem.Quantity = 1;
+                    cart.TotalPrice += game.Price * gameItem.Quantity;
                 }
             }
             else
@@ -119,10 +120,11 @@ namespace GameVerse.Services
                     AddedOn = DateTime.Now,
                 };
 
+                cart.TotalPrice += game.Price * gameItem.Quantity;
                 cart.GamesCarts.Add(gameItem);
             }
 
-            cart.TotalPrice += game.Price * gameItem.Quantity;
+            //cart.TotalPrice += game.Price * gameItem.Quantity;
 
             await _cartRepository.SaveChangesAsync();
         }
@@ -144,13 +146,14 @@ namespace GameVerse.Services
             {
                 if (eventItem.IsDeleted == false)
                 {
-                    cart.TotalPrice -= eventItem.TicketQuantity * e.TicketPrice;
+                    cart.TotalPrice += eventItem.TicketQuantity * e.TicketPrice;
                     eventItem.TicketQuantity++;
                 }
                 else
                 {
                     eventItem.IsDeleted = false;
                     eventItem.TicketQuantity = 1;
+                    cart.TotalPrice += eventItem.TicketQuantity * e.TicketPrice;
                 }
             }
             else
@@ -163,10 +166,10 @@ namespace GameVerse.Services
                     AddedOn = DateTime.Now
                 };
 
+                cart.TotalPrice += eventItem.TicketQuantity * e.TicketPrice;
+
                 cart.EventsCarts.Add(eventItem);
             }
-
-            cart.TotalPrice += eventItem.TicketQuantity * e.TicketPrice;
 
             await _cartRepository.SaveChangesAsync();
         }
@@ -354,6 +357,8 @@ namespace GameVerse.Services
                     {
                         alreadyBoughtGameByUser.Quantity = gameCartItem.Quantity;
                         alreadyBoughtGameByUser.BoughtOn = DateTime.Now;
+
+                        game.QuantityInStock -= gameCartItem.Quantity;
                     }
 
                     await _userBoughtGamesRepository.SaveChangesAsync();
@@ -401,6 +406,7 @@ namespace GameVerse.Services
                         existingEventRegistration.TicketQuantity = eventCartItem.TicketQuantity;
                         existingEventRegistration.RegistrationDate = DateTime.Now;
                         existingEventRegistration.QrCode = qrCodeAsBase64String;
+                        e.Seats -= eventCartItem.TicketQuantity;
                     }
 
                     
@@ -433,6 +439,8 @@ namespace GameVerse.Services
                     gameItem.IsDeleted = true;
                 }
             }
+
+            cart.TotalPrice = 0;
 
             await _cartRepository.SaveChangesAsync();
         }
