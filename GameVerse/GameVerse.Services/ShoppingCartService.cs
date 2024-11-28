@@ -189,12 +189,12 @@ namespace GameVerse.Services
 
             gameItem.Quantity--;
 
+            cart.TotalPrice -= gamePrice;
+
             if (gameItem.Quantity < 1)
             {
                 gameItem.IsDeleted = true;
             }
-
-            cart.TotalPrice -= gameItem.Quantity * gamePrice;
 
             await _cartRepository.SaveChangesAsync();
         }
@@ -214,12 +214,12 @@ namespace GameVerse.Services
 
             eventItem.TicketQuantity--;
 
+            cart.TotalPrice -= eventTicketPrice;
+
             if (eventItem.TicketQuantity < 1)
             {
                 eventItem.IsDeleted = true;
             }
-
-            cart.TotalPrice -= eventItem.TicketQuantity * eventTicketPrice;
 
             await _cartRepository.SaveChangesAsync();
         }
