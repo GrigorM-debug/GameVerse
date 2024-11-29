@@ -96,5 +96,9 @@ namespace GameVerse.Services.Interfaces
         /// <param name="cart">The shopping cart to clear.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
         Task ClearCart(Cart cart);
+
+        Task IncreaseGameQuantityAsync(string gameId, string userId);
+
+        Task DecreaseGameQuantityAsync(string gameId, string userId);
     }
 }
