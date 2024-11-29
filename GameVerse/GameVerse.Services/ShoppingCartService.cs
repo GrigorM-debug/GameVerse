@@ -199,6 +199,7 @@ namespace GameVerse.Services
             if (gameItem != null)
             {
                 gameItem.IsDeleted = true;
+                cart.TotalPrice -= gamePrice;
                 await _cartRepository.SaveChangesAsync();
             }
 
@@ -218,16 +219,23 @@ namespace GameVerse.Services
 
             EventCart? eventItem = cart.EventsCarts.FirstOrDefault(gc => gc.EventId.ToString() == eventId && gc.IsDeleted == false);
 
-            eventItem.TicketQuantity--;
+            //eventItem.TicketQuantity--;
 
-            cart.TotalPrice -= eventTicketPrice;
+            //cart.TotalPrice -= eventTicketPrice;
 
-            if (eventItem.TicketQuantity < 1)
+            //if (eventItem.TicketQuantity < 1)
+            //{
+            //    eventItem.IsDeleted = true;
+            //}
+
+            if (eventItem != null)
             {
                 eventItem.IsDeleted = true;
+                cart.TotalPrice -= eventTicketPrice;
+                await _cartRepository.SaveChangesAsync();
             }
 
-            await _cartRepository.SaveChangesAsync();
+            //await _cartRepository.SaveChangesAsync();
         }
 
         /// <summary>
@@ -482,6 +490,43 @@ namespace GameVerse.Services
                 {
                     gameItem.IsDeleted = true;
                     cart.TotalPrice -= gameItem.Game.Price;
+                }
+
+                await _cartRepository.SaveChangesAsync();
+            }
+        }
+
+        public async Task IncreaseEventItemQuantity(string eventId, string userId)
+        {
+            Cart cart = await GetOrCreateUserCart(userId);
+
+            EventCart? eventItem = cart.EventsCarts.FirstOrDefault(gc => gc.EventId.ToString() == eventId && gc.IsDeleted == false);
+
+            if (eventItem != null)
+            {
+                eventItem.TicketQuantity++;
+                cart.TotalPrice += eventItem.Event.TicketPrice;
+                await _cartRepository.SaveChangesAsync();
+            }
+        }
+
+        public async Task DecreaseEventItemQuantityAsync(string eventId, string userId)
+        {
+            Cart cart = await GetOrCreateUserCart(userId);
+
+            EventCart? eventItem = cart.EventsCarts.FirstOrDefault(gc => gc.EventId.ToString() == eventId);
+
+            if (eventItem != null && eventItem.IsDeleted == false)
+            {
+                if (eventItem.TicketQuantity > 1)
+                {
+                    eventItem.TicketQuantity--;
+                    cart.TotalPrice -= eventItem.Event.TicketPrice;
+                }
+                else
+                {
+                    eventItem.IsDeleted = true;
+                    cart.TotalPrice -= eventItem.Event.TicketPrice;
                 }
 
                 await _cartRepository.SaveChangesAsync();
