@@ -100,5 +100,9 @@ namespace GameVerse.Services.Interfaces
         Task IncreaseGameQuantityAsync(string gameId, string userId);
 
         Task DecreaseGameQuantityAsync(string gameId, string userId);
+
+        Task IncreaseEventItemQuantity(string eventId, string userId);
+
+        Task DecreaseEventItemQuantityAsync(string eventId, string userId);
     }
 }
