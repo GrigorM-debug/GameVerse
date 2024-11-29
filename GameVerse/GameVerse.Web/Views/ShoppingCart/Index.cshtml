@@ -6,6 +6,8 @@
     // var today = DateTime.Now.ToString("dd-MM-yyyy");
 }
 
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
 <div class="d-flex justify-content-between align-items-center mb-3" style="margin-top: 20px;">
     <h2>@ViewData["Title"]</h2>
 </div>
@@ -51,15 +53,25 @@
                                         <a asp-area="" asp-controller="GameStore" asp-action="Details" asp-route-id="@gameCartItem.Id" class="d-block text-dark">@gameCartItem.Title</a>
                                         <small>
                                             <span class="text-muted">Added On: @gameCartItem.AddedOn</span>
-                                            @* <span class="ui-product-color ui-product-color-sm align-text-bottom" style="background: #e81e2c;"></span> &nbsp;
-                                            <span class="text-muted">Size: </span> EU 37 &nbsp;
-                                            <span class="text-muted">Ships from: </span> China *@
+                                            
                                         </small>
                                     </div>
                                 </div>
                             </td>
                             <td class="text-right font-weight-semibold align-middle p-4">@gameCartItem.Price</td>
-                                <td class="align-middle p-4 text-center">@gameCartItem.Quantity</td>
+                            <td class="d-flex justify-content-between align-items-center">
+                                <form method="post" asp-area="" asp-action="DecreaseGameItemQuantity" asp-controller="ShoppingCart" asp-route-gameId="@gameCartItem.Id">
+                                    <button type="submit" class="btn btn-outline-secondary decrement">
+                                        <i class="fas fa-minus"></i> 
+                                    </button>
+                                </form>
+                                <p class="align-middle p-4 text-center mb-0">@gameCartItem.Quantity</p>
+                                <form method="post" asp-area="" asp-action="IncreaseGameItemQuantity" asp-controller="ShoppingCart" asp-route-gameId="@gameCartItem.Id">
+                                    <button type="submit" class="btn btn-outline-secondary increment">
+                                        <i class="fas fa-plus"></i> 
+                                    </button>
+                                </form>
+                            </td>
                             <td class="text-right font-weight-semibold align-middle p-4">@gameCartItem.TotalPrice</td>
                             <td class="text-center align-middle px-0">
                                         <form method="post" asp-area="" asp-controller="ShoppingCart" asp-action="RemoveGameFromCart" asp-route-gameId="@gameCartItem.Id">
