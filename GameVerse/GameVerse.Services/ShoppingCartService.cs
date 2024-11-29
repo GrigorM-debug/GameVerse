@@ -187,16 +187,22 @@ namespace GameVerse.Services
 
             GameCart? gameItem = cart.GamesCarts.FirstOrDefault(gc => gc.GameId.ToString() == gameId && gc.IsDeleted == false);
 
-            gameItem.Quantity--;
+            //gameItem.Quantity--;
 
-            cart.TotalPrice -= gamePrice;
+            //cart.TotalPrice -= gamePrice;
 
-            if (gameItem.Quantity < 1)
+            //if (gameItem.Quantity < 1)
+            //{
+            //    gameItem.IsDeleted = true;
+            //}
+
+            if (gameItem != null)
             {
                 gameItem.IsDeleted = true;
+                await _cartRepository.SaveChangesAsync();
             }
 
-            await _cartRepository.SaveChangesAsync();
+            //await _cartRepository.SaveChangesAsync();
         }
 
         /// <summary>
@@ -443,6 +449,43 @@ namespace GameVerse.Services
             cart.TotalPrice = 0;
 
             await _cartRepository.SaveChangesAsync();
+        }
+
+        public async Task IncreaseGameQuantityAsync(string gameId, string userId)
+        {
+            Cart cart = await GetOrCreateUserCart(userId);
+
+            GameCart? gameItem = cart.GamesCarts.FirstOrDefault(gc => gc.GameId.ToString() == gameId && gc.IsDeleted == false);
+
+            if (gameItem != null)
+            {
+                gameItem.Quantity++;
+                cart.TotalPrice += gameItem.Game.Price;
+                await _cartRepository.SaveChangesAsync();
+            }
+        }
+
+        public async Task DecreaseGameQuantityAsync(string gameId, string userId)
+        {
+            Cart cart = await GetOrCreateUserCart(userId);
+
+            GameCart? gameItem = cart.GamesCarts.FirstOrDefault(gc => gc.GameId.ToString() == gameId);
+
+            if (gameItem != null && !gameItem.IsDeleted)
+            {
+                if (gameItem.Quantity > 1)
+                {
+                    gameItem.Quantity--;
+                    cart.TotalPrice -= gameItem.Game.Price;
+                }
+                else
+                {
+                    gameItem.IsDeleted = true;
+                    cart.TotalPrice -= gameItem.Game.Price;
+                }
+
+                await _cartRepository.SaveChangesAsync();
+            }
         }
     }
 }
