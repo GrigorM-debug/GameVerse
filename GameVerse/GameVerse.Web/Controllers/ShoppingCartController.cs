@@ -291,5 +291,79 @@ namespace GameVerse.Web.Controllers
 
             return RedirectToAction("Index", "ShoppingCart", new { area = "" });
         }
+
+        [HttpPost]
+        public async Task<IActionResult> IncreaseEventItemQuantity(string eventId)
+        {
+            string? userId = User.GetId();
+
+            if (userId == null)
+            {
+                _notyf.Warning("You don't have the permission to do this");
+                return Unauthorized();
+            }
+
+            Event? e = await _eventService.GetEventByIdAsync(eventId);
+
+            if (e == null)
+            {
+                _notyf.Error("Event doesn't exist");
+                return NotFound();
+            }
+
+            bool isEventItemExistInTheShoppingCart =
+                await _shoppingCartService.EventItemExistInTheShoppingCart(eventId, userId);
+
+            if (!isEventItemExistInTheShoppingCart)
+            {
+                _notyf.Error("Item doesn't exist in your shopping cart");
+                return RedirectToAction("Index", "ShoppingCart", new { area = "" });
+            }
+
+            await _shoppingCartService.IncreaseEventItemQuantity(eventId, userId);
+
+            _notyf.Success("Event ticket quantity successfully increased");
+
+            Log.Information("User with ID {UserId} perform {Action} in {Controller}", userId, nameof(IncreaseEventItemQuantity), nameof(ShoppingCartController));
+
+            return RedirectToAction("Index", "ShoppingCart", new { area = "" });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DecreaseEventItemQuantity(string eventId)
+        {
+            string? userId = User.GetId();
+
+            if (userId == null)
+            {
+                _notyf.Warning("You don't have the permission to do this");
+                return Unauthorized();
+            }
+
+            Event? e = await _eventService.GetEventByIdAsync(eventId);
+
+            if (e == null)
+            {
+                _notyf.Error("Event doesn't exist");
+                return NotFound();
+            }
+
+            bool isEventItemExistInTheShoppingCart =
+                await _shoppingCartService.EventItemExistInTheShoppingCart(eventId, userId);
+
+            if (!isEventItemExistInTheShoppingCart)
+            {
+                _notyf.Error("Item doesn't exist in your shopping cart");
+                return RedirectToAction("Index", "ShoppingCart", new { area = "" });
+            }
+
+            await _shoppingCartService.DecreaseEventItemQuantityAsync(eventId, userId);
+
+            _notyf.Success("Event ticket quantity successfully decreased");
+
+            Log.Information("User with ID {UserId} perform {Action} in {Controller}", userId, nameof(DecreaseEventItemQuantity), nameof(ShoppingCartController));
+
+            return RedirectToAction("Index", "ShoppingCart", new { area = "" });
+        }
     }
 }
