@@ -1,10 +1,12 @@
-﻿using GameVerse.Data;
+﻿using AspNetCoreHero.ToastNotification.Notyf.Models;
+using GameVerse.Data;
 using GameVerse.Data.Models.ApplicationUsers;
 using GameVerse.Services.Interfaces;
 using GameVerse.Services;
 using GameVerse.Web.Areas.Administrator.Services.Interfaces;
 using GameVerse.Web.Areas.Administrator.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -39,6 +41,7 @@ namespace Microsoft.Extensions.DependencyInjection
                     GameVerse.Web.Areas.Moderator.Services.ModeratorService>();
             services.AddScoped<IImageValidationService, ImageValidationService>();
             services.AddScoped<IQrCodeService, QrCodeService>();
+            services.AddScoped<IEmailSender, EmailSender>();
 
             return services;
         }
@@ -55,15 +58,31 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             IConfigurationSection passwordSettings = config.GetSection("IdentitySettings:Password");
             IConfigurationSection signInSettings = config.GetSection("IdentitySettings:SignIn");
+            IConfiguration userSettings = config.GetSection("IdentitySettings:User");
+            IConfiguration lockoutSettings = config.GetSection("IdentitySettings:Lockout");
 
             services.AddDefaultIdentity<ApplicationUser>(options =>
                 {
+                    //Sign In 
                     options.SignIn.RequireConfirmedAccount = bool.Parse(signInSettings["RequireConfirmedAccount"]);
+                    options.SignIn.RequireConfirmedEmail = bool.Parse(signInSettings["RequireConfirmedEmail"]);
+                    
+                    //Password
                     options.Password.RequireDigit = bool.Parse(passwordSettings["RequireDigit"]);
                     options.Password.RequireNonAlphanumeric = bool.Parse(passwordSettings["RequireNonAlphanumeric"]);
                     options.Password.RequireLowercase = bool.Parse(passwordSettings["RequireLowercase"]); 
                     options.Password.RequireUppercase = bool.Parse(passwordSettings["RequireUppercase"]);
                     options.Password.RequiredLength = int.Parse(passwordSettings["RequiredLength"]);
+                    options.Password.RequiredUniqueChars = int.Parse(passwordSettings["RequiredUniqueChars"]);
+
+                    //User
+                    options.User.AllowedUserNameCharacters = userSettings["AllowedUserNameCharacters"];
+                    options.User.RequireUniqueEmail = bool.Parse(userSettings["RequireUniqueEmail"]);
+
+                    //Lockout
+                    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                    options.Lockout.MaxFailedAccessAttempts = int.Parse(lockoutSettings["MaxFailedAccessAttempts"]);
+                    options.Lockout.AllowedForNewUsers = bool.Parse(lockoutSettings["AllowedForNewUsers"]);
                 })
                 .AddRoles<IdentityRole<Guid>>()
                 .AddEntityFrameworkStores<GameVerseDbContext>();
