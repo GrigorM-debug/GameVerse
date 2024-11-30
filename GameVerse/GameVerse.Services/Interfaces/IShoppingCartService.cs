@@ -97,12 +97,36 @@ namespace GameVerse.Services.Interfaces
         /// <returns>A task representing the asynchronous operation.</returns>
         Task ClearCart(Cart cart);
 
+        /// <summary>
+        /// Increases the quantity of a specific game for a user.
+        /// </summary>
+        /// <param name="gameId">The unique identifier of the game.</param>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         Task IncreaseGameQuantityAsync(string gameId, string userId);
 
+        /// <summary>
+        /// Decreases the quantity of a specific game for a user.
+        /// </summary>
+        /// <param name="gameId">The unique identifier of the game.</param>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         Task DecreaseGameQuantityAsync(string gameId, string userId);
 
+        /// <summary>
+        /// Increases the quantity of a specific event item for a user.
+        /// </summary>
+        /// <param name="eventId">The unique identifier of the event item.</param>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         Task IncreaseEventItemQuantity(string eventId, string userId);
 
+        /// <summary>
+        /// Decreases the quantity of a specific event item for a user.
+        /// </summary>
+        /// <param name="eventId">The unique identifier of the event item.</param>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         Task DecreaseEventItemQuantityAsync(string eventId, string userId);
     }
 }

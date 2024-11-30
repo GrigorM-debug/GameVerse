@@ -459,6 +459,12 @@ namespace GameVerse.Services
             await _cartRepository.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Increases the quantity of a specific game for a user.
+        /// </summary>
+        /// <param name="gameId">The unique identifier of the game.</param>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         public async Task IncreaseGameQuantityAsync(string gameId, string userId)
         {
             Cart cart = await GetOrCreateUserCart(userId);
@@ -473,6 +479,12 @@ namespace GameVerse.Services
             }
         }
 
+        /// <summary>
+        /// Decreases the quantity of a specific game for a user.
+        /// </summary>
+        /// <param name="gameId">The unique identifier of the game.</param>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         public async Task DecreaseGameQuantityAsync(string gameId, string userId)
         {
             Cart cart = await GetOrCreateUserCart(userId);
@@ -496,6 +508,12 @@ namespace GameVerse.Services
             }
         }
 
+        /// <summary>
+        /// Increases the quantity of a specific event item for a user.
+        /// </summary>
+        /// <param name="eventId">The unique identifier of the event item.</param>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         public async Task IncreaseEventItemQuantity(string eventId, string userId)
         {
             Cart cart = await GetOrCreateUserCart(userId);
@@ -510,6 +528,12 @@ namespace GameVerse.Services
             }
         }
 
+        /// <summary>
+        /// Decreases the quantity of a specific event item for a user.
+        /// </summary>
+        /// <param name="eventId">The unique identifier of the event item.</param>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         public async Task DecreaseEventItemQuantityAsync(string eventId, string userId)
         {
             Cart cart = await GetOrCreateUserCart(userId);
