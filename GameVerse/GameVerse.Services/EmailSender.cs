@@ -58,9 +58,7 @@ namespace GameVerse.Services
                 Log.Error($"Failed to send email to {toEmail}. Error: {errorDetails}");
                 throw new InvalidOperationException("An error occurred while sending email");
             }
-            Log.Information(response.IsSuccessStatusCode
-                ? $"Email to {toEmail} queued successfully!"
-                : $"Failure Email to {toEmail}");
+            Log.Information("Email to {toEmail} queued successfully!");
         }
     }
 }
