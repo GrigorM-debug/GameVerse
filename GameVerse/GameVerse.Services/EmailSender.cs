@@ -13,20 +13,24 @@ using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace GameVerse.Services
 {
-    public class EmailSender : IEmailSender
+    /// <summary>
+    /// Provides functionality to send emails using the SendGrid service.
+    /// </summary>
+    public class EmailSender(
+        ILogger<EmailSender> logger,
+        IConfiguration configuration)
+        : IEmailSender
     {
-        private readonly ILogger _logger;
-        private readonly IConfiguration _configuration;
+        private readonly ILogger _logger = logger;
+        private readonly IConfiguration _configuration = configuration;
 
-        public EmailSender(
-            ILogger<EmailSender> logger,
-            IConfiguration configuration)
-        {
-            _logger = logger;
-            _configuration = configuration;
-        }
-
-
+        /// <summary>
+        /// Sends an email asynchronously using the SendGrid service.
+        /// </summary>
+        /// <param name="toEmail">The recipient's email address.</param>
+        /// <param name="subject">The subject of the email.</param>
+        /// <param name="message">The body content of the email, both in plain text and HTML format.</param>
+        /// <exception cref="InvalidOperationException">Thrown when the email fails to send.</exception>
         public async Task SendEmailAsync(string toEmail, string subject, string message)
         {
             IConfiguration sendGridSection = _configuration.GetSection("SendGrid");
