@@ -8,10 +8,8 @@ namespace GameVerse.Web.Areas.Moderator.Controllers
 {
     [Area("Moderator")]
     [Authorize(Roles = "Moderator")]
-    public class ModeratorController(IModeratorService moderatorService) : Controller
+    public class ModeratorController(IModeratorService _moderatorService) : Controller
     {
-        private readonly IModeratorService _moderatorService = moderatorService;
-
         [HttpGet]
         public async Task<IActionResult> Dashboard()
         {

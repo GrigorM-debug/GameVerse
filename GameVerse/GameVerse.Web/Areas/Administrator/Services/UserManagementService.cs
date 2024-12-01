@@ -11,15 +11,11 @@ namespace GameVerse.Web.Areas.Administrator.Services
     /// Service for managing user roles and retrieving user details, including administrators and moderators.
     /// </summary>
     public class UserManagementService(
-        UserManager<ApplicationUser> userManager,
-        IGenericRepository<ApplicationUser, Guid> userRepository,
-        IGenericRepository<Data.Models.ApplicationUsers.Moderator, Guid> moderatorRepository)
+        UserManager<ApplicationUser> _userManager,
+        IGenericRepository<ApplicationUser, Guid> _userRepository,
+        IGenericRepository<Data.Models.ApplicationUsers.Moderator, Guid> _moderatorRepository)
         : IUserManagementService
     {
-        private readonly UserManager<ApplicationUser> _userManager = userManager;
-        private readonly IGenericRepository<ApplicationUser, Guid> _userRepository = userRepository;
-        private readonly IGenericRepository<Data.Models.ApplicationUsers.Moderator, Guid> _moderatorRepository = moderatorRepository;
-
         /// <summary>
         /// Retrieves a collection of all users with detailed information asynchronously.
         /// </summary>

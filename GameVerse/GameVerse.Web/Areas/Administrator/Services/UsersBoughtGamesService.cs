@@ -9,12 +9,9 @@ namespace GameVerse.Web.Areas.Administrator.Services
     /// Service for managing and retrieving data about games purchased by users.
     /// </summary>
     public class UsersBoughtGamesService(
-        IGenericRepository<UserBoughtGame, object> usersBoughtGamesRepository
+        IGenericRepository<UserBoughtGame, object> _usersBoughtGamesRepository
         ) : IUsersBoughtGamesService
     {
-        private readonly IGenericRepository<UserBoughtGame, object> _usersBoughtGamesRepository =
-            usersBoughtGamesRepository;
-
         /// <summary>
         /// Retrieves the total count of games purchased by users asynchronously.
         /// </summary>
