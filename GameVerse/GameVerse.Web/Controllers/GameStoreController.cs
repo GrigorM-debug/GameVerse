@@ -320,15 +320,15 @@ namespace GameVerse.Web.Controllers
 
             bool isCreatorOfTheGame = await _gameService.HasPublisherWithIdAsync(moderatorId, id);
 
-            if (isCreatorOfTheGame == false && isAdmin)
+            if (isCreatorOfTheGame == false && isAdmin == false)
             {
                 _notyf.Warning("You are not the creator of the Game");
                 return Unauthorized();
             }
 
-            string? gameId = await _gameService.DeleteGamePostAsync(id, moderatorId, isAdmin);
+            await _gameService.DeleteGamePostAsync(id, moderatorId, isAdmin);
 
-            await _moderatorService.DecreaseCreatedTotalGamesCount(moderatorId);
+            await _moderatorService.DecreaseCreatedTotalGamesCount(moderatorId, isAdmin);
 
             _notyf.Success("Game was deleted successfully!");
 
