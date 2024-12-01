@@ -247,9 +247,9 @@ namespace GameVerse.Services
         {
             Cart? cart = await _cartRepository
                 .GetAllAttached()
-                .Include(c => c.GamesCarts)
-                .ThenInclude(gc => gc.Game)
-                .Include(c => c.EventsCarts)
+                .Include(c => c.GamesCarts.Where(gc => gc.IsDeleted == false))
+                .ThenInclude(gc => gc.Game )
+                .Include(c => c.EventsCarts.Where(ec => ec.IsDeleted == false))
                 .ThenInclude(ec => ec.Event)
                 .FirstOrDefaultAsync(c => c.UserId.ToString() == userId);
 
