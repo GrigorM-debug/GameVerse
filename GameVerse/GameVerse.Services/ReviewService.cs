@@ -172,7 +172,7 @@ namespace GameVerse.Services
                 model.Content = review.Content;
                 model.Rating = review.Rating;
                 model.ReviewerId = review.ReviewerId.ToString();
-                model.ReviewerName = review.Reviewer.UserName;
+                model.ReviewerName = review.Reviewer.UserName ?? string.Empty;
                 model.CreatedOn = review.CreatedOn.ToString(DateTimeFormat, CultureInfo.InvariantCulture);
                 model.GameName = review.Game.Title;
                 model.GameId = review.GameId.ToString();
