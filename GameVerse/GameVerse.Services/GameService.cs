@@ -388,7 +388,7 @@ namespace GameVerse.Services
                 Image = g.Image,
                 QuantityInStock = g.QuantityInStock,
                 Type = g.Type.ToString(),
-                Publisher = g.Publisher.User.UserName,
+                Publisher = g.Publisher.User.UserName ?? string.Empty,
                 Platforms = g.GamesPlatforms
                     .Where(gp => gp.IsDeleted == false)
                     .Select(gp => new GamePlatformsIndexViewModel()
@@ -415,7 +415,7 @@ namespace GameVerse.Services
                         Content = r.Content,
                         Rating = r.Rating,
                         CreatedOn = r.CreatedOn.ToString(DateTimeFormat, CultureInfo.InvariantCulture),
-                        Reviewer = r.Reviewer.UserName
+                        Reviewer = r.Reviewer.UserName ?? string.Empty,
                     }).ToList(),
                 AverageRating = g.Reviews
                     .Where(r => r.IsDeleted == false)
@@ -506,7 +506,7 @@ namespace GameVerse.Services
                     Price = g.Price.ToString("C"),
                     Image = g.Image,
                     QuantityInStock = g.QuantityInStock,
-                    Publisher = g.Publisher.User.UserName
+                    Publisher = g.Publisher.User.UserName ?? string.Empty
                 }).ToListAsync();
 
             return gameIndexViewModels;
@@ -531,7 +531,7 @@ namespace GameVerse.Services
                     Price = g.Price.ToString("C"),
                     Image = g.Image,
                     QuantityInStock = g.QuantityInStock,
-                    Publisher = g.Publisher.User.UserName
+                    Publisher = g.Publisher.User.UserName ?? string.Empty
                 }).ToListAsync();
 
             return last3Games;
