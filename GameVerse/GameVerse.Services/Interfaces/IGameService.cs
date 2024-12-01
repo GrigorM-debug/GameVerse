@@ -84,8 +84,7 @@ namespace GameVerse.Services.Interfaces
         /// <param name="gameId">The ID of the game to delete.</param>
         /// <param name="moderatorId">The ID of the moderator performing the deletion.</param>
         /// <param name="isAdmin">Indicates if the user is an admin.</param>
-        /// <returns>A task containing the ID of the deleted game.</returns>
-        Task<string> DeleteGamePostAsync(string gameId,string moderatorId, bool isAdmin);
+        Task DeleteGamePostAsync(string gameId,string moderatorId, bool isAdmin);
 
         /// <summary>
         /// Retrieves detailed information about a specific game.

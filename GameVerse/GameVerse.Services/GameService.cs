@@ -325,8 +325,7 @@ namespace GameVerse.Services
         /// <param name="gameId">The ID of the game to delete.</param>
         /// <param name="moderatorId">The ID of the moderator performing the deletion.</param>
         /// <param name="isAdmin">Indicates whether the user is an admin.</param>
-        /// <returns>The ID of the deleted game.</returns>
-        public async Task<string> DeleteGamePostAsync(string gameId, string moderatorId, bool isAdmin)
+        public async Task DeleteGamePostAsync(string gameId, string moderatorId, bool isAdmin)
         {
             Game? game = await _gameRepository
                 .FirstOrDefaultAsync(g =>
@@ -338,8 +337,6 @@ namespace GameVerse.Services
 
                 await _gameRepository.SaveChangesAsync();
             }
-
-            return game.Id.ToString();
         }
 
         /// <summary>
