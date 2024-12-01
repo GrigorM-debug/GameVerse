@@ -175,17 +175,31 @@ namespace GameVerse.Web.Areas.Moderator.Controllers
                 return View(inputModel);
             }
 
-            /*bool isImageValid = await _imageValidationService.ValidateImageWithApi(inputModel.Image);
-
-            if (!isImageValid)
+            try
             {
+                bool isImageValid = await _imageValidationService.ValidateImageWithApi(inputModel.Image);
+
+                if (!isImageValid)
+                {
+                    inputModel.GenreSelectList = genres;
+                    inputModel.PlatformSelectList = platforms;
+                    inputModel.RestrictionSelectList = restrictions;
+                    inputModel.GameTypes = types;
+                    _notyf.Error("The image contains irrelevant content.");
+                    ModelState.AddModelError(nameof(inputModel.Image), "The image contains irrelevant content.");
+                    return View(inputModel);
+                }
+            }
+            catch (InvalidOperationException ex)
+            {
+                _notyf.Error("An error occured while validating image");
+                Log.Error("An error occured while validating image with message {Error} in {Action} in {Controller}", ex.Message, nameof(Add), nameof(ModeratorGameStoreController));
                 inputModel.GenreSelectList = genres;
                 inputModel.PlatformSelectList = platforms;
                 inputModel.RestrictionSelectList = restrictions;
                 inputModel.GameTypes = types;
-                ModelState.AddModelError(nameof(inputModel.Image), "The image contains irrelevant content.");
                 return View(inputModel);
-            }*/
+            }
 
             if (ModelState.IsValid == false)
             {
