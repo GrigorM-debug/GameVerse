@@ -111,7 +111,7 @@ namespace GameVerse.Web.Controllers
 
             bool isAdmin = User.IsAdmin();
 
-            if(String.IsNullOrEmpty(moderatorId) || isAdmin == false)
+            if(String.IsNullOrEmpty(moderatorId) && isAdmin == false)
             {
                 //You can also redirect to Login Page
                 _notyf.Warning("You don't have the permission to do this");
@@ -192,7 +192,7 @@ namespace GameVerse.Web.Controllers
 
             bool isAdmin = User.IsAdmin();
 
-            if (String.IsNullOrEmpty(moderatorId) || isAdmin == false)
+            if (String.IsNullOrEmpty(moderatorId) && isAdmin == false)
             {
                 //You can also redirect to Login Page
                 _notyf.Warning("You don't have the permission to do this");
@@ -226,7 +226,7 @@ namespace GameVerse.Web.Controllers
             string? moderatorId = await _moderatorService.GetModeratorIdByUserIdAsync(userId);
             bool isAdmin = User.IsAdmin();
 
-            if (String.IsNullOrEmpty(moderatorId))
+            if (String.IsNullOrEmpty(moderatorId) && isAdmin == false) 
             {
                 //You can also redirect to Login Page
                 _notyf.Warning("You don't have the permission to do this");
@@ -242,7 +242,7 @@ namespace GameVerse.Web.Controllers
 
             await _eventService.DeleteEventPostAsync(id, moderatorId, isAdmin);
 
-            await _moderatorService.DecreaseCreatedTotalEventsCount(moderatorId);
+            await _moderatorService.DecreaseCreatedTotalEventsCount(moderatorId, isAdmin);
 
             _notyf.Success("Event was deleted successfully !");
 
@@ -255,7 +255,7 @@ namespace GameVerse.Web.Controllers
                 Log.Information("Moderator with ID {ModeratorId} perform an {Action} in controller {Controller}", moderatorId, nameof(Delete), nameof(EventController));
             }
 
-            return RedirectToAction("Index", "GameStore",new { area = ""});
+            return RedirectToAction("Index", "Event",new { area = ""});
         }
     }
 }
