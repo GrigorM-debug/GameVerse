@@ -14,10 +14,8 @@ namespace GameVerse.Services
     /// <summary>
     /// Provides functionality for validating images using an external NSFW detection API.
     /// </summary>
-    public class ImageValidationService(IConfiguration configuration) : IImageValidationService
+    public class ImageValidationService(IConfiguration _configuration) : IImageValidationService
     {
-        private readonly IConfiguration _configuration = configuration;
-
         /// <summary>
         /// Validates an image by sending its URL to an external API to detect NSFW content.
         /// </summary>
@@ -31,7 +29,7 @@ namespace GameVerse.Services
             //string apiUrl = "https://nsfw-images-detection-and-classification.p.rapidapi.com/adult-content";
             //string apiKey = "eef38abf0emsh6661c57d682594fp10ed0cjsn841fc5b63cfb";
 
-            IConfiguration nfwsImageDetectionApiSection = configuration.GetSection("NSFWImageDetectionApi");
+            IConfiguration nfwsImageDetectionApiSection = _configuration.GetSection("NSFWImageDetectionApi");
 
             string apiKey = nfwsImageDetectionApiSection["ApiKey"];
             string apiUrl = nfwsImageDetectionApiSection["ApiUrl"];

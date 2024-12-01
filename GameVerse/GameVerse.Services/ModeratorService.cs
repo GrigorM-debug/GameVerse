@@ -12,10 +12,8 @@ namespace GameVerse.Services
     /// Provides services for managing moderators, including checking their existence, 
     /// retrieving IDs, and updating counts for created games and events.
     /// </summary>
-    public class ModeratorService(IGenericRepository<Moderator, Guid> moderatorRepository) : IModeratorService
+    public class ModeratorService(IGenericRepository<Moderator, Guid> _moderatorRepository) : IModeratorService
     {
-        private readonly IGenericRepository<Moderator, Guid> _moderatorRepository = moderatorRepository;
-
         /// <summary>
         /// Retrieves the moderator ID associated with the specified user ID.
         /// </summary>

@@ -24,18 +24,12 @@ namespace GameVerse.Services
     /// Provides functionality for managing games, including adding, editing, deleting, and retrieving game details.
     /// </summary>
     public class GameService(
-        IGenericRepository<Game, Guid> gameRepository,
-        IGenericRepository<Genre, Guid> genreRepository,
-        IGenericRepository<Platform, Guid> platformRepository,
-        IGenericRepository<Restriction, Guid> restrictionRepository)
+        IGenericRepository<Game, Guid> _gameRepository,
+        IGenericRepository<Genre, Guid> _genreRepository,
+        IGenericRepository<Platform, Guid> _platformRepository,
+        IGenericRepository<Restriction, Guid> _restrictionRepository)
         : IGameService
     {
-        private readonly IGenericRepository<Game, Guid> _gameRepository = gameRepository;
-        private readonly IGenericRepository<Genre, Guid>
-            _genreRepository = genreRepository;
-        private readonly IGenericRepository<Platform, Guid> _platformRepository = platformRepository;
-        private readonly IGenericRepository<Restriction, Guid> _restrictionRepository = restrictionRepository;
-
         /// <summary>
         /// Retrieves a game by its ID if it exists and is not marked as deleted.
         /// </summary>
@@ -492,8 +486,8 @@ namespace GameVerse.Services
             }
 
             query = sortOrder == EntitySortOrder.Newest
-                ? query.OrderByDescending(g => g.Id)
-                : query.OrderBy(g => g.Id);
+                ? query.OrderByDescending(g => g.CreatedOn)
+                : query.OrderBy(g => g.CreatedOn);
 
             var gameIndexViewModels = await query
                 .Skip((currentPage - 1) * gamesPerPage)
