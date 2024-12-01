@@ -19,7 +19,7 @@
                 <p class="card-text">Are you sure you want to Delete Event with Topic @Model.Topic</p>
             </div>
             <div class="card-footer">
-                <form asp-area ="" asp-action="DeleteConfirm" method="post">
+                <form asp-area="" asp-action="DeleteConfirm" asp-route-id="@Model.Id" method="post">
                     @* <input type="hidden" asp-for="Id" />
                     <input type="hidden" asp-for="Topic" />
                     <input type="hidden" asp-for="PublisherId" /> *@
