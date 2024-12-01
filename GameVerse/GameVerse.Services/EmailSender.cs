@@ -17,12 +17,10 @@ namespace GameVerse.Services
     /// Provides functionality to send emails using the SendGrid service.
     /// </summary>
     public class EmailSender(
-        ILogger<EmailSender> logger,
-        IConfiguration configuration)
+        ILogger<EmailSender> _logger,
+        IConfiguration _configuration)
         : IEmailSender
     {
-        private readonly ILogger _logger = logger;
-        private readonly IConfiguration _configuration = configuration;
 
         /// <summary>
         /// Sends an email asynchronously using the SendGrid service.
