@@ -18,18 +18,13 @@ namespace GameVerse.Web.Areas.Moderator.Controllers
     [Area("Moderator")]
     [Authorize(Roles = "Moderator")]
     public class ModeratorGameStoreController(
-        ILogger<ModeratorGameStoreController> logger,
-        INotyfService notyf,
-        IModeratorService moderatorService,
-        IGameService gameService,
-        IImageValidationService imageValidationService
+        ILogger<ModeratorGameStoreController> _logger,
+        INotyfService _notyf,
+        IModeratorService _moderatorService,
+        IGameService _gameService,
+        IImageValidationService _imageValidationService
         ) : Controller
     {
-        private readonly ILogger<ModeratorGameStoreController> _logger = logger;
-        private readonly INotyfService _notyf = notyf;
-        private readonly IModeratorService _moderatorService = moderatorService;
-        private readonly IGameService _gameService = gameService;
-        private readonly IImageValidationService _imageValidationService = imageValidationService;
 
         [HttpGet]
         public async Task<IActionResult> Add()

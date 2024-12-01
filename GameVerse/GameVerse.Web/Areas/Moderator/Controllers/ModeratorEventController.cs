@@ -15,16 +15,12 @@ namespace GameVerse.Web.Areas.Moderator.Controllers
     [Area("Moderator")]
     [Authorize(Roles = "Moderator")]
     public class ModeratorEventController(
-        IEventService eventService, 
-        ILogger<ModeratorEventController> logger, 
-        IModeratorService moderatorService, 
-        INotyfService notyf
+        IEventService _eventService, 
+        ILogger<ModeratorEventController> _logger, 
+        IModeratorService _moderatorService, 
+        INotyfService _notyf
         ) : Controller
     {
-        private readonly IEventService _eventService = eventService;
-        private readonly ILogger<ModeratorEventController> _logger = logger;
-        private readonly IModeratorService _moderatorService = moderatorService;
-        private readonly INotyfService _notyf = notyf;
 
         [HttpGet]
         public async Task<IActionResult> Add()

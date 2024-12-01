@@ -13,10 +13,9 @@ namespace GameVerse.Web.Areas.Moderator.Services
     /// Provides functionality for retrieving and managing information about games and events created by moderators.
     /// </summary>
     public class ModeratorService(
-        IGenericRepository<Data.Models.ApplicationUsers.Moderator, Guid> moderatorRepository
+        IGenericRepository<Data.Models.ApplicationUsers.Moderator, Guid> _moderatorRepository
         ) : IModeratorService
     {
-        private readonly IGenericRepository<Data.Models.ApplicationUsers.Moderator, Guid> _moderatorRepository = moderatorRepository;
 
         /// <summary>
         /// Retrieves the last 5 events created by the specified moderator.
