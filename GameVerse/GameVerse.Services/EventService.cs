@@ -44,7 +44,7 @@ namespace GameVerse.Services
                     Seats = e.Seats,
                     TicketPrice = e.TicketPrice.ToString("C"),
                     Image = e.Image,
-                    PublisherName = e.Publisher.User.UserName
+                    PublisherName = e.Publisher.User.UserName ?? string.Empty
                 }).ToListAsync();
 
             return eventIndexViewModels;
@@ -254,7 +254,7 @@ namespace GameVerse.Services
                     Seats = e.Seats,
                     TicketPrice = e.TicketPrice.ToString("C"),
                     Image = e.Image,
-                    PublisherName = e.Publisher.User.UserName
+                    PublisherName = e.Publisher.User.UserName ?? string.Empty
                 })
                 .ToListAsync();
 
@@ -285,7 +285,7 @@ namespace GameVerse.Services
                 Seats = e.Seats,
                 TicketPrice = e.TicketPrice.ToString("C"),
                 Image = e.Image,
-                PublisherName = e.Publisher.User.UserName
+                PublisherName = e.Publisher.User.UserName ?? string.Empty
             };
 
             return eventDetailsViewModel;
@@ -299,7 +299,7 @@ namespace GameVerse.Services
         /// <returns><c>true</c> if the event is associated with the specified moderator; otherwise, <c>false</c>.</returns>
         public async Task<bool> HasPublisherWithIdAsync(string moderatorId, string eventId)
         {
-            Event? e = await _eventRepository.AllAsReadOnly().FirstOrDefaultAsync(e => e.Id.ToString() == eventId && e.PublisherId.ToString() == moderatorId);
+            Event? e = await _eventRepository.AllAsReadOnly().FirstOrDefaultAsync(e => e.Id.ToString() == eventId && e.PublisherId.ToString() == moderatorId && e.IsDeleted == false);
 
             if (e == null)
             {
