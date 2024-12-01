@@ -15,13 +15,10 @@ namespace GameVerse.Services
     /// Provides services for retrieving user-specific data, including purchased games and event registrations.
     /// </summary>
     public class UserService(
-        IGenericRepository<UserBoughtGame, object> userBoughtGamesRepository,
-        IGenericRepository<EventRegistration, object> eventRegistrationsRepository
+        IGenericRepository<UserBoughtGame, object> _userBoughtGamesRepository,
+        IGenericRepository<EventRegistration, object> _eventRegistrationsRepository
         ) : IUserService
     {
-        private readonly IGenericRepository<UserBoughtGame, object> _userBoughtGames = userBoughtGamesRepository;
-        private readonly IGenericRepository<EventRegistration, object> _eventRegistrationsRepository = eventRegistrationsRepository;
-
         /// <summary>
         /// Retrieves the list of games purchased by the specified user.
         /// </summary>
@@ -32,7 +29,7 @@ namespace GameVerse.Services
         /// </returns>
         public async Task<IEnumerable<UserBoughtGamesViewModel>> GetUserBoughtGamesAsync(string userId)
         {
-            IEnumerable<UserBoughtGamesViewModel> userBoughtGamesViewModels = await _userBoughtGames
+            IEnumerable<UserBoughtGamesViewModel> userBoughtGamesViewModels = await _userBoughtGamesRepository
                 .GetWithIncludeAsync(g => g.Game)
                 .Where(u => u.UserId.ToString() == userId)
                 .Select(g => new UserBoughtGamesViewModel()

@@ -19,21 +19,21 @@ namespace GameVerse.Services
     /// and purchasing games and events, as well as handling cart operations for users.
     /// </summary>
     public class ShoppingCartService(
-        IGenericRepository<Cart, Guid> cartRepository,
-        IGenericRepository<Game, Guid> gameRespository,
-        IGenericRepository<Event, Guid> eventRepository,
-        IGenericRepository<EventRegistration, object> eventRegistrationRepository,
-        IGenericRepository<UserBoughtGame, object> userBoughtGamesRepository,
-        IQrCodeService qrCodeService
+        IGenericRepository<Cart, Guid> _cartRepository,
+        IGenericRepository<Game, Guid> _gameRepository,
+        IGenericRepository<Event, Guid> _eventRepository,
+        IGenericRepository<EventRegistration, object> _eventRegistrationRepository,
+        IGenericRepository<UserBoughtGame, object> _userBoughtGamesRepository,
+        IQrCodeService _qrCodeService
         ) : BaseService, IShoppingCartService
     {
 
-        private readonly IGenericRepository<Cart, Guid> _cartRepository = cartRepository;
-        private readonly IGenericRepository<Game, Guid> _gameRepository = gameRespository;
-        private readonly IGenericRepository<Event, Guid> _eventRepository = eventRepository;
-        private readonly IGenericRepository<EventRegistration, object> _eventRegistrationRepository = eventRegistrationRepository;
-        private readonly IGenericRepository<UserBoughtGame, object> _userBoughtGamesRepository = userBoughtGamesRepository;
-        private readonly IQrCodeService _qrCodeService = qrCodeService;
+        //private readonly IGenericRepository<Cart, Guid> _cartRepository = cartRepository;
+        //private readonly IGenericRepository<Game, Guid> _gameRepository = gameRespository;
+        //private readonly IGenericRepository<Event, Guid> _eventRepository = eventRepository;
+        //private readonly IGenericRepository<EventRegistration, object> _eventRegistrationRepository = eventRegistrationRepository;
+        //private readonly IGenericRepository<UserBoughtGame, object> _userBoughtGamesRepository = userBoughtGamesRepository;
+        //private readonly IQrCodeService _qrCodeService = qrCodeService;
 
         /// <summary>
         /// Retrieves the shopping cart items for the specified user.

@@ -12,14 +12,8 @@ namespace GameVerse.Services
     /// <summary>
     /// Implements the review management functionality for games.
     /// </summary>
-    public class ReviewService(IGenericRepository<GameReview, Guid> reviewRepository) : IReviewService
+    public class ReviewService(IGenericRepository<GameReview, Guid> _reviewRepository) : IReviewService
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ReviewService"/> class.
-        /// </summary>
-        /// <param name="reviewRepository">The repository for managing game reviews.</param>
-        private readonly IGenericRepository<GameReview, Guid> _reviewRepository = reviewRepository;
-
         /// <summary>
         /// Checks if a review already exists for a given game by a specific user.
         /// </summary>
