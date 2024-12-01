@@ -44,7 +44,8 @@ namespace GameVerse.Services
         /// <returns>A task representing the asynchronous operation.</returns>
         public async Task InCreaseCreatedTotalEventsCount(string moderatorId)
         {
-            Moderator? moderator = await _moderatorRepository.FirstOrDefaultAsync(m => m.Id.ToString() == moderatorId);
+            Moderator? moderator = await _moderatorRepository
+                .FirstOrDefaultAsync(m => m.Id.ToString() == moderatorId);
 
             if (moderator != null)
             {
@@ -61,7 +62,8 @@ namespace GameVerse.Services
         /// <returns>A task representing the asynchronous operation.</returns>
         public async Task IncreaseCreatedTotalGamesCount(string moderatorId)
         {
-            Moderator? moderator = await _moderatorRepository.FirstOrDefaultAsync(m => m.Id.ToString() == moderatorId);
+            Moderator? moderator = await _moderatorRepository
+                .FirstOrDefaultAsync(m => m.Id.ToString() == moderatorId);
 
             if (moderator != null)
             {
@@ -75,10 +77,12 @@ namespace GameVerse.Services
         /// Decreases the total number of games created by the specified moderator.
         /// </summary>
         /// <param name="moderatorId">The unique ID of the moderator.</param>
+        /// <param name="isAdmin">Boolean representing if the user is Admin</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        public async Task DecreaseCreatedTotalGamesCount(string moderatorId)
+        public async Task DecreaseCreatedTotalGamesCount(string moderatorId, bool isAdmin)
         {
-            Moderator? moderator = await _moderatorRepository.FirstOrDefaultAsync(m => m.Id.ToString() == moderatorId);
+            Moderator? moderator = await _moderatorRepository
+                .FirstOrDefaultAsync(m => (m.Id.ToString() == moderatorId || isAdmin));
 
             if (moderator != null)
             {
@@ -93,9 +97,11 @@ namespace GameVerse.Services
         /// </summary>
         /// <param name="moderatorId">The unique ID of the moderator.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        public async Task DecreaseCreatedTotalEventsCount(string moderatorId)
+        /// <param name="isAdmin">Boolean representing if the user is Admin</param>
+        public async Task DecreaseCreatedTotalEventsCount(string moderatorId, bool isAdmin)
         {
-            Moderator? moderator = await _moderatorRepository.FirstOrDefaultAsync(m => m.Id.ToString() == moderatorId);
+            Moderator? moderator = await _moderatorRepository
+                .FirstOrDefaultAsync(m => (m.Id.ToString() == moderatorId || isAdmin));
 
             if (moderator != null)
             {

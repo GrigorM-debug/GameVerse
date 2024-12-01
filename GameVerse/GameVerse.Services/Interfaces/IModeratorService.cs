@@ -44,14 +44,16 @@ namespace GameVerse.Services.Interfaces
         /// Decreases the count of total games created by the specified moderator.
         /// </summary>
         /// <param name="moderatorId">The unique ID of the moderator.</param>
+        /// <param name="isAdmin">Boolean representing if the user is Admin</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        Task DecreaseCreatedTotalGamesCount(string moderatorId);
+        Task DecreaseCreatedTotalGamesCount(string moderatorId, bool isAdmin);
 
         /// <summary>
         /// Decreases the count of total events created by the specified moderator.
         /// </summary>
         /// <param name="moderatorId">The unique ID of the moderator.</param>
+        /// <param name="isAdmin">Boolean representing if the user is Admin</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        Task DecreaseCreatedTotalEventsCount(string moderatorId);
+        Task DecreaseCreatedTotalEventsCount(string moderatorId, bool isAdmin);
     }
 }
