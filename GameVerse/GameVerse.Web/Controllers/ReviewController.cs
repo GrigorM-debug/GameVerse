@@ -15,13 +15,11 @@ namespace GameVerse.Web.Controllers
 {
     [Authorize]
     [OnlyUsersWithoutRoles]
-    public class ReviewController(IGameService gameService, IReviewService reviewService, INotyfService notyf, ILogger<ReviewController> logger) : BaseController
+    public class ReviewController(IGameService _gameService, 
+        IReviewService _reviewService, 
+        INotyfService _notyf, 
+        ILogger<ReviewController> _logger) : BaseController
     {
-        private readonly IGameService _gameService = gameService;
-        private readonly IReviewService _reviewService = reviewService;
-        private readonly INotyfService _notyf = notyf;
-        private readonly ILogger<ReviewController> _logger = logger;
-
         [HttpGet]
         public async Task<IActionResult> Add(string gameId)
         {

@@ -19,17 +19,12 @@ namespace GameVerse.Web.Controllers
     [Authorize]
     [OnlyUsersWithoutRoles]
     public class ShoppingCartController(
-        INotyfService notyf, 
-        IGameService gameService,
-        IEventService eventService,
-        IShoppingCartService shoppingCartService
+        INotyfService _notyf, 
+        IGameService _gameService,
+        IEventService _eventService,
+        IShoppingCartService _shoppingCartService
         ) : BaseController
     {
-        private readonly INotyfService _notyf = notyf;
-        private readonly IShoppingCartService _shoppingCartService = shoppingCartService;
-        private readonly IGameService _gameService = gameService;
-        private readonly IEventService _eventService = eventService;
-
         [HttpGet]
         public async Task<IActionResult> Index()
         {
