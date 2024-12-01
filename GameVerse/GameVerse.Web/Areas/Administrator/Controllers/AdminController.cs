@@ -10,23 +10,15 @@ namespace GameVerse.Web.Areas.Administrator.Controllers
     [Area("Administrator")]
     [Authorize(Roles = "Admin")]
     public class AdminController(
-        ILogService logService,
-        INotyfService notyfService,
-        IUserManagementService userManagementService,
-        IGameService gameService,
-        IEventService eventService,
-        IEventsRegistrationsService eventsRegistrationsService,
-        IUsersBoughtGamesService usersBoughtGamesService)
+        ILogService _logService,
+        INotyfService _notyfService,
+        IUserManagementService _userManagementService,
+        IGameService _gameService,
+        IEventService _eventService,
+        IEventsRegistrationsService _eventsRegistrationsService,
+        IUsersBoughtGamesService _usersBoughtGamesService)
         : Controller
     {
-        private readonly ILogService _logService = logService;
-        private readonly INotyfService _notyfService = notyfService;
-        private readonly IUserManagementService _userManagementService = userManagementService;
-        private readonly IEventService _eventService = eventService;
-        private readonly IGameService _gameService = gameService;
-        private readonly IEventsRegistrationsService _eventsRegistrationsService = eventsRegistrationsService;
-        private readonly IUsersBoughtGamesService _usersBoughtGamesService = usersBoughtGamesService;
-
         [HttpGet]
         public async Task<IActionResult> DashBoard()
         {

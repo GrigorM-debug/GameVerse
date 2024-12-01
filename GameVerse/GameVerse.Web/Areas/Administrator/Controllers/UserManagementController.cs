@@ -12,21 +12,13 @@ namespace GameVerse.Web.Areas.Administrator.Controllers
 {
     [Area("Administrator")]
     [Authorize(Roles = "Admin")]
-    public class UserManagementController : Controller
+    public class UserManagementController(
+        IUserManagementService _userManagementService,
+        INotyfService _notyfService,
+        ILogger<UserManagementController> _logger,
+        IModeratorService _moderatorService)
+        : Controller
     {
-        private readonly IUserManagementService _userManagementService;
-        private readonly IModeratorService _moderatorService;
-        private readonly INotyfService _notyfService;
-        private ILogger<UserManagementController> _logger;
-
-        public UserManagementController(IUserManagementService userManagementService, INotyfService notyfService, ILogger<UserManagementController> logger, IModeratorService moderatorService)
-        {   
-            _userManagementService = userManagementService;
-            _notyfService = notyfService;
-            _logger = logger;
-            _moderatorService = moderatorService;
-        }
-
         [HttpGet]
         public async Task<IActionResult> ManageUsers()
         {

@@ -12,11 +12,9 @@ namespace GameVerse.Web.Areas.Administrator.Services
     /// A repository for accessing event registration data.
     /// </param>
     public class EventsRegistrationsService(
-        IGenericRepository<EventRegistration, object> eventsRegistrationsRepository
+        IGenericRepository<EventRegistration, object> _eventsRegistrationsRepository
         ) : IEventsRegistrationsService
     {
-        private readonly IGenericRepository<EventRegistration, object> _eventsRegistrationsRepository = eventsRegistrationsRepository;
-
         /// <summary>
         /// Retrieves the total count of event registrations asynchronously.
         /// </summary>
