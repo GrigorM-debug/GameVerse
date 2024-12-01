@@ -196,11 +196,35 @@ namespace GameVerse.Web.Controllers
 
             try
             {
+                Cart userCart = await _shoppingCartService.GetOrCreateUserCart(userId);
+
+                var hasEvents = userCart.EventsCarts.Any();
+                var hasGames = userCart.GamesCarts.Any();
+
+                var eventIds = string.Join(", ", userCart.EventsCarts.Where(ec => ec.IsDeleted == false).Select(ec => ec.EventId));
+                var gameIds = string.Join(", ", userCart.GamesCarts.Where(gc => gc.IsDeleted == false).Select(gc => gc.GameId));
+
                 await _shoppingCartService.PurchaseItemsInShoppingCart(userId);
 
-                Log.Information("User with {UserId} made an {Action} in {Controller}", userId, nameof(PurchaseItemsInShoppingCart), nameof(ShoppingCartController));
+                //Log.Information("User with {UserId} made an {Action} in {Controller}", userId, nameof(PurchaseItemsInShoppingCart), nameof(ShoppingCartController));
 
-                _notyf.Success("Items successfully purchased. You can see them in Bought Games and Event Registrations Pages");
+                if (hasEvents && !hasGames)
+                {
+                    _notyf.Success("Items successfully purchased. You can see them in Events Registrations Page");
+                    Log.Information("User with Id: {UserId} bought ticket/s for Event/s with Ids {EventIds}", userId, eventIds);
+                }
+                else if (!hasEvents && hasGames)
+                {
+                    _notyf.Success("Items successfully purchased. You can see them in Bought Games Page");
+                    Log.Information("User with Id: {UserId} bought game/s with Ids: {GameIds}", userId, gameIds);
+                }
+                else
+                {
+                    Log.Information("User with {UserId} made an {Action} in {Controller}. Items purchased Ids: {EventIds}, {GameIds}", userId, nameof(PurchaseItemsInShoppingCart), nameof(ShoppingCartController), eventIds, gameIds);
+                    _notyf.Success("Items successfully purchased. You can see them in Bought Games and Event Registrations Pages");
+                }
+
+                //_notyf.Success("Items successfully purchased. You can see them in Bought Games and Event Registrations Pages");
 
                 return RedirectToAction("Index", "ShoppingCart", new {area=""});
             }
