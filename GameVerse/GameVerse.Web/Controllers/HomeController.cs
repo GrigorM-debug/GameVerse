@@ -12,12 +12,11 @@ using Serilog;
 
 namespace GameVerse.Web.Controllers
 {
-    public class HomeController(ILogger<HomeController> logger, IEventService eventService, IGameService gameService) : Controller
+    public class HomeController(
+        ILogger<HomeController> _logger, 
+        IEventService _eventService, 
+        IGameService _gameService) : Controller
     {
-        private readonly ILogger<HomeController> _logger = logger;
-        private readonly IEventService _eventService = eventService;
-        private readonly IGameService _gameService = gameService;
-
         public async Task<IActionResult> Index()
         {
             if (User.IsAdmin())

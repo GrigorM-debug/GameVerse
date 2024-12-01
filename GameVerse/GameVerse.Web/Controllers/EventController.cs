@@ -15,13 +15,12 @@ using static GameVerse.Common.ApplicationConstants.EventConstants;
 namespace GameVerse.Web.Controllers
 {
     [Authorize(Roles = "Admin, Moderator")]
-    public class EventController(ILogger<EventController> logger, IEventService eventService, IModeratorService moderatorService, INotyfService notyf) : BaseController
+    public class EventController(
+        ILogger<EventController> _logger, 
+        IEventService _eventService, 
+        IModeratorService _moderatorService, 
+        INotyfService _notyf) : BaseController
     {
-        private readonly ILogger<EventController> _logger = logger;
-        private readonly IEventService _eventService = eventService;
-        private readonly IModeratorService _moderatorService = moderatorService;
-        private readonly INotyfService _notyf = notyf;
-
         [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> Index([FromQuery] AllEventsQueryModel model)
