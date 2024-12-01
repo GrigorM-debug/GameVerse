@@ -11,13 +11,10 @@ namespace GameVerse.Web.Controllers
     [Authorize]
     [OnlyUsersWithoutRoles]
     public class UserController(
-        IUserService userService,
-        INotyfService notyf
+        IUserService _userService,
+        INotyfService _notyf
         ) : BaseController
     {
-        private readonly IUserService _userService = userService;
-        private readonly INotyfService _notyf = notyf;
-
         [HttpGet]
         public async Task<IActionResult> UserBoughtGames()
         {
