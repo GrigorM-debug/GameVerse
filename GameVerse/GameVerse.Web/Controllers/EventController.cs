@@ -38,20 +38,12 @@ namespace GameVerse.Web.Controllers
                 model.CurrentPage = 1;
             }
 
-            string? userId = string.Empty;
-
-            if (User?.Identity?.IsAuthenticated == true && User.IsInRole("Moderator"))
-            {
-                userId = User.GetId();
-            }
-
             int totalEventsCount = await _eventService.GetTotalEventsCountAsync();
 
             IEnumerable<EventIndexViewModel> events = await _eventService.GetAllEventsAsync(
                 model.CurrentPage,
                 model.EventsPerPage,
-                model.EventSelectedSortOrder,
-                userId
+                model.EventSelectedSortOrder
                 );
 
             model.TotalEventsCount = totalEventsCount;
