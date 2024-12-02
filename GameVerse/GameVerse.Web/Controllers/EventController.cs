@@ -14,6 +14,9 @@ using static GameVerse.Common.ApplicationConstants.EventConstants;
 
 namespace GameVerse.Web.Controllers
 {
+    /// <summary>
+    /// Handles operations related to events such as listing, editing, deleting, and details.
+    /// </summary>
     [Authorize(Roles = "Admin, Moderator")]
     public class EventController(
         ILogger<EventController> _logger, 
@@ -21,6 +24,11 @@ namespace GameVerse.Web.Controllers
         IModeratorService _moderatorService, 
         INotyfService _notyf) : BaseController
     {
+        /// <summary>
+        /// Displays a list of all events with optional filtering and pagination.
+        /// </summary>
+        /// <param name="model">Query model for filtering and pagination.</param>
+        /// <returns>The event index view with the list of events.</returns>
         [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> Index([FromQuery] AllEventsQueryModel model)
@@ -52,6 +60,11 @@ namespace GameVerse.Web.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Displays detailed information about a specific event.
+        /// </summary>
+        /// <param name="id">The unique identifier of the event.</param>
+        /// <returns>The event details view or NotFound if the event does not exist.</returns>
         [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> Details(string id)
@@ -68,6 +81,11 @@ namespace GameVerse.Web.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Displays the event edit form for the specified event.
+        /// </summary>
+        /// <param name="id">The unique identifier of the event.</param>
+        /// <returns>The edit event view or Unauthorized/NotFound based on permissions.</returns>
         [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
@@ -102,6 +120,12 @@ namespace GameVerse.Web.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Handles the event editing logic after form submission.
+        /// </summary>
+        /// <param name="inputModel">The edited event data from the form.</param>
+        /// <param name="id">The unique identifier of the event.</param>
+        /// <returns>Redirects to the event details view upon success or redisplays the form upon failure.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EventInputViewModel inputModel, string id)
@@ -184,6 +208,11 @@ namespace GameVerse.Web.Controllers
             return RedirectToAction(nameof(Details), new { id = eventId, area = "" });
         }
 
+        /// <summary>
+        /// Displays the delete confirmation view for an event.
+        /// </summary>
+        /// <param name="id">The unique identifier of the event.</param>
+        /// <returns>The delete confirmation view or Unauthorized/NotFound based on permissions.</returns>
         [HttpGet]
         public async Task<IActionResult> Delete(string id)
         {
@@ -218,6 +247,11 @@ namespace GameVerse.Web.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Handles the deletion of an event after confirmation.
+        /// </summary>
+        /// <param name="id">The unique identifier of the event.</param>
+        /// <returns>Redirects to the event index view upon successful deletion.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirm(string id)

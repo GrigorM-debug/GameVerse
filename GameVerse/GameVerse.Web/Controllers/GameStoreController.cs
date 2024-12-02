@@ -15,6 +15,9 @@ using static GameVerse.Common.ApplicationConstants;
 
 namespace GameVerse.Web.Controllers
 {
+    /// <summary>
+    /// Handles operations related to the game store, including listing, editing, viewing details, and deleting games.
+    /// </summary>
     [Authorize(Roles = "Admin, Moderator")]
     public class GameStoreController(
         ILogger<GameStoreController> _logger, 
@@ -22,6 +25,11 @@ namespace GameVerse.Web.Controllers
         IModeratorService _moderatorService, 
         IGameService _gameService) : BaseController
     {
+        /// <summary>
+        /// Displays a list of all games with optional filtering, searching, and pagination.
+        /// </summary>
+        /// <param name="model">The query model for filtering, searching, and pagination.</param>
+        /// <returns>The view displaying a list of games.</returns>
         [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> Index([FromQuery] AllGamesQueryModel model)
@@ -54,6 +62,11 @@ namespace GameVerse.Web.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Displays detailed information about a specific game.
+        /// </summary>
+        /// <param name="id">The unique identifier of the game.</param>
+        /// <returns>The details view of the game or a NotFound result if the game does not exist.</returns>
         [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> Details(string id)
@@ -70,6 +83,11 @@ namespace GameVerse.Web.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Displays the form to edit an existing game.
+        /// </summary>
+        /// <param name="id">The unique identifier of the game to edit.</param>
+        /// <returns>The edit view of the game or Unauthorized/NotFound result if conditions are not met.</returns>
         [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
@@ -104,6 +122,12 @@ namespace GameVerse.Web.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Handles the submission of the edited game data.
+        /// </summary>
+        /// <param name="inputModel">The edited game data.</param>
+        /// <param name="id">The unique identifier of the game being edited.</param>
+        /// <returns>Redirects to the game details view on success, or redisplays the form with validation errors.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(GameInputViewModel inputModel, string id)
@@ -265,6 +289,11 @@ namespace GameVerse.Web.Controllers
             return RedirectToAction(nameof(Details), new { id = gameId, area = "" });
         }
 
+        /// <summary>
+        /// Displays the delete confirmation view for a game.
+        /// </summary>
+        /// <param name="id">The unique identifier of the game to delete.</param>
+        /// <returns>The delete confirmation view or Unauthorized/NotFound result.</returns>
         [HttpGet]
         public async Task<IActionResult> Delete(string id)
         {
@@ -301,6 +330,11 @@ namespace GameVerse.Web.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Handles the deletion of a game after confirmation.
+        /// </summary>
+        /// <param name="id">The unique identifier of the game to delete.</param>
+        /// <returns>Redirects to the game index view on success.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirm(string id)
