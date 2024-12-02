@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GameVerse.Web.Areas.Administrator.Controllers
 {
+    /// <summary>
+    /// Handles administrative operations, including viewing a dashboard with platform statistics and managing log files.
+    /// </summary>
     [Area("Administrator")]
     [Authorize(Roles = "Admin")]
     public class AdminController(
@@ -19,6 +22,10 @@ namespace GameVerse.Web.Areas.Administrator.Controllers
         IUsersBoughtGamesService _usersBoughtGamesService)
         : Controller
     {
+        /// <summary>
+        /// Displays the dashboard for administrators, including platform statistics and recent logs.
+        /// </summary>
+        /// <returns>The dashboard view with administrative statistics.</returns>
         [HttpGet]
         public async Task<IActionResult> DashBoard()
         {
@@ -39,6 +46,11 @@ namespace GameVerse.Web.Areas.Administrator.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Allows administrators to download a specific log file.
+        /// </summary>
+        /// <param name="fileName">The name of the log file to download.</param>
+        /// <returns>The log file as a downloadable response or an error if the file is not found.</returns>
         [HttpGet]
         public IActionResult DownloadLog(string fileName)
         {
