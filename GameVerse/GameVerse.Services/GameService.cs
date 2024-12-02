@@ -468,7 +468,7 @@ namespace GameVerse.Services
         /// <param name="searchString">An optional search term to filter games.</param>
         /// <param name="gameSelectedGameTypeSortOrder">An optional filter for the game type.</param>
         /// <returns>A collection of games as view models.</returns>
-        public async Task<IEnumerable<GameIndexViewModel>> GetAllGamesAsync(int currentPage, int gamesPerPage, EntitySortOrder sortOrder, string? searchString, GameType? gameSelectedGameTypeSortOrder, string? userId = null)
+        public async Task<IEnumerable<GameIndexViewModel>> GetAllGamesAsync(int currentPage, int gamesPerPage, EntitySortOrder sortOrder, string? searchString, GameType? gameSelectedGameTypeSortOrder)
         {
             IQueryable<Game> query =  _gameRepository
                 .GetWithIncludeAsync(g => g.Publisher.User)
@@ -488,11 +488,6 @@ namespace GameVerse.Services
             query = sortOrder == EntitySortOrder.Newest
                 ? query.OrderByDescending(g => g.CreatedOn)
                 : query.OrderBy(g => g.CreatedOn);
-
-            if (userId != null)
-            {
-                query = query.Where(g => g.Publisher.UserId.ToString() == userId);
-            }
 
             IEnumerable<GameIndexViewModel> gameIndexViewModels = await query
                 .Skip((currentPage - 1) * gamesPerPage)

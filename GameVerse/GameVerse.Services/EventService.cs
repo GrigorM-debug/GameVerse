@@ -221,8 +221,7 @@ namespace GameVerse.Services
         public async Task<IEnumerable<EventIndexViewModel>> GetAllEventsAsync(
             int currentPage,
             int eventsPerPage,
-            EntitySortOrder sortOrder,
-            string? userId = null
+            EntitySortOrder sortOrder
             )
         {
             IQueryable<Event> query = _eventRepository
@@ -236,10 +235,6 @@ namespace GameVerse.Services
                 ? query.OrderByDescending(e => e.Id) 
                 : query.OrderBy(e => e.Id);
 
-            if (userId != null)
-            {
-                query = query.Where(e => e.Publisher.UserId.ToString() == userId);
-            }
 
             IEnumerable<EventIndexViewModel> eventIndexViewModels = await query
                 .Skip((currentPage - 1) * eventsPerPage)

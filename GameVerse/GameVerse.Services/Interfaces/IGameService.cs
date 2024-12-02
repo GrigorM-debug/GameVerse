@@ -118,7 +118,7 @@ namespace GameVerse.Services.Interfaces
         /// <param name="searchString">An optional search term to filter games.</param>
         /// <param name="gameSelectedGameTypeSortOrder">An optional filter for the game type.</param>
         /// <returns>A task containing a collection of <see cref="GameIndexViewModel"/> for the games.</returns>
-        Task<IEnumerable<GameIndexViewModel>> GetAllGamesAsync(int currentPage, int gamesPerPage, EntitySortOrder sortOrder, string? searchString, GameType? gameSelectedGameTypeSortOrder, string? userId = null);
+        Task<IEnumerable<GameIndexViewModel>> GetAllGamesAsync(int currentPage, int gamesPerPage, EntitySortOrder sortOrder, string? searchString, GameType? gameSelectedGameTypeSortOrder);
 
         /// <summary>
         /// Retrieves the last three added games.
