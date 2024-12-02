@@ -17,7 +17,7 @@ namespace GameVerse.Services.Interfaces
         /// <param name="eventsPerPage">The Events per Page. For example 10</param>
         /// <param name="sortOrder">The Events Sort Order. By default, is set to Newest</param>
         /// <returns>A collection of <see cref="EventIndexViewModel"/> representing each event.</returns>
-        Task<IEnumerable<EventIndexViewModel>> GetAllEventsAsync(int currentPage, int eventsPerPage, EntitySortOrder sortOrder, string? userId == null);
+        Task<IEnumerable<EventIndexViewModel>> GetAllEventsAsync(int currentPage, int eventsPerPage, EntitySortOrder sortOrder, string? userId = null);
 
         /// <summary>
         /// Retrieves the total count of the events that are not deleted.
