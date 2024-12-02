@@ -31,6 +31,12 @@ namespace GameVerse.Web.Controllers
                 model.CurrentPage = 1;
             }
 
+            string? userId = string.Empty;
+            if (User?.Identity?.IsAuthenticated == true && User.IsInRole("Moderator"))
+            {
+                userId = User.GetId();
+            }
+
             int totalGameCount = await _gameService.GetTotalGamesCountAsync();
 
             IEnumerable<GameIndexViewModel> games = await _gameService.GetAllGamesAsync(
@@ -38,7 +44,8 @@ namespace GameVerse.Web.Controllers
                 model.GamesPerPage,
                 model.GameSelectedSortOrder,
                 model.SearchString,
-                model.GameSelectedGameTypeSortOrder
+                model.GameSelectedGameTypeSortOrder,
+                userId
             );
 
             model.TotalGamesCount = totalGameCount;
