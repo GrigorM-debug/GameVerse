@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GameVerse.Web.Controllers
 {
+    /// <summary>
+    /// Handles user-specific actions, such as viewing purchased games and event registrations.
+    /// </summary>
     [Authorize]
     [OnlyUsersWithoutRoles]
     public class UserController(
@@ -15,6 +18,10 @@ namespace GameVerse.Web.Controllers
         INotyfService _notyf
         ) : BaseController
     {
+        /// <summary>
+        /// Displays a list of games that the user has purchased.
+        /// </summary>
+        /// <returns>The view displaying the user's purchased games or an appropriate error response.</returns>
         [HttpGet]
         public async Task<IActionResult> UserBoughtGames()
         {
@@ -32,6 +39,10 @@ namespace GameVerse.Web.Controllers
             return View(userBoughtGamesViewModels);
         }
 
+        /// <summary>
+        /// Displays a list of events the user has registered for.
+        /// </summary>
+        /// <returns>The view displaying the user's event registrations or an appropriate error response.</returns>
         [HttpGet]
         public async Task<IActionResult> UserEventRegistrations()
         {

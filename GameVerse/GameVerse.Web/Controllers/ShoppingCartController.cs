@@ -16,6 +16,9 @@ using static GameVerse.Common.ApplicationConstants.EventConstants;
 
 namespace GameVerse.Web.Controllers
 {
+    /// <summary>
+    /// Handles operations related to the shopping cart, including adding, removing, and managing items.
+    /// </summary>
     [Authorize]
     [OnlyUsersWithoutRoles]
     public class ShoppingCartController(
@@ -25,6 +28,10 @@ namespace GameVerse.Web.Controllers
         IShoppingCartService _shoppingCartService
         ) : BaseController
     {
+        /// <summary>
+        /// Displays the items in the user's shopping cart.
+        /// </summary>
+        /// <returns>The shopping cart view.</returns>
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -41,6 +48,11 @@ namespace GameVerse.Web.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Adds a game to the user's shopping cart.
+        /// </summary>
+        /// <param name="gameId">The unique identifier of the game.</param>
+        /// <returns>Redirects to the shopping cart or appropriate error response.</returns>
         [HttpPost]
         public async Task<IActionResult> AddGameToCart(string gameId)
         {
@@ -75,6 +87,11 @@ namespace GameVerse.Web.Controllers
             return RedirectToAction("Index", "ShoppingCart", new { area = "" });
         }
 
+        /// <summary>
+        /// Adds an event ticket to the user's shopping cart.
+        /// </summary>
+        /// <param name="eventId">The unique identifier of the event.</param>
+        /// <returns>Redirects to the shopping cart or appropriate error response.</returns>
         [HttpPost]
         public async Task<IActionResult> AddEventToCart(string eventId)
         {
@@ -109,6 +126,11 @@ namespace GameVerse.Web.Controllers
             return RedirectToAction("Index", "ShoppingCart", new{ area = "" });
         }
 
+        /// <summary>
+        /// Removes a game from the user's shopping cart.
+        /// </summary>
+        /// <param name="gameId">The unique identifier of the game.</param>
+        /// <returns>Redirects to the game details or shopping cart view.</returns>
         [HttpPost]
         public async Task<IActionResult> RemoveGameFromCart(string gameId)
         {
@@ -146,6 +168,11 @@ namespace GameVerse.Web.Controllers
             return RedirectToAction("Details", "GameStore", new{id = gameId, area = "" });
         }
 
+        /// <summary>
+        /// Removes a game from the user's shopping cart.
+        /// </summary>
+        /// <param name="gameId">The unique identifier of the game.</param>
+        /// <returns>Redirects to the game details or shopping cart view.</returns>
         [HttpPost]
         public async Task<IActionResult> RemoveEventFromCart(string eventId)
         {
@@ -183,6 +210,10 @@ namespace GameVerse.Web.Controllers
             return RedirectToAction("Details", "Event", new {id = eventId, area=""});
         }
 
+        /// <summary>
+        /// Purchases all items in the user's shopping cart.
+        /// </summary>
+        /// <returns>Redirects to the shopping cart view or appropriate error response.</returns>
         [HttpPost]
         public async Task<IActionResult> PurchaseItemsInShoppingCart()
         {
@@ -237,6 +268,11 @@ namespace GameVerse.Web.Controllers
             }
         }
 
+        /// <summary>
+        /// Increases the quantity of a specific game item in the user's shopping cart.
+        /// </summary>
+        /// <param name="gameId">The unique identifier of the game.</param>
+        /// <returns>Redirects to the shopping cart view or an appropriate error response.</returns>
         [HttpPost]
         public async Task<IActionResult> IncreaseGameItemQuantity(string gameId)
         {
@@ -273,6 +309,12 @@ namespace GameVerse.Web.Controllers
 
             return RedirectToAction("Index", "ShoppingCart", new { area = "" });
         }
+
+        /// <summary>
+        /// Decreases the quantity of a specific game item in the user's shopping cart.
+        /// </summary>
+        /// <param name="gameId">The unique identifier of the game.</param>
+        /// <returns>Redirects to the shopping cart view or an appropriate error response.</returns>
 
         [HttpPost]
         public async Task<IActionResult> DecreaseGameItemQuantity(string gameId)
@@ -311,6 +353,11 @@ namespace GameVerse.Web.Controllers
             return RedirectToAction("Index", "ShoppingCart", new { area = "" });
         }
 
+        /// <summary>
+        /// Increases the quantity of a specific event ticket in the user's shopping cart.
+        /// </summary>
+        /// <param name="eventId">The unique identifier of the event.</param>
+        /// <returns>Redirects to the shopping cart view or an appropriate error response.</returns>
         [HttpPost]
         public async Task<IActionResult> IncreaseEventItemQuantity(string eventId)
         {
@@ -348,6 +395,11 @@ namespace GameVerse.Web.Controllers
             return RedirectToAction("Index", "ShoppingCart", new { area = "" });
         }
 
+        /// <summary>
+        /// Decreases the quantity of a specific event ticket in the user's shopping cart.
+        /// </summary>
+        /// <param name="eventId">The unique identifier of the event.</param>
+        /// <returns>Redirects to the shopping cart view or an appropriate error response.</returns>
         [HttpPost]
         public async Task<IActionResult> DecreaseEventItemQuantity(string eventId)
         {
