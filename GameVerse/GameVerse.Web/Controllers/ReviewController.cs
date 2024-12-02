@@ -13,6 +13,9 @@ using static GameVerse.Common.ApplicationConstants;
 
 namespace GameVerse.Web.Controllers
 {
+    /// <summary>
+    /// Handles operations related to user reviews, including adding, editing, and deleting reviews.
+    /// </summary>
     [Authorize]
     [OnlyUsersWithoutRoles]
     public class ReviewController(IGameService _gameService, 
@@ -20,6 +23,11 @@ namespace GameVerse.Web.Controllers
         INotyfService _notyf, 
         ILogger<ReviewController> _logger) : BaseController
     {
+        /// <summary>
+        /// Displays the form to add a review for a specific game.
+        /// </summary>
+        /// <param name="gameId">The unique identifier of the game to add a review for.</param>
+        /// <returns>The review add view or appropriate error response.</returns>
         [HttpGet]
         public async Task<IActionResult> Add(string gameId)
         {
@@ -55,6 +63,12 @@ namespace GameVerse.Web.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Handles the submission of a new review for a specific game.
+        /// </summary>
+        /// <param name="inputModel">The review data provided by the user.</param>
+        /// <param name="gameId">The unique identifier of the game being reviewed.</param>
+        /// <returns>Redirects to the game details view upon success or redisplays the form upon failure.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(ReviewInputViewModel inputModel, string gameId)
@@ -108,6 +122,12 @@ namespace GameVerse.Web.Controllers
             return RedirectToAction("Details", "GameStore", new { id = gameId, area = "" });
         }
 
+        /// <summary>
+        /// Displays the form to edit an existing review for a specific game.
+        /// </summary>
+        /// <param name="id">The unique identifier of the review to edit.</param>
+        /// <param name="gameId">The unique identifier of the game being reviewed.</param>
+        /// <returns>The review edit view or appropriate error response.</returns>
         [HttpGet]
         public async Task<IActionResult> Edit(string id, string gameId)
         {
@@ -141,6 +161,13 @@ namespace GameVerse.Web.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Handles the submission of updated review data for a specific game.
+        /// </summary>
+        /// <param name="inputModel">The updated review data provided by the user.</param>
+        /// <param name="id">The unique identifier of the review being edited.</param>
+        /// <param name="gameId">The unique identifier of the game being reviewed.</param>
+        /// <returns>Redirects to the game details view upon success or redisplays the form upon failure.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(ReviewInputViewModel inputModel, string id, string gameId)
@@ -194,6 +221,12 @@ namespace GameVerse.Web.Controllers
             return RedirectToAction("Details", "GameStore", new { id = gameId, area = "" });
         }
 
+        /// <summary>
+        /// Displays the confirmation view for deleting a review.
+        /// </summary>
+        /// <param name="id">The unique identifier of the review to delete.</param>
+        /// <param name="gameId">The unique identifier of the game being reviewed.</param>
+        /// <returns>The delete confirmation view or appropriate error response.</returns>
         [HttpGet]
         public async Task<IActionResult> Delete(string id, string gameId)
         {
@@ -227,6 +260,12 @@ namespace GameVerse.Web.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Handles the deletion of a review after confirmation.
+        /// </summary>
+        /// <param name="id">The unique identifier of the review to delete.</param>
+        /// <param name="gameId">The unique identifier of the game being reviewed.</param>
+        /// <returns>Redirects to the game details view upon success.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirm(string id, string gameId)

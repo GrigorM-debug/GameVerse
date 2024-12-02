@@ -12,11 +12,18 @@ using Serilog;
 
 namespace GameVerse.Web.Controllers
 {
+    /// <summary>
+    /// Handles operations related to the home page, privacy policy, and error handling.
+    /// </summary>
     public class HomeController(
         ILogger<HomeController> _logger, 
         IEventService _eventService, 
         IGameService _gameService) : Controller
     {
+        /// <summary>
+        /// Displays the home page. Redirects users to dashboards based on their roles or shows the latest events and games for regular users.
+        /// </summary>
+        /// <returns>The home page view for regular users or a redirection to the appropriate dashboard for Admins/Moderators.</returns>
         public async Task<IActionResult> Index()
         {
             if (User.IsAdmin())
@@ -41,11 +48,20 @@ namespace GameVerse.Web.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Displays the privacy policy page.
+        /// </summary>
+        /// <returns>The privacy policy view.</returns>
         public IActionResult Privacy()
         {
             return View();
         }
 
+        /// <summary>
+        /// Handles error responses based on the HTTP status code.
+        /// </summary>
+        /// <param name="statusCode">The HTTP status code of the error.</param>
+        /// <returns>The appropriate error view for the given status code.</returns>
         [AllowAnonymous]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error(int statusCode)
@@ -66,16 +82,6 @@ namespace GameVerse.Web.Controllers
                     Log.Error("An unexpected error occurred with status code {StatusCode}. Trace ID: {TraceId}", statusCode, requestId);
                     break;
             }
-
-            //if (statusCode == 404)
-            //{
-            //    return View("Error404");
-            //}
-
-            //if(statusCode == 401)
-            //{
-            //    return View("Error401");
-            //}
 
             return View(new ErrorViewModel { RequestId = requestId });
         }
