@@ -19,6 +19,11 @@ namespace GameVerse.Services
         /// </returns>
         public string GenerateQrCode(string data)
         {
+            if (data == null)
+            {
+                throw new ArgumentNullException(nameof(data), "Input data can't be null");
+            }
+
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
 
             QRCodeData qrCodeData = qrGenerator.CreateQrCode(data, QRCodeGenerator.ECCLevel.Q);
