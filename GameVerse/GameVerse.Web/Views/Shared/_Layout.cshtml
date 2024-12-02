@@ -81,6 +81,13 @@
                             </ul>
                         </li>
                         
+                        @if (User?.Identity?.IsAuthenticated == true && User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Administrator" asp-controller="ValidateUserTicket" asp-action="Index">Validate Qr Code</a>
+                            </li>
+                        }
+                        
                         @if (User?.Identity?.IsAuthenticated == true && !User.IsInRole("Admin") && !User.IsInRole("Moderator"))
                         {
                             <li class="nav-item">
