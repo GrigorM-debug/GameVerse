@@ -1,5 +1,6 @@
 ﻿using GameVerse.Data.Models.Events;
 using GameVerse.Data.Repositories.Interfaces;
+using GameVerse.Web.Areas.Administrator.Models;
 using GameVerse.Web.Areas.Administrator.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,6 +30,18 @@ namespace GameVerse.Web.Areas.Administrator.Services
                 .CountAsync();
 
             return eventsRegistrationsTotalCount;
+        }
+
+        public async Task<bool> IsUserEventRegistrationValidAsync(DecodedDataViewModel qrCodeData)
+        {
+            var userEventRegistration = await _eventsRegistrationsRepository.AllAsReadOnly().FirstOrDefaultAsync(er => er.UserId.ToString() == qrCodeData.UserId && er.EventId.ToString() == qrCodeData.EventId);
+
+            if (userEventRegistration == null)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

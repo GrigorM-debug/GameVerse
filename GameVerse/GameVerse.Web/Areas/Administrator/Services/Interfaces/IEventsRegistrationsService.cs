@@ -1,4 +1,6 @@
-﻿namespace GameVerse.Web.Areas.Administrator.Services.Interfaces
+﻿using GameVerse.Web.Areas.Administrator.Models;
+
+namespace GameVerse.Web.Areas.Administrator.Services.Interfaces
 {
     /// <summary>
     /// Provides methods for managing and retrieving information about event registrations.
@@ -13,5 +15,7 @@
         /// The task result contains the total number of event registrations as an <see cref="int"/>.
         /// </returns>
         Task<int> GetTotalEventsRegistrationsCountAsync();
+
+        Task<bool> IsUserEventRegistrationValidAsync(DecodedDataViewModel qrCodeData);
     }
 }
