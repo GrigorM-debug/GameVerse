@@ -1,24 +1,28 @@
 ﻿function startScanner() {
+    function onSuccessCallback(decodedText) {
+        alert(`Qr code successfully scanned : ${decodedText}`);
+        html5QrCode.stop();
+        readerDiv.style.display = "none";
+        validateTicket(decodedText);
+    }
+
+    function onErrorCallback(errroMessage) {
+        console.error("Error while scanning", errorMessage);
+    }
+
+    const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+
     const readerDiv = document.getElementById("reader");
     readerDiv.style.display = "block";
 
     const html5QrCode = new Html5Qrcode("reader");
     html5QrCode.start(
-        { facingMode: "user" }, 
-        { fps: 10, qrbox: { width: 250, height: 250 } },
-        (decodedText) => {
-            alert(`Qr code successfully scanned: ${decodedText}`); 
-            //validateTicket(decodedText);
-            html5QrCode.stop(); 
-            readerDiv.style.display = "none";
-            validateTicket(decodedText);
-            //alert(`Qr code successfully scanned: ${decodedText}`); 
-        },
-        (errorMessage) => {
-            console.error("Error while scanning", errorMessage);
-        }
+        { facingMode: "user" },
+        config,
+        onSuccessCallback,
+        onErrorCallback
     ).catch((err) => {
-        console.error("Failure to access the camera:", err);
+        alert("Failure to access the camera:", err);
     });
 }
 
