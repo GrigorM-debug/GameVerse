@@ -43,7 +43,7 @@ function displayMapWithDetails(eventLat, eventLng) {
     const eventMarker = L.marker([eventLat, eventLng]).addTo(map);
     eventMarker.bindPopup("Event Location!").openPopup();
 
-    //Using JS Navigator
+    //Using JS Navigator to get user location
     navigator.geolocation.getCurrentPosition(
         (position) => {
             const userLat = position.coords.latitude;
