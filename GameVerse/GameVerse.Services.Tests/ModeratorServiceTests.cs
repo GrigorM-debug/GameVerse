@@ -288,5 +288,32 @@ namespace GameVerse.Services.Tests
             Moderator updatedModerator = await _dbContext.Moderators.FirstAsync();
             Assert.That(updatedModerator.TotalEventsCreated, Is.EqualTo(expectedCount));
         }
+
+        [Test]
+        public async Task ModeratorExistByUserIdAsync_ReturnsTrue_WhenUserIsModerator()
+        {
+            //Arrange
+            Moderator moderator = await _dbContext.Moderators.FirstAsync();
+            string userId = moderator.UserId.ToString();
+
+            //Act 
+            bool result = await _moderatorService.ModeratorExistByUserIdAsync(userId);
+
+            //Assert
+            Assert.True(result);
+        }
+
+        [Test]
+        public async Task ModeratorExistByUserIdAsync_RetursFalse_WhenUserIsNotModerator()
+        {
+            //Arrange
+            string userId = Guid.NewGuid().ToString();
+
+            //Act
+            bool result = await _moderatorService.ModeratorExistByUserIdAsync(userId);
+
+            //Assert
+            Assert.False(result);
+        }
     }
 }
