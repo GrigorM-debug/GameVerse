@@ -195,5 +195,72 @@ namespace GameVerse.Services.Tests
             //Assert
             Assert.False(result);
         }
+
+        [Test]
+        public async Task AddReviewAsync_ShouldMarkReviewAsNotDeleted_WhenReviewExistsAndIsDeleted()
+        {
+            //Arrange
+            GameReview review = new GameReview
+            {
+                Id = Guid.NewGuid(),
+                GameId = Guid.NewGuid(),
+                ReviewerId = Guid.NewGuid(),
+                Content = "Deleted Review",
+                Rating = 3,
+                CreatedOn = DateTime.UtcNow.AddDays(-1),
+                IsDeleted = true
+            };
+
+            await _dbContext.GameReviews.AddAsync(review);
+            await _dbContext.SaveChangesAsync();
+
+            ReviewInputViewModel inputModel = new ReviewInputViewModel
+            {
+                Content = "Updated Review Content",
+                Rating = 5
+            };
+
+            string userId = review.ReviewerId.ToString();
+            string gameId = review.GameId.ToString();
+            DateTime createdOn = DateTime.UtcNow;
+
+            //Act
+            bool result = await _reviewService.AddReviewAsync(inputModel, userId, gameId, createdOn);
+
+            GameReview? updatedReview = await _dbContext.GameReviews.FirstOrDefaultAsync(r => r.Id == review.Id);
+
+            Assert.IsTrue(result);
+            Assert.IsNotNull(updatedReview);
+            Assert.IsFalse(updatedReview.IsDeleted);
+        }
+
+        [Test]
+        public async Task AddReviewAsync_AddsNewReview_WhenReviewDoesNotExist()
+        {
+            //Arrange
+            string userId = Guid.NewGuid().ToString();
+            string gameId = Guid.NewGuid().ToString();
+            DateTime createdOn = DateTime.UtcNow;
+
+            ReviewInputViewModel inputModel = new ReviewInputViewModel()
+            {
+                Content = "New review",
+                Rating = 4
+            };
+
+            //Act
+            bool result = await _reviewService.AddReviewAsync(inputModel, userId, gameId, createdOn);
+
+            //Assert
+            Assert.True(result);
+
+            GameReview? review = await _dbContext.GameReviews.FirstOrDefaultAsync(r => r.GameId.ToString() == gameId && r.ReviewerId.ToString() == userId && r.IsDeleted == false);
+
+            Assert.IsNotNull(review);
+            Assert.That(review.Content, Is.EqualTo("New review"));
+            Assert.That(4, Is.EqualTo(review.Rating));
+        }
+
+
     }
 }
