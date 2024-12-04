@@ -85,5 +85,20 @@ namespace GameVerse.Services.Tests
             Assert.IsNotNull(moderatorId);
             Assert.That(moderatorId, Is.EqualTo(moderator.Id.ToString()));
         }
+
+        [Test]
+        public async Task GetModeratorIdByUserIdAsync_ReturnsNull_IfUserIsNotModerator()
+        {
+            //Arrange
+            Moderator moderator = await _dbContext.Moderators.FirstAsync();
+            string userId = "00000000-0000-0000-0000-0000000000010";
+
+            //Act
+            string? moderatorId = await _moderatorService.GetModeratorIdByUserIdAsync(userId);
+
+            //Assert
+            Assert.IsNull(moderatorId);
+            Assert.That(userId, Is.Not.EqualTo(moderator.Id.ToString()));
+        }
     }
 }
