@@ -193,5 +193,30 @@ namespace GameVerse.Services.Tests
             Assert.That(game.Title, Is.EqualTo(firstBoughtGame.Title));
             Assert.That(game.Type.ToString(), Is.EqualTo(firstBoughtGame.Type));
         }
+
+        [Test]
+        public async Task GetUserEventRegistrationsAsync_ReturnsCorrectViewModel()
+        {
+            //Arrange
+            Event e = await _dbContext.Events.FirstAsync();
+            EventRegistration userEventRegistration = await _dbContext.EventsRegistrations.FirstAsync();
+            string userId = "00000000-0000-0000-0000-000000000001";
+
+            //Act 
+            IEnumerable<UserEventRegistrationsViewModel> result = await _userService.GetUserEventRegistrationsAsync(userId);
+
+            //Assert
+            Assert.IsNotEmpty(result);
+
+            UserEventRegistrationsViewModel? registration = result.FirstOrDefault();
+
+            Assert.IsNotNull(registration);
+            Assert.That(registration.EventId, Is.EqualTo(e.Id.ToString()));
+            Assert.That(userEventRegistration.RegistrationDate.ToString(EventDateTimeFormat, CultureInfo.InvariantCulture), Is.EqualTo(registration.RegistrationDate));
+            Assert.That(registration.Image, Is.EqualTo(e.Image));
+            Assert.That((e.TicketPrice * userEventRegistration.TicketQuantity).ToString("C"), Is.EqualTo(registration.Price));
+            Assert.That(registration.TicketQuantity, Is.EqualTo(userEventRegistration.TicketQuantity));
+            Assert.That(e.Topic, Is.EqualTo(registration.Topic));
+        }
     }
 }
