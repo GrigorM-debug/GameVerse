@@ -350,5 +350,22 @@ namespace GameVerse.Services.Tests
             Assert.That(result.GameId, Is.EqualTo(review.GameId.ToString()));
             Assert.That(result.GameName, Is.EqualTo(review.Game.Title));
         }
+
+        [Test]
+        public async Task DeleteReviewPostAsync_DeleteReview_WhenReviewExist()
+        {
+            //Assert
+            GameReview existingReview = await _dbContext.GameReviews.FirstAsync();
+
+            //Act
+            bool result = await _reviewService.DeleteReviewPostAsync(existingReview.Id.ToString(), existingReview.ReviewerId.ToString(), existingReview.GameId.ToString());
+
+            //Arrange
+            Assert.True(result);
+
+            GameReview deletedReview = await _dbContext.GameReviews.FirstAsync();
+
+            Assert.IsTrue(deletedReview.IsDeleted);
+        }
     }
 }
