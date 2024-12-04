@@ -100,5 +100,36 @@ namespace GameVerse.Services.Tests
             Assert.IsNull(moderatorId);
             Assert.That(userId, Is.Not.EqualTo(moderator.Id.ToString()));
         }
+
+        [Test]
+        public async Task InCreaseCreatedTotalEventsCount_IncreaseTotalEventsCreated_WhenModeratorExist()
+        {
+            //Arrange
+            Moderator moderator = await _dbContext.Moderators.FirstAsync();
+            string moderatorId = moderator.Id.ToString();
+            int expectecTotalEventsCount = 1;
+
+            //Act
+            await _moderatorService.InCreaseCreatedTotalEventsCount(moderatorId);
+
+            //Assert
+            Moderator updatedModerator = await _dbContext.Moderators.FirstAsync();
+            Assert.That(updatedModerator.TotalEventsCreated, Is.EqualTo(expectecTotalEventsCount));
+        }
+
+        [Test]
+        public async Task InCreaseCreatedTotalEventsCount_DoesNotIncreaseTotalEventsCreated_WhenModeratorDoesNotExist()
+        {
+            //Arrange
+            string modetatorId = Guid.NewGuid().ToString();
+            int expectecTotalEventsCount = 0;
+
+            //Act
+            await _moderatorService.InCreaseCreatedTotalEventsCount(modetatorId);
+
+            //Arrange
+            Moderator moderator = await _dbContext.Moderators.FirstAsync();
+            Assert.That(moderator.TotalEventsCreated, Is.EqualTo(expectecTotalEventsCount));
+        }
     }
 }
