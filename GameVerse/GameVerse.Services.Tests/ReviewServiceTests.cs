@@ -308,5 +308,24 @@ namespace GameVerse.Services.Tests
             //Assert
             Assert.False(result);
         }
+
+        [Test]
+        public async Task EditReviewGetAsync_ReturnsCorrectViewModel_WhenReviewExists()
+        {
+            //Arrange
+            GameReview review = await _dbContext.GameReviews.FirstAsync();
+            string reviewId = review.Id.ToString();
+            string userId = review.ReviewerId.ToString();
+            string gameId = review.GameId.ToString();
+
+            //Act
+            ReviewInputViewModel result = await _reviewService.EditViewGetAsync(reviewId, gameId, userId);
+
+            //Assert
+            Assert.IsNotNull(result);
+            Assert.That(result.Content, Is.EqualTo(review.Content));
+            Assert.That(result.Rating, Is.EqualTo(review.Rating));
+            Assert.That(result.GameId, Is.EqualTo(review.GameId.ToString()));
+        }
     }
 }
