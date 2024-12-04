@@ -367,5 +367,24 @@ namespace GameVerse.Services.Tests
 
             Assert.IsTrue(deletedReview.IsDeleted);
         }
+
+        [Test]
+        public async Task DeleteReviewPostAsync_ReturnsFalse_WhenReviewDoesNotExist()
+        {
+            //Assert
+            string userId = Guid.NewGuid().ToString();
+            string gameId = Guid.NewGuid().ToString();
+            string reviewId = Guid.NewGuid().ToString();
+
+            //Act
+            bool result = await _reviewService.DeleteReviewPostAsync(reviewId, userId, gameId);
+
+            //Arrange
+            Assert.False(result);
+
+            GameReview review = await _dbContext.GameReviews.FirstAsync();
+
+            Assert.IsFalse(review.IsDeleted);
+        }
     }
 }
