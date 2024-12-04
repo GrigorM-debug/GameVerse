@@ -140,6 +140,60 @@ namespace GameVerse.Services.Tests
             await _dbContext.SaveChangesAsync();
         }
 
-        
+        [Test]
+        public async Task ReviewAlreadyExistByGameIdAndUserIdAsync_ReturnsTrue_WhenReviewExist()
+        {
+            //Arrange
+            string userId = "00000000-0000-0000-0000-000000000001";
+            string gameId = "00000000-0000-0000-0000-000000000002";
+
+            //Act
+            bool result = await _reviewService.ReviewAlreadyExistByGameIdAndUserIdAsync(userId, gameId);
+
+            //Assert
+            Assert.True(result);
+        }
+
+        [Test]
+        public async Task ReviewAlreadyExistByGameIdAndUserIdAsync_ReturnsFalse_WhenReviewDoesNotExistByUserIdAndGameId()
+        {
+            //Arrange 
+            string gameId = Guid.NewGuid().ToString();
+            string userId = Guid.NewGuid().ToString();
+
+            //Act
+            bool result = await _reviewService.ReviewAlreadyExistByGameIdAndUserIdAsync(userId, gameId);
+
+            //Assert
+            Assert.False(result);
+        }
+
+        [Test]
+        public async Task ReviewAlreadyExistByGameIdAndUserIdAsync_ReturnsFalse_WhenUserIdIsWrong()
+        {
+            //Arrange
+            string userId = Guid.NewGuid().ToString();
+            string gameId = "00000000-0000-0000-0000-000000000002";
+
+            //Act
+            bool result = await _reviewService.ReviewAlreadyExistByGameIdAndUserIdAsync(userId, gameId);
+
+            //Assert
+            Assert.False(result);
+        }
+
+        [Test]
+        public async Task ReviewAlreadyExistByGameIdAndUserIdAsync_ReturnsFalse_WhenGameIdIsWrong()
+        {
+            //Arrange
+            string userId = "00000000-0000-0000-0000-000000000001";
+            string gameId = Guid.NewGuid().ToString();
+
+            //Act
+            bool result = await _reviewService.ReviewAlreadyExistByGameIdAndUserIdAsync(userId, gameId);
+
+            //Assert
+            Assert.False(result);
+        }
     }
 }
