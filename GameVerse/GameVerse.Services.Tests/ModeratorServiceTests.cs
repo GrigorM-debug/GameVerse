@@ -225,5 +225,68 @@ namespace GameVerse.Services.Tests
             Moderator updatedModerator = await _dbContext.Moderators.FirstAsync();
             Assert.That(updatedModerator.TotalGamesCreated, Is.EqualTo(expectedCount));
         }
+
+        [Test]
+        public async Task DecreaseCreatedTotalEventsCount_DecreaseTotalEventsCreated_WhenUserIsModeratorAndIsNotAdmin()
+        {
+            //Arrange
+            bool isAdmin = false;
+
+            Moderator moderator = await _dbContext.Moderators.FirstAsync();
+            moderator.TotalEventsCreated += 1;
+            await _dbContext.SaveChangesAsync();
+
+            string moderatorId = moderator.Id.ToString();
+            int expectedCount = 0;
+
+            //Act
+            await _moderatorService.DecreaseCreatedTotalEventsCount(moderatorId, isAdmin);
+
+            //Assert
+            Moderator updatedModerator = await _dbContext.Moderators.FirstAsync();
+            Assert.That(updatedModerator.TotalEventsCreated, Is.EqualTo(expectedCount));
+        }
+
+        [Test]
+        public async Task DecreaseCreatedTotalEventsCount_DoesNotDecreaseEventsCreated_WhenUserIsNotModeratorAndIsNotAdmin()
+        {
+            //Arrange
+            bool isAdmin = false;
+
+            Moderator moderator = await _dbContext.Moderators.FirstAsync();
+            moderator.TotalEventsCreated += 1;
+            await _dbContext.SaveChangesAsync();
+
+            string moderatorId = Guid.NewGuid().ToString();
+            int expectedCount = 1;
+
+            //Act
+            await _moderatorService.DecreaseCreatedTotalEventsCount(moderatorId, isAdmin);
+
+            //Assert
+            Moderator updatedModerator = await _dbContext.Moderators.FirstAsync();
+            Assert.That(updatedModerator.TotalEventsCreated, Is.EqualTo(expectedCount));
+        }
+
+        [Test]
+        public async Task DecreaseCreatedTotalEventsCount_DecreseTotalEventsCreated_WhenUserIsNotModeratorButIsAdmin()
+        {
+            //Arrange
+            bool isAdmin = true;
+
+            Moderator moderator = await _dbContext.Moderators.FirstAsync();
+            moderator.TotalEventsCreated += 1;
+            await _dbContext.SaveChangesAsync();
+
+            string moderatorId = Guid.NewGuid().ToString();
+            int expectedCount = 0;
+
+            //Act
+            await _moderatorService.DecreaseCreatedTotalEventsCount(moderatorId, isAdmin);
+
+            //Assert
+            Moderator updatedModerator = await _dbContext.Moderators.FirstAsync();
+            Assert.That(updatedModerator.TotalEventsCreated, Is.EqualTo(expectedCount));
+        }
     }
 }
