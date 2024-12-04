@@ -261,6 +261,52 @@ namespace GameVerse.Services.Tests
             Assert.That(4, Is.EqualTo(review.Rating));
         }
 
+        [Test]
+        public async Task EditReviewPostAsync_UpdatesReview_WhenReviewExist()
+        {
+            //Arrange
+            GameReview? existringReview = await _dbContext.GameReviews.FirstAsync();
 
+            ReviewInputViewModel inputModel = new ReviewInputViewModel()
+            {
+                Content = "Updated review content",
+                Rating = 4
+            };
+
+            DateTime createdOn = DateTime.UtcNow;
+
+            //Act
+            bool result = await _reviewService.EditReviewPostAsync(inputModel, createdOn, existringReview.Id.ToString(), existringReview.ReviewerId.ToString(), existringReview.GameId.ToString());
+
+            //Assert
+            Assert.True(result);
+
+            GameReview updatedReview = await _dbContext.GameReviews.FirstAsync();
+
+            Assert.That(updatedReview.Content, Is.EqualTo("Updated review content"));
+            Assert.That(updatedReview.Rating, Is.EqualTo(4));
+        }
+
+        [Test]
+        public async Task EditReviewPostAsync_ReturnsFalse_WhenReviewDoesNotExist()
+        {
+            //Arrange
+            string userId = Guid.NewGuid().ToString();
+            string gameId = Guid.NewGuid().ToString();
+            string reviewId = Guid.NewGuid().ToString();
+            DateTime createdOn = DateTime.UtcNow;
+
+            ReviewInputViewModel inputModel = new ReviewInputViewModel()
+            {
+                Content = "Updated review content",
+                Rating = 4
+            };
+
+            //Act 
+            bool result = await _reviewService.EditReviewPostAsync(inputModel, createdOn, reviewId, userId, gameId);
+
+            //Assert
+            Assert.False(result);
+        }
     }
 }
