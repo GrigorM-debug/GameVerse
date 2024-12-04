@@ -327,5 +327,28 @@ namespace GameVerse.Services.Tests
             Assert.That(result.Rating, Is.EqualTo(review.Rating));
             Assert.That(result.GameId, Is.EqualTo(review.GameId.ToString()));
         }
+
+        [Test]
+        public async Task DeleteReviewGetAsync_ReturnsCorrectViewModel_WhenReviewExists()
+        {
+            //Arrange
+            GameReview review = await _dbContext.GameReviews.FirstAsync();
+            string reviewId = review.Id.ToString();
+            string userId = review.ReviewerId.ToString();
+            string gameId = review.GameId.ToString();
+
+            //Act
+            ReviewDeleteViewModel result = await _reviewService.DeleteReviewGetAsync(reviewId, userId, gameId);
+
+            //Assert
+            Assert.IsNotNull(result);
+            Assert.That(result.Id, Is.EqualTo(reviewId));
+            Assert.That(result.Content, Is.EqualTo(review.Content));
+            Assert.That(result.Rating, Is.EqualTo(review.Rating));
+            Assert.That(result.ReviewerId, Is.EqualTo(review.ReviewerId.ToString()));
+            Assert.That(result.ReviewerName, Is.EqualTo(review.Reviewer.UserName));
+            Assert.That(result.GameId, Is.EqualTo(review.GameId.ToString()));
+            Assert.That(result.GameName, Is.EqualTo(review.Game.Title));
+        }
     }
 }
