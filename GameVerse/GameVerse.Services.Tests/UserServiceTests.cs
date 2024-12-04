@@ -13,6 +13,9 @@ using GameVerse.Data.Models.Games.Genres;
 using GameVerse.Data.Models.Games.Platform;
 using GameVerse.Data.Models.Games.Restrictions;
 using GameVerse.Data.Models.Carts;
+using GameVerse.Web.ViewModels.Game.UserPagesViewModels;
+using static GameVerse.Common.ApplicationConstants.EventConstants;
+using System.Globalization;
 
 namespace GameVerse.Services.Tests
 {
@@ -169,11 +172,26 @@ namespace GameVerse.Services.Tests
         {
             //Arrange 
             Game game = await _dbContext.Games.FirstAsync();
+            UserBoughtGame boughtGame = await _dbContext.UserBoughtGames.FirstAsync();
             string userId = "00000000-0000-0000-0000-000000000001";
 
-            var result = await _userService.GetUserBoughtGamesAsync(userId);
+            //Act
+            IEnumerable<UserBoughtGamesViewModel> result = await _userService.GetUserBoughtGamesAsync(userId);
 
-            Assert.IsNotNull(result);
+            //Assert
+            Assert.IsNotEmpty(result);
+            
+            UserBoughtGamesViewModel? firstBoughtGame = result.FirstOrDefault();
+
+            Assert.IsNotNull(firstBoughtGame);
+
+            Assert.That(game.Id.ToString(), Is.EqualTo(firstBoughtGame.GameId));
+            Assert.That(boughtGame.BoughtOn.ToString(EventDateTimeFormat, CultureInfo.InvariantCulture), Is.EqualTo(firstBoughtGame.BoughtOn));
+            Assert.That(game.Image, Is.EqualTo(firstBoughtGame.Image));
+            Assert.That((game.Price * boughtGame.Quantity).ToString("C"), Is.EqualTo(firstBoughtGame.Price));
+            Assert.That(boughtGame.Quantity, Is.EqualTo(firstBoughtGame.Quantity));
+            Assert.That(game.Title, Is.EqualTo(firstBoughtGame.Title));
+            Assert.That(game.Type.ToString(), Is.EqualTo(firstBoughtGame.Type));
         }
     }
 }
