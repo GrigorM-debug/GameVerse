@@ -132,12 +132,46 @@ namespace GameVerse.Services.Tests
                 Restriction = restriction
             });
 
+            Game game2 = new Game()
+            {
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000003"),
+                Title = "Test Game2",
+                Description = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
+                PublishingStudio = "Test Studio2",
+                YearPublished = 2011,
+                CreatedOn = DateTime.UtcNow.AddDays(2),
+                Price = 20,
+                Image = "wdffffffffffffffffffffff",
+                QuantityInStock = 10,
+                Type = GameType.DigitalKey,
+                IsDeleted = false,
+                PublisherId = moderator.Id
+            };
+
+            game2.GamesGenres.Add(new GameGenre()
+            {
+                Genre = genre,
+                Game = game2,
+            });
+
+            game2.GamesPlatforms.Add(new GamePlatform()
+            {
+                Game = game2,
+                Platform = platform
+            });
+
+            game2.GamesRestrictions.Add(new GameRestriction()
+            {
+                Game = game2,
+                Restriction = restriction
+            });
+
             await _dbContext.Users.AddAsync(user);
             await _dbContext.Moderators.AddAsync(moderator);
             await _dbContext.Restrictions.AddAsync(restriction);
             await _dbContext.Genres.AddAsync(genre);
             await _dbContext.Platforms.AddAsync(platform);
-            await _dbContext.Games.AddAsync(game);
+            await _dbContext.Games.AddRangeAsync(game, game2);
             await _dbContext.SaveChangesAsync();
         }
 
@@ -567,8 +601,8 @@ namespace GameVerse.Services.Tests
 
             // Assert
             Assert.NotNull(result);
-            Assert.That(result.Count(), Is.EqualTo(1)); 
-            Assert.That(result.First().Title, Is.EqualTo("Test Game")); 
+            Assert.That(result.Count(), Is.EqualTo(2)); 
+            Assert.That(result.First().Title, Is.EqualTo("Test Game2")); 
         }
 
         [Test]
@@ -578,7 +612,7 @@ namespace GameVerse.Services.Tests
             int currentPage = 1;
             int gamesPerPage = 5;
             var sortOrder = EntitySortOrder.Newest;
-            string searchString = "Test Game"; 
+            string searchString = "Test Game2"; 
             GameType? gameSelectedGameTypeSortOrder = null;
 
             // Act
@@ -587,7 +621,7 @@ namespace GameVerse.Services.Tests
             // Assert
             Assert.NotNull(result);
             Assert.That(result.Count(), Is.EqualTo(1)); 
-            Assert.That(result.First().Title, Is.EqualTo("Test Game"));
+            Assert.That(result.First().Title, Is.EqualTo("Test Game2"));
         }
 
         [Test]
@@ -605,7 +639,7 @@ namespace GameVerse.Services.Tests
 
             // Assert
             Assert.NotNull(result);
-            Assert.That(result.Count(), Is.EqualTo(1)); 
+            Assert.That(result.Count(), Is.EqualTo(2)); 
         }
 
         [Test]
@@ -613,7 +647,9 @@ namespace GameVerse.Services.Tests
         {
             // Arrange
             Game game = await _dbContext.Games.FirstAsync();
+            Game game2 = await _dbContext.Games.LastAsync();
             _dbContext.Remove(game);
+            _dbContext.Remove(game2);
             await _dbContext.SaveChangesAsync();
             int currentPage = 1;
             int gamesPerPage = 5;
@@ -648,7 +684,7 @@ namespace GameVerse.Services.Tests
 
             List<GameIndexViewModel> resultList = result.ToList();
 
-            Assert.IsTrue(resultList.Count() == 1); // Ensure there is more than one result to test sorting
+            Assert.IsTrue(resultList.Count() == 2); // Ensure there is more than one result to test sorting
             for (int i = 1; i < resultList.Count; i++)
             {
                 Assert.IsTrue(
@@ -675,7 +711,7 @@ namespace GameVerse.Services.Tests
             Assert.NotNull(result);
 
             List<GameIndexViewModel> resultList = result.ToList();
-            Assert.IsTrue(resultList.Count == 1); 
+            Assert.IsTrue(resultList.Count > 1); 
 
             for (int i = 1; i < resultList.Count; i++)
             {
