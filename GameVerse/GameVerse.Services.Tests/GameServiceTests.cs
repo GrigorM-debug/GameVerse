@@ -7,10 +7,12 @@ using GameVerse.Data.Models.Games;
 using GameVerse.Data.Models.Games.Genres;
 using GameVerse.Data.Models.Games.Platform;
 using GameVerse.Data.Models.Games.Restrictions;
+using GameVerse.Data.Models.Games.Review;
 using GameVerse.Data.Repositories;
 using GameVerse.Data.Repositories.Interfaces;
 using GameVerse.Services.Interfaces;
 using GameVerse.Web.ViewModels.Game;
+using GameVerse.Web.ViewModels.Game.Details;
 using GameVerse.Web.ViewModels.Game.SelectLists;
 using Microsoft.EntityFrameworkCore;
 using SendGrid.Helpers.Mail;
@@ -71,6 +73,17 @@ namespace GameVerse.Services.Tests
                 LastName = "Testov"
             };
 
+            ApplicationUser user2 = new ApplicationUser()
+            {
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000008"),
+                UserName = "TestUser2",
+                NormalizedUserName = "TESTUSER2",
+                Email = "test2@abv.bg",
+                NormalizedEmail = "test2@abv.bg",
+                FirstName = "Test2",
+                LastName = "Testov2"
+            };
+
             Moderator moderator = new Moderator()
             {
                 Id = Guid.NewGuid(),
@@ -78,6 +91,15 @@ namespace GameVerse.Services.Tests
                 UserId = user.Id,
                 TotalEventsCreated = 0,
                 TotalGamesCreated = 0,
+            };
+
+            GameReview review = new GameReview()
+            {
+                Id = Guid.NewGuid(),
+                Content = "Test review",
+                Rating = 5,
+                IsDeleted = false,
+                ReviewerId = user2.Id,
             };
 
             Restriction restriction = new Restriction()
@@ -166,7 +188,9 @@ namespace GameVerse.Services.Tests
                 Restriction = restriction
             });
 
-            await _dbContext.Users.AddAsync(user);
+            game.Reviews.Add(review);
+
+            await _dbContext.Users.AddRangeAsync(user, user2);
             await _dbContext.Moderators.AddAsync(moderator);
             await _dbContext.Restrictions.AddAsync(restriction);
             await _dbContext.Genres.AddAsync(genre);
@@ -870,7 +894,7 @@ namespace GameVerse.Services.Tests
             Assert.That(updatedGame.Title, Is.EqualTo("Updated Test Game"));
             Assert.That(updatedGame.Price, Is.EqualTo(60.0m));
             Assert.That(updatedGame.PublishingStudio, Is.EqualTo("Updated Studio"));
-            Assert.AreEqual(2025, updatedGame.YearPublished);
+            Assert.That(updatedGame.YearPublished, Is.EqualTo(2025));
 
             // Verify associations
             Assert.That(updatedGame.GamesGenres.Count(g => !g.IsDeleted), Is.EqualTo(1));
@@ -952,6 +976,154 @@ namespace GameVerse.Services.Tests
             Assert.That(updatedGame.GamesGenres.Count(g => !g.IsDeleted), Is.EqualTo(0)); // No genres
             Assert.That(updatedGame.GamesPlatforms.Count(p => !p.IsDeleted), Is.EqualTo(1)); // One platform
             Assert.That(updatedGame.GamesRestrictions.Count(r => !r.IsDeleted), Is.EqualTo(0));
+        }
+
+
+        [Test]
+        public async Task GetGameDetailsByIdAsync_ShouldReturnGameDetails_WhenGameExists()
+        {
+            // Arrange
+            string gameId = "00000000-0000-0000-0000-000000000002"; 
+            Game game = await _dbContext.Games.FirstOrDefaultAsync(g => g.Id.ToString() == gameId);
+
+            // Act
+            GameDetailsViewModel result = await _gameService.GetGameDetailsByIdAsync(gameId);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.That(result.Title, Is.EqualTo(game.Title));
+            Assert.That(result.Description, Is.EqualTo(game.Description));
+            Assert.That(result.PublishingStudio, Is.EqualTo(game.PublishingStudio));
+            Assert.That(result.YearPublished, Is.EqualTo(game.YearPublished));
+            Assert.That(result.Publisher, Is.EqualTo(game.Publisher.User.UserName));
+
+            // Verify related data
+            Assert.That(result.Platforms.Count(), Is.EqualTo(1));
+            Assert.That(result.Platforms.First().Name, Is.EqualTo("Test Platform"));
+
+            Assert.That(result.Restrictions.Count(), Is.EqualTo(1));
+            Assert.That(result.Restrictions.First().Name, Is.EqualTo("Test Restriction"));
+
+            Assert.That(result.Genres.Count(), Is.EqualTo(1));
+            Assert.That(result.Genres.First().Name, Is.EqualTo("Test Genre"));
+
+            Assert.That(result.Reviews.Count(), Is.EqualTo(1));
+            Assert.That(result.Reviews.First().Rating, Is.EqualTo(5));
+
+            Assert.That(result.AverageRating, Is.EqualTo(5.0));
+        }
+
+        [Test]
+        public async Task GetGameDetailsByIdAsync_ShouldCalculateAverageRatingCorrectly()
+        {
+            // Arrange
+            string gameId = "00000000-0000-0000-0000-000000000002";
+
+            List<GameReview> reviews = new List<GameReview>
+            {
+                new GameReview
+                {
+                    Id = Guid.NewGuid(),
+                    GameId = Guid.Parse(gameId),
+                    Content = "Great game!",
+                    Rating = 4,
+                    CreatedOn = DateTime.UtcNow,
+                    ReviewerId = _dbContext.Users.First().Id,
+                    IsDeleted = false
+                },
+                new GameReview
+                {
+                    Id = Guid.NewGuid(),
+                    GameId = Guid.Parse(gameId),
+                    Content = "Not bad.",
+                    Rating = 3,
+                    CreatedOn = DateTime.UtcNow,
+                    ReviewerId = _dbContext.Users.First().Id,
+                    IsDeleted = false
+                }
+            };
+
+            await _dbContext.GameReviews.AddRangeAsync(reviews);
+            await _dbContext.SaveChangesAsync();
+
+            // Act
+            GameDetailsViewModel result = await _gameService.GetGameDetailsByIdAsync(gameId);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.That(result.Reviews.Count(), Is.EqualTo(3));
+            Assert.That(result.AverageRating, Is.EqualTo(4));
+        }
+
+        [Test]
+        public async Task GetGameDetailsByIdAsync_ShouldHandleGameWithNoReviews()
+        {
+            // Arrange
+            string gameId = Guid.NewGuid().ToString();
+            Genre genre = _dbContext.Genres.First();
+            Platform platform = _dbContext.Platforms.First();
+            Restriction restriction = _dbContext.Restrictions.First();
+
+            Game game = new Game
+            {
+                Id = Guid.Parse(gameId),
+                Title = "No Reviews Test Game",
+                Description = "This game has genres, platforms, and restrictions but no reviews.",
+                PublishingStudio = "Test Studio",
+                YearPublished = 2023,
+                CreatedOn = DateTime.UtcNow,
+                Price = 30.0m,
+                Image = "test-image-url",
+                QuantityInStock = 20,
+                Type = GameType.DigitalKey,
+                PublisherId = _dbContext.Moderators.First().Id,
+                IsDeleted = false
+            };
+
+            game.GamesGenres.Add(new GameGenre
+            {
+                GameId = game.Id,
+                GenreId = genre.Id,
+                IsDeleted = false
+            });
+
+            game.GamesPlatforms.Add(new GamePlatform
+            {
+                GameId = game.Id,
+                PlatformId = platform.Id,
+                IsDeleted = false
+            });
+
+            game.GamesRestrictions.Add(new GameRestriction
+            {
+                GameId = game.Id,
+                RestrictionId = restriction.Id,
+                IsDeleted = false
+            });
+
+            await _dbContext.Games.AddAsync(game);
+            await _dbContext.SaveChangesAsync();
+
+            // Act
+            GameDetailsViewModel result = await _gameService.GetGameDetailsByIdAsync(gameId);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.That(result.Title, Is.EqualTo("No Reviews Test Game"));
+
+            // Verify genres, platforms, and restrictions are returned correctly
+            Assert.IsNotEmpty(result.Genres);
+            Assert.That(result.Genres.First().Name, Is.EqualTo(genre.Name));
+
+            Assert.IsNotEmpty(result.Platforms);
+            Assert.That(result.Platforms.First().Name, Is.EqualTo(platform.Name));
+
+            Assert.IsNotEmpty(result.Restrictions);
+            Assert.That(result.Restrictions.First().Name, Is.EqualTo(restriction.Name));
+
+            // Verify reviews are empty and average rating is 0
+            Assert.IsEmpty(result.Reviews);
+            Assert.That(result.AverageRating, Is.EqualTo(0.0));
         }
 
 
