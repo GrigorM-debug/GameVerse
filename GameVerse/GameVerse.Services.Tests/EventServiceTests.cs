@@ -257,5 +257,100 @@ namespace GameVerse.Services.Tests
             Assert.That(addedEvent.PublisherId.ToString(), Is.EqualTo(moderatorId));
         }
 
+        [Test]
+        public async Task DeleteEventGetAsync_ShouldReturnEventDeleteViewModel_WhenEventExistsAndUSerISModerator()
+        {
+            // Arrange
+            Event e = await _dbContext.Events.FirstAsync();
+            string eventId = e.Id.ToString();
+            Moderator moderator = await _dbContext.Moderators.FirstAsync();
+            string moderatorId = moderator.Id.ToString(); 
+            bool isAdmin = false; 
+
+            // Act
+            EventDeleteViewModel? result = await _eventService.DeleteEventGetAsync(eventId, moderatorId, isAdmin);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.That(result.Id, Is.EqualTo(eventId));
+            Assert.That(result.Topic, Is.EqualTo(e.Topic)); 
+            Assert.That(result.PublisherId, Is.EqualTo(moderatorId));
+            Assert.That(result.PublisherName, Is.EqualTo(e.Publisher.User.UserName)); 
+        }
+
+        [Test]
+        public async Task DeleteEventGetAsync_ShouldReturnEventDeleteViewModel_WhenEventExistsAndUserIsNotModeratorButIsAdmin()
+        {
+            // Arrange
+            Event e = await _dbContext.Events.FirstAsync();
+            string eventId = e.Id.ToString();
+            bool isAdmin = true;
+            string moderatorId = Guid.NewGuid().ToString();
+
+            // Act
+            EventDeleteViewModel? result = await _eventService.DeleteEventGetAsync(eventId, moderatorId, isAdmin);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.That(result.Id, Is.EqualTo(eventId));
+            Assert.That(result.Topic, Is.EqualTo(e.Topic));
+            Assert.That(result.PublisherId, Is.EqualTo(e.PublisherId.ToString()));
+            Assert.That(result.PublisherName, Is.EqualTo(e.Publisher.User.UserName));
+        }
+
+
+        [Test]
+        public async Task GetLatest3EventsAsync_ShouldReturnLatest3Events_WhenEventsExist()
+        {
+            // Arrange
+            Guid moderatorId = _dbContext.Moderators.First().Id;
+            List<Event> events = new List<Event>
+            {
+                new Event
+                {
+                    Topic = "Event 1",
+                    Description = "First Event",
+                    StartDate = DateTime.UtcNow.AddDays(-3),
+                    EndDate = DateTime.UtcNow.AddDays(-2),
+                    Latitude = 10.0,
+                    Longitude = 20.0,
+                    Seats = 50,
+                    TicketPrice = 10.0m,
+                    Image = "event1.jpg",
+                    PublisherId = moderatorId,
+                    IsDeleted = false
+                },
+                new Event
+                {
+                    Topic = "Event 2",
+                    Description = "Second Event",
+                    StartDate = DateTime.UtcNow.AddDays(-2),
+                    EndDate = DateTime.UtcNow.AddDays(-1),
+                    Latitude = 15.0,
+                    Longitude = 25.0,
+                    Seats = 100,
+                    TicketPrice = 15.0m,
+                    Image = "event2.jpg",
+                    PublisherId = moderatorId,
+                    IsDeleted = false
+                },
+            };
+
+            await _dbContext.Events.AddRangeAsync(events);
+            await _dbContext.SaveChangesAsync();
+
+            // Act
+            IEnumerable<EventIndexViewModel> result = await _eventService.GetLatest3EventsAsync();
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.That(result.Count(), Is.EqualTo(3));
+
+            var resultList = result.ToList();
+            Assert.That(resultList[0].Topic, Is.EqualTo("Event 2")); 
+            Assert.That(resultList[1].Topic, Is.EqualTo("Event 1"));
+            Assert.That(resultList[2].Topic, Is.EqualTo("Test Event"));
+        }
+
     }
 }

@@ -91,7 +91,7 @@ namespace GameVerse.Services
             {
                 Id = e.Id.ToString(),
                 Topic = e.Topic,
-                PublisherName = e.Publisher.User.UserName,
+                PublisherName = e.Publisher.User.UserName ?? string.Empty,
                 PublisherId = e.PublisherId.ToString(),
             };
 
