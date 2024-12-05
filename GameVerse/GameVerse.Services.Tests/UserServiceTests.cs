@@ -218,5 +218,21 @@ namespace GameVerse.Services.Tests
             Assert.That(registration.TicketQuantity, Is.EqualTo(userEventRegistration.TicketQuantity));
             Assert.That(e.Topic, Is.EqualTo(registration.Topic));
         }
+
+        [Test]
+        public async Task GetUserBoughtGamesAsync_ReturnsEmptyCollection_IfUserHasNoGamesBought()
+        {
+            //Assert
+            string userId = "00000000-0000-0000-0000-000000000001";
+            UserBoughtGame boughtGame = await _dbContext.UserBoughtGames.FirstAsync();
+            _dbContext.UserBoughtGames.Remove(boughtGame);
+            await _dbContext.SaveChangesAsync();
+
+            //Act
+            var result = await _userService.GetUserBoughtGamesAsync(userId);
+
+            //Assert
+            Assert.IsEmpty(result);
+        }
     }
 }
