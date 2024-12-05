@@ -2,6 +2,7 @@
 
 using System.Globalization;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using GameVerse.Common.Enums;
 using GameVerse.Data;
 using GameVerse.Data.Models.Games;
@@ -301,6 +302,11 @@ namespace GameVerse.Services
                 .AsNoTracking()
                 .FirstOrDefaultAsync(g => g.Id.ToString() == gameId && (g.PublisherId.ToString() == moderatorId || isAdmin) &&
                                           g.IsDeleted == false);
+
+            if (game == null)
+            {
+                return null;
+            }
 
             GameDeleteViewModel model = new GameDeleteViewModel()
             {
