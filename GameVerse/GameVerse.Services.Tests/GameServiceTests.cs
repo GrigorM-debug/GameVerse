@@ -10,6 +10,7 @@ using GameVerse.Data.Models.Games.Restrictions;
 using GameVerse.Data.Repositories;
 using GameVerse.Data.Repositories.Interfaces;
 using GameVerse.Services.Interfaces;
+using GameVerse.Web.ViewModels.Game.SelectLists;
 using Microsoft.EntityFrameworkCore;
 
 namespace GameVerse.Services.Tests
@@ -265,6 +266,27 @@ namespace GameVerse.Services.Tests
             int result = await _gameService.GetTotalGamesCountAsync();
 
             Assert.That(result, Is.EqualTo(totalGamesCountExpected));
+        }
+
+        [Test]
+        public async Task GetGenresAsync_Returns_CorrectlyPopulatedViewModel()
+        {
+            //Arrange
+            IEnumerable<Genre> genres = await _dbContext.Genres.ToListAsync();
+
+            //Act
+            IEnumerable<GenreSelectList> result = await _gameService.GetGenresAsync();
+
+            Assert.IsNotEmpty(result);
+
+            foreach(Genre genre in genres)
+            {
+                foreach(GenreSelectList genreSelect in result)
+                {
+                    Assert.That(genre.Name, Is.EqualTo(genreSelect.Name));
+                    Assert.That(genreSelect.Id, Is.EqualTo(genreSelect.Id));
+                }
+            }
         }
     }
 }
