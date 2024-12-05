@@ -111,5 +111,34 @@ namespace GameVerse.Services.Tests
             Assert.That(totalEventsCount, Is.EqualTo(0));
         }
 
+        [Test]
+        public async Task GetEventByIdAsync_ShouldReturnNull_WhenEventDoesNotExist()
+        {
+            // Arrange
+            string invalidEventId = Guid.NewGuid().ToString(); 
+
+            // Act
+            Event result = await _eventService.GetEventByIdAsync(invalidEventId);
+
+            // Assert
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public async Task GetEventByIdAsync_ShouldReturnEvent_WhenEventExists()
+        {
+            // Arrange
+            string eventId = _dbContext.Events.First().Id.ToString(); 
+
+            // Act
+            Event result = await _eventService.GetEventByIdAsync(eventId);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.That(result.Id.ToString(), Is.EqualTo(eventId));
+            Assert.That(result.Topic, Is.EqualTo("Test Event")); 
+            Assert.That(result.IsDeleted, Is.EqualTo(false));
+        }
+
     }
 }
