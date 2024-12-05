@@ -454,5 +454,52 @@ namespace GameVerse.Services.Tests
             //Assert
             Assert.False(result);
         }
+
+        [Test]
+        public async Task DeleteGameGetAsync_ShouldReturnGameDeleteViewModel_WhenGameExistsAndModeratorIsPublisher()
+        {
+            //Arrange
+            Game game = _dbContext.Games.First();
+            string gameId = game.Id.ToString();
+            bool isAdmin = false;
+
+            // Act
+            GameDeleteViewModel result = await _gameService.DeleteGameGetAsync(gameId, game.PublisherId.ToString(), isAdmin); // Moderator is the publisher
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.That(result.Id, Is.EqualTo(game.Id.ToString()));
+            Assert.That(result.Title, Is.EqualTo(game.Title));
+            Assert.That(result.PublisherId, Is.EqualTo(game.PublisherId.ToString()));
+            Assert.That(result.PublisherName, Is.EqualTo(game.Publisher.User.UserName));
+        }
+
+        [Test]
+        public async Task DeleteGameGetAsync_ShouldReturnGameDeleteViewModel_WhenGameExistsAndUserIsAdmin()
+        {
+            //Arrange
+            bool isAdmin = true;
+            Game game = await _dbContext.Games.FirstAsync();
+
+            //Act
+            GameDeleteViewModel result = await _gameService.DeleteGameGetAsync(game.Id.ToString(), "123", isAdmin);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.That(result.Id, Is.EqualTo(game.Id.ToString()));
+            Assert.That(result.Title, Is.EqualTo(game.Title));
+            Assert.That(result.PublisherId, Is.EqualTo(game.PublisherId.ToString()));
+            Assert.That(result.PublisherName, Is.EqualTo(game.Publisher.User.UserName));
+        }
+
+        [Test]
+        public async Task DeleteGameGetAsync_ShouldReturnNull_WhenGameDoesNotExistOrIsDeleted()
+        {
+            // Act
+            GameDeleteViewModel result = await _gameService.DeleteGameGetAsync("1", "1", false);
+
+            // Assert
+            Assert.IsNull(result);
+        }
     }
 }
