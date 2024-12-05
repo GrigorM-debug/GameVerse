@@ -229,7 +229,23 @@ namespace GameVerse.Services.Tests
             await _dbContext.SaveChangesAsync();
 
             //Act
-            var result = await _userService.GetUserBoughtGamesAsync(userId);
+            IEnumerable<UserBoughtGamesViewModel> result = await _userService.GetUserBoughtGamesAsync(userId);
+
+            //Assert
+            Assert.IsEmpty(result);
+        }
+
+        [Test]
+        public async Task GetUserEventRegistrationsAsync_ReturnsEmptyCollection_IfUserHasNoEventsRegistrations()
+        {
+            //Assert
+            string userId = "00000000-0000-0000-0000-000000000001";
+            EventRegistration eventRegistration = await _dbContext.EventsRegistrations.FirstAsync();
+            _dbContext.EventsRegistrations.Remove(eventRegistration);
+            await _dbContext.SaveChangesAsync();
+
+            //Act
+            IEnumerable<UserEventRegistrationsViewModel> result = await _userService.GetUserEventRegistrationsAsync(userId);
 
             //Assert
             Assert.IsEmpty(result);
