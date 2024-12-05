@@ -298,6 +298,42 @@ namespace GameVerse.Services.Tests
             Assert.That(result.PublisherName, Is.EqualTo(e.Publisher.User.UserName));
         }
 
+        [Test]
+        public async Task DeleteEventPostAsync_ShouldDoNothing_WhenEventDoesNotExistOrUserLacksAccess()
+        {
+            // Arrange
+            string nonExistentEventId = Guid.NewGuid().ToString(); 
+            string invalidModeratorId = "invalid-moderator-id"; 
+            bool isAdmin = false; 
+
+            // Act
+            await _eventService.DeleteEventPostAsync(nonExistentEventId, invalidModeratorId, isAdmin);
+
+            // Assert
+            IEnumerable<Event> events = _dbContext.Events.ToList(); 
+            Assert.IsTrue(events.All(e => !e.IsDeleted));
+        }
+
+        [Test]
+        public async Task DeleteEventPostAsync_ShouldMarkEventAsDeleted_WhenEventExistsAndUserHasAccess()
+        {
+            // Arrange
+            Event e = await _dbContext.Events.FirstAsync();
+            string eventId = e.Id.ToString();
+            Moderator moderator = await _dbContext.Moderators.FirstAsync();
+            string moderatorId = moderator.Id.ToString();
+            bool isAdmin = false; 
+
+            // Act
+            await _eventService.DeleteEventPostAsync(eventId, moderatorId, isAdmin);
+
+            // Assert
+            Event? deletedEvent = await _dbContext.Events.FindAsync(Guid.Parse(eventId));
+            Assert.NotNull(deletedEvent);
+            Assert.IsTrue(deletedEvent.IsDeleted);
+        }
+
+
 
         [Test]
         public async Task GetLatest3EventsAsync_ShouldReturnLatest3Events_WhenEventsExist()
