@@ -6,6 +6,7 @@ using GameVerse.Data.Models.Events;
 using GameVerse.Data.Repositories;
 using GameVerse.Data.Repositories.Interfaces;
 using GameVerse.Services.Interfaces;
+using GameVerse.Web.ViewModels.Event;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework.Internal;
 
@@ -128,7 +129,8 @@ namespace GameVerse.Services.Tests
         public async Task GetEventByIdAsync_ShouldReturnEvent_WhenEventExists()
         {
             // Arrange
-            string eventId = _dbContext.Events.First().Id.ToString(); 
+            Event e = await _dbContext.Events.FirstAsync(); 
+            string eventId = e.Id.ToString();
 
             // Act
             Event result = await _eventService.GetEventByIdAsync(eventId);
@@ -139,6 +141,55 @@ namespace GameVerse.Services.Tests
             Assert.That(result.Topic, Is.EqualTo("Test Event")); 
             Assert.That(result.IsDeleted, Is.EqualTo(false));
         }
+
+        [Test]
+        public async Task GetEventDetailsByIdAsync_ShouldReturnEventDetails_WhenEventExists()
+        {
+            // Arrange
+            Event e = await _dbContext.Events.FirstAsync();
+            string eventId = e.Id.ToString();
+            
+
+            // Act
+            EventDetailsViewModel result = await _eventService.GetEventDetailsByIdAsync(eventId);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.That(result.Id, Is.EqualTo(eventId));
+            Assert.That(result.Topic, Is.EqualTo(e.Topic)); 
+            Assert.That(result.Description, Is.EqualTo(e.Description));
+            Assert.That(result.Seats, Is.EqualTo(e.Seats));
+            Assert.That(result.TicketPrice, Is.EqualTo(e.TicketPrice.ToString("C"))); 
+            Assert.That(result.Image, Is.EqualTo(e.Image));
+            Assert.That(result.PublisherName, Is.EqualTo(e.Publisher.User.UserName)); 
+        }
+
+        [Test]
+        public async Task EventExistByTitle_ShouldReturnTrue_WhenEventExists()
+        {
+            // Arrange
+            string topic = "Test Event"; 
+
+            // Act
+            bool result = await _eventService.EventExistByTitle(topic);
+
+            // Assert
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        public async Task EventExistByTitle_ShouldReturnFalse_WhenEventDoesNotExist()
+        {
+            // Arrange
+            string nonExistentTopic = "Non-Existent Event";
+
+            // Act
+            bool result = await _eventService.EventExistByTitle(nonExistentTopic);
+
+            // Assert
+            Assert.IsFalse(result);
+        }
+
 
     }
 }
