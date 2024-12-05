@@ -227,5 +227,32 @@ namespace GameVerse.Services.Tests
             Assert.That(result.RestrictionSelectList.Count(), Is.EqualTo(1));
             Assert.IsNotEmpty(result.GameTypes);
         }
+
+        [Test]
+        public async Task GameExistByIdAsync_ReturnsTrue_WhenGameExists()
+        {
+            //Arrange
+            Game game = await _dbContext.Games.FirstAsync();
+            string gameId = game.Id.ToString();
+
+            //Act
+            bool result = await _gameService.GameExistByIdAsync(gameId);
+
+            //Assert
+            Assert.True(result);
+        }
+
+        [Test]
+        public async Task GameExistByIdAsync_ReturnsFalse_WhenGameDoesNotExist()
+        {
+            //Arrange
+            string gameId = Guid.NewGuid().ToString();
+
+            //Act
+            bool result = await _gameService.GameExistByIdAsync(gameId);
+
+            //Assert
+            Assert.False(result);
+        }
     }
 }
