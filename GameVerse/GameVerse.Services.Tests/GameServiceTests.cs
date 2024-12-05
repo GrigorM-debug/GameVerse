@@ -277,6 +277,7 @@ namespace GameVerse.Services.Tests
             //Act
             IEnumerable<GenreSelectList> result = await _gameService.GetGenresAsync();
 
+            //Assert
             Assert.IsNotEmpty(result);
 
             foreach(Genre genre in genres)
@@ -287,6 +288,34 @@ namespace GameVerse.Services.Tests
                     Assert.That(genreSelect.Id, Is.EqualTo(genreSelect.Id));
                 }
             }
+        }
+
+        [Test]
+        public async Task GetPlatformsAsync_Returns_CorrectlyPopulatedViewModel()
+        {
+            //Arrange
+            IEnumerable<Platform> platforms = await _dbContext.Platforms.ToListAsync();
+
+            //Act
+            IEnumerable<PlatformSelectList> result = await _gameService.GetPlatformsAsync();
+
+            //Assert
+            Assert.IsNotEmpty(result);
+
+            foreach(Platform platform in platforms)
+            {
+                foreach (PlatformSelectList platformSelect in result)
+                {
+                    Assert.That(platformSelect.Name, Is.EqualTo(platform.Name));
+                    Assert.That(platformSelect.Id, Is.EqualTo(platform.Id));
+                }
+            }
+        }
+
+        [Test]
+        public async Task GetRestrictionsAsync_Returns_CorrectlyPopulatedViewModel()
+        {
+
         }
     }
 }
