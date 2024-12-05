@@ -217,5 +217,45 @@ namespace GameVerse.Services.Tests
             Assert.IsFalse(result);
         }
 
+        [Test]
+        public async Task AddEventAsync_ShouldAddEventSuccessfully()
+        {
+            // Arrange
+            EventInputViewModel inputModel = new EventInputViewModel
+            {
+                Topic = "New Event",
+                Description = "This is a test event.",
+                Latitude = 12.345,
+                Longitude = 67.890,
+                Seats = 100,
+                TicketPrice = 50.0m,
+                Image = "test-image-url"
+            };
+
+            string moderatorId = _dbContext.Moderators.First().Id.ToString(); 
+            DateTime startDate = DateTime.UtcNow.AddDays(1); 
+            DateTime endDate = startDate.AddHours(2); 
+
+            // Act
+            string result = await _eventService.AddEventAsync(inputModel, moderatorId, startDate, endDate);
+
+            // Assert
+            Assert.NotNull(result);
+
+            Event addedEvent = await _dbContext.Events.FindAsync(Guid.Parse(result));
+
+            Assert.NotNull(addedEvent);
+            Assert.That(addedEvent.Topic, Is.EqualTo(inputModel.Topic));
+            Assert.That(addedEvent.Description, Is.EqualTo(inputModel.Description));
+            Assert.That(addedEvent.StartDate, Is.EqualTo(startDate));
+            Assert.That(addedEvent.EndDate, Is.EqualTo(endDate));
+            Assert.That(addedEvent.Latitude, Is.EqualTo(inputModel.Latitude));
+            Assert.That(addedEvent.Longitude, Is.EqualTo(inputModel.Longitude));
+            Assert.That(addedEvent.Seats, Is.EqualTo(inputModel.Seats));
+            Assert.That(addedEvent.TicketPrice, Is.EqualTo(inputModel.TicketPrice));
+            Assert.That(addedEvent.Image, Is.EqualTo(inputModel.Image));
+            Assert.That(addedEvent.PublisherId.ToString(), Is.EqualTo(moderatorId));
+        }
+
     }
 }
