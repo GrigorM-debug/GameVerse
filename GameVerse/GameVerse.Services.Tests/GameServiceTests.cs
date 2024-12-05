@@ -315,7 +315,23 @@ namespace GameVerse.Services.Tests
         [Test]
         public async Task GetRestrictionsAsync_Returns_CorrectlyPopulatedViewModel()
         {
+            //Arrange
+            IEnumerable<Restriction> restrictions = await _dbContext.Restrictions.ToListAsync();
 
+            //Act
+            IEnumerable<RestrictionSelectList> result = await _gameService.GetRestrictionsAsync();
+
+            //Assert
+            Assert.IsNotEmpty(result);
+        
+            foreach(Restriction restriction in restrictions)
+            {
+                foreach(RestrictionSelectList restrictionSelect in result)
+                {
+                    Assert.That(restrictionSelect.Name, Is.EqualTo(restriction.Name));
+                    Assert.That(restrictionSelect.Id, Is.EqualTo(restriction.Id));
+                }
+            }
         }
     }
 }
