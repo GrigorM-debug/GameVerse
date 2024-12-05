@@ -336,7 +336,7 @@ namespace GameVerse.Services.Tests
         }
 
         [Test]
-        public async Task GetGameTypes_Retruns_CorrectlyPopulatedViewModel()
+        public void GetGameTypes_Retruns_CorrectlyPopulatedViewModel()
         {
             //Arrange
             List<GameTypeViewModel> expectedGameTypes = new List<GameTypeViewModel>
@@ -357,6 +357,37 @@ namespace GameVerse.Services.Tests
                 Assert.That(result[i].Value, Is.EqualTo(expectedGameTypes[i].Value));
                 Assert.That(result[i].Text, Is.EqualTo(expectedGameTypes[i].Text));
             }
+        }
+
+        [Test]
+        public async Task UpdateGameQuantityInStockAsync_UpdatesQuantityInStock_WhenGameExist()
+        {
+            //Arrange
+            Game game = await _dbContext.Games.FirstAsync();
+            string gameId = game.Id.ToString();
+            int expectedQuantityInStock = 11;
+
+            //Act 
+            await _gameService.UpdateGameQuantityInStockAsync(gameId, 1);
+
+            //Assert
+            Game gameUpdated = await _dbContext.Games.FirstAsync();
+            Assert.That(gameUpdated.QuantityInStock, Is.EqualTo(expectedQuantityInStock));
+        }
+
+        [Test]
+        public async Task UpdateGameQuantityInStockAsync_DoesNotUpdateQuantityInStock_WhenGameDoesNotExist()
+        {
+            //Arrange
+            string gameId = Guid.NewGuid().ToString();
+            int expectedQuantityInStock = 10;
+
+            //Act 
+            await _gameService.UpdateGameQuantityInStockAsync(gameId, 1);
+
+            //Assert
+            Game game = await _dbContext.Games.FirstAsync();
+            Assert.That(game.QuantityInStock, Is.EqualTo(expectedQuantityInStock));
         }
     }
 }
