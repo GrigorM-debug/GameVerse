@@ -163,6 +163,11 @@ namespace GameVerse.Services
         {
             Event? e = await _eventRepository.FirstOrDefaultAsync(e => e.Id.ToString() == eventId && (e.PublisherId.ToString() == moderatorId || isAdmin) && e.IsDeleted == false);
 
+            if(e == null)
+            {
+                return null;
+            }
+
             if(e != null)
             {
                 e.Topic = inputModel.Topic;

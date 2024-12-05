@@ -372,6 +372,83 @@ namespace GameVerse.Services.Tests
             Assert.IsNull(result);
         }
 
+        [Test]
+        public async Task EditEventPostAsync_ShouldUpdateEventSuccessfully_WhenEventExistsAndUserHasAccess()
+        {
+            // Arrange
+            Event e = await _dbContext.Events.FirstAsync();
+            string eventId = e.Id.ToString();
+            Moderator moderator = await _dbContext.Moderators.FirstAsync();
+            string moderatorId = moderator.Id.ToString();
+            DateTime startDate = DateTime.UtcNow.AddDays(1);
+            DateTime endDate = DateTime.UtcNow.AddDays(2);
+
+            EventInputViewModel inputModel = new EventInputViewModel
+            {
+                Topic = "Updated Event Topic",
+                Description = "Updated Event Description",
+                Latitude = 50.0,
+                Longitude = 60.0,
+                Seats = 200,
+                TicketPrice = 100.0m,
+                Image = "updated-image-url"
+            };
+
+            // Act
+            string result = await _eventService.EditEventPostAsync(inputModel, eventId, moderatorId, startDate, endDate, false);
+
+            // Assert
+            Event updatedEvent = await _dbContext.Events.FindAsync(Guid.Parse(result));
+
+            Assert.NotNull(updatedEvent);
+            Assert.That(updatedEvent.Topic, Is.EqualTo(inputModel.Topic));
+            Assert.That(updatedEvent.Description, Is.EqualTo(inputModel.Description));
+            Assert.That(updatedEvent.StartDate, Is.EqualTo(startDate));
+            Assert.That(updatedEvent.EndDate, Is.EqualTo(endDate));
+            Assert.That(updatedEvent.Latitude, Is.EqualTo(inputModel.Latitude));
+            Assert.That(updatedEvent.Longitude, Is.EqualTo(inputModel.Longitude));
+            Assert.That(updatedEvent.Seats, Is.EqualTo(inputModel.Seats));
+            Assert.That(updatedEvent.TicketPrice, Is.EqualTo(inputModel.TicketPrice));
+            Assert.That(updatedEvent.Image, Is.EqualTo(inputModel.Image));
+        }
+
+        [Test]
+        public async Task EditEventPostAsync_ShouldNotUpdateEvent_WhenEventDoesNotExistOrUserLacksAccess()
+        {
+            // Arrange
+            string nonExistentEventId = Guid.NewGuid().ToString(); 
+            string invalidModeratorId = "invalid-moderator-id"; 
+            DateTime startDate = DateTime.UtcNow.AddDays(1);
+            DateTime endDate = DateTime.UtcNow.AddDays(2);
+
+            EventInputViewModel inputModel = new EventInputViewModel
+            {
+                Topic = "Non-Existent Event",
+                Description = "This event does not exist.",
+                Latitude = 50.0,
+                Longitude = 60.0,
+                Seats = 200,
+                TicketPrice = 100.0m,
+                Image = "non-existent-image-url"
+            };
+
+            // Act
+            await _eventService.EditEventPostAsync(inputModel, nonExistentEventId, invalidModeratorId, startDate, endDate, false);
+
+            // Assert
+            IEnumerable<Event> events = _dbContext.Events.ToList();
+            foreach (var existingEvent in events)
+            {
+                Assert.That(existingEvent.Topic, Is.Not.EqualTo("Non-Existent Event"));
+                Assert.That(existingEvent.Description, Is.Not.EqualTo("This event does not exist."));
+                Assert.That(existingEvent.Latitude, Is.Not.EqualTo(50.0));
+                Assert.That(existingEvent.Longitude, Is.Not.EqualTo(60.0));
+                Assert.That(existingEvent.Seats, Is.Not.EqualTo(200));
+                Assert.That(existingEvent.TicketPrice, Is.Not.EqualTo(100.0m));
+                Assert.That(existingEvent.Image, Is.Not.EqualTo("non-existent-image-url"));
+            }
+        }
+
 
 
         [Test]
