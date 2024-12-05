@@ -12,6 +12,7 @@ using GameVerse.Data.Repositories.Interfaces;
 using GameVerse.Services.Interfaces;
 using GameVerse.Web.ViewModels.Game.SelectLists;
 using Microsoft.EntityFrameworkCore;
+using SendGrid.Helpers.Mail;
 
 namespace GameVerse.Services.Tests
 {
@@ -331,6 +332,30 @@ namespace GameVerse.Services.Tests
                     Assert.That(restrictionSelect.Name, Is.EqualTo(restriction.Name));
                     Assert.That(restrictionSelect.Id, Is.EqualTo(restriction.Id));
                 }
+            }
+        }
+
+        [Test]
+        public async Task GetGameTypes_Retruns_CorrectlyPopulatedViewModel()
+        {
+            //Arrange
+            List<GameTypeViewModel> expectedGameTypes = new List<GameTypeViewModel>
+            {
+                new GameTypeViewModel { Value = 1, Text = "PhysicalCopy" },
+                new GameTypeViewModel { Value = 2, Text = "DigitalKey" },
+            };
+
+            //Act
+            List<GameTypeViewModel> result = _gameService.GetGameTypes().ToList();
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.That(result.Count(), Is.EqualTo(expectedGameTypes.Count()));
+
+            for (int i = 0; i < expectedGameTypes.Count(); i++)
+            {
+                Assert.That(result[i].Value, Is.EqualTo(expectedGameTypes[i].Value));
+                Assert.That(result[i].Text, Is.EqualTo(expectedGameTypes[i].Text));
             }
         }
     }
