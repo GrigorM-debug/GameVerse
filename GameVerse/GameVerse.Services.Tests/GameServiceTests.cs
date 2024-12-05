@@ -172,5 +172,42 @@ namespace GameVerse.Services.Tests
             //Assert
             Assert.IsNull(result);
         }
+
+        [Test]
+        public async Task GetGameByIdAsTrackingAsync_ReturnsGame_WhenGameExist()
+        {
+            //Arrange
+            Game game = await _dbContext.Games.FirstAsync();
+            string gameId = game.Id.ToString();
+
+            //Act
+            Game? result = await _gameService.GetGameByIdAsTrackingAsync(gameId);
+
+            //Assert
+            Assert.IsNotNull(result);
+            Assert.That(game.Id, Is.EqualTo(result.Id));
+            Assert.That(game.Title, Is.EqualTo(result.Title));
+            Assert.That(game.Image, Is.EqualTo(result.Image));
+            Assert.That(game.Description, Is.EqualTo(result.Description));
+            Assert.That(game.CreatedOn, Is.EqualTo(result.CreatedOn));
+            Assert.That(game.Price, Is.EqualTo(result.Price));
+            Assert.That(game.Type, Is.EqualTo(result.Type));
+            Assert.That(game.PublisherId, Is.EqualTo(result.PublisherId));
+        }
+
+        [Test]
+        public async Task GetGameByIdAsTrackingAsync_ReturnsNull_WhenGameDoesNotExist()
+        {
+            //Arrange
+            string gameId = Guid.NewGuid().ToString();
+
+            //Act
+            Game? result = await _gameService.GetGameByIdAsTrackingAsync(gameId);
+
+            //Assert
+            Assert.IsNull(result);
+        }
+
+
     }
 }
