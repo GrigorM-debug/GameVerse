@@ -307,7 +307,7 @@ namespace GameVerse.Services
                 Id = game.Id.ToString(),
                 Title = game.Title,
                 PublisherId = game.PublisherId.ToString(),
-                PublisherName = game.Publisher.User.UserName
+                PublisherName = game.Publisher.User.UserName ?? string.Empty
             };
 
             return model;

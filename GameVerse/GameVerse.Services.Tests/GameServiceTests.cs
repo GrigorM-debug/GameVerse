@@ -424,5 +424,35 @@ namespace GameVerse.Services.Tests
 
             Assert.That(resultList[0].Title, Is.EqualTo(game.Title));
         }
+
+        [Test]
+        public async Task GameExistByTitleAndTypeAsync_ShouldReturnTrue_WhenGameExists()
+        {
+            //Arrange 
+            Game game = await _dbContext.Games.FirstAsync();
+            string gameTitle = game.Title;
+            GameType type = GameType.DigitalKey;
+
+            //Act
+            bool result = await _gameService.GameExistByTitleAndTypeAsync(gameTitle, type);
+
+            //Assert
+            Assert.True(result);
+        }
+
+        [Test]
+        public async Task GameExistByTitleAndTypeAsync_ShouldReturnFalse_WhenGameDoesNotExist()
+        {
+            //Arrange 
+            Game game = await _dbContext.Games.FirstAsync();
+            string gameTitle = "Neznam";
+            GameType type = GameType.PhysicalCopy;
+
+            //Act
+            bool result = await _gameService.GameExistByTitleAndTypeAsync(gameTitle, type);
+
+            //Assert
+            Assert.False(result);
+        }
     }
 }
