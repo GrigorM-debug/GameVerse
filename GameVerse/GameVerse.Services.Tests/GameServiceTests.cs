@@ -254,5 +254,17 @@ namespace GameVerse.Services.Tests
             //Assert
             Assert.False(result);
         }
+
+        [Test]
+        public async Task GetTotalGamesCountAsync_ReturnsTotalGamesCount()
+        {
+            //Arrange
+            int totalGamesCountExpected = 1;
+
+            //Act 
+            int result = await _gameService.GetTotalGamesCountAsync();
+
+            Assert.That(result, Is.EqualTo(totalGamesCountExpected));
+        }
     }
 }
