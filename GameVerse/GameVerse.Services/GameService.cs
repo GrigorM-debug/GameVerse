@@ -153,6 +153,11 @@ namespace GameVerse.Services
                 .FirstOrDefaultAsync(g =>
                     g.Id.ToString() == gameId && (g.PublisherId.ToString() == moderatorId || isAdmin) && g.IsDeleted == false);
 
+            if (game == null)
+            {
+                return null;
+            }
+
             IEnumerable<GenreSelectList> genres = await GetGenresAsync();
             IEnumerable<PlatformSelectList> platforms = await GetPlatformsAsync();
             IEnumerable<RestrictionSelectList> restrictions = await GetRestrictionsAsync();

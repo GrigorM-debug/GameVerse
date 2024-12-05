@@ -721,6 +721,239 @@ namespace GameVerse.Services.Tests
             }
         }
 
+        [Test]
+        public async Task EditGameGetAsync_ShouldReturnGameInputViewModel_WhenGameExistsAndIsAccessibleByModerator()
+        {
+            // Arrange
+            string gameId = "00000000-0000-0000-0000-000000000002"; 
+            string moderatorId = _dbContext.Moderators.First().Id.ToString(); 
+            bool isAdmin = false;
+            Game game1 = await _dbContext.Games.FirstOrDefaultAsync(g=> g.Id.ToString() == gameId);
+
+            // Act
+            GameInputViewModel result = await _gameService.EditGameGetAsync(gameId, moderatorId, isAdmin);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.That(result.Title, Is.EqualTo(game1.Title));
+            Assert.That(result.Description, Is.EqualTo(game1.Description));
+            Assert.That(result.PublishingStudio, Is.EqualTo(game1.PublishingStudio));
+            Assert.That(result.YearPublished, Is.EqualTo(game1.YearPublished));
+            Assert.That(result.Price, Is.EqualTo(game1.Price));
+
+            Assert.NotNull(result.GenreSelectList);
+            Assert.NotNull(result.PlatformSelectList);
+            Assert.NotNull(result.RestrictionSelectList);
+            Assert.NotNull(result.GameTypes);
+
+            Assert.That(result.SelectedGenres.Count(), Is.EqualTo(1));
+            Assert.That(result.SelectedPlatforms.Count(), Is.EqualTo(1));
+            Assert.That(result.SelectedRestrictions.Count(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public async Task EditGameGetAsync_ShouldReturnGameInputViewModel_WhenGameExistsAndIsAccessibleByAdmin()
+        {
+            // Arrange
+            string gameId = "00000000-0000-0000-0000-000000000002"; 
+            string moderatorId = "not-a-real-id"; 
+            bool isAdmin = true; 
+            Game game1 = await _dbContext.Games.FirstOrDefaultAsync(g => g.Id.ToString() == gameId);
+
+            // Act
+            GameInputViewModel result = await _gameService.EditGameGetAsync(gameId, moderatorId, isAdmin);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.That(result.Title, Is.EqualTo(game1.Title)); 
+            Assert.That(result.Price, Is.EqualTo(game1.Price));
+            Assert.That(result.Description, Is.EqualTo(game1.Description));
+            Assert.That(result.PublishingStudio, Is.EqualTo(game1.PublishingStudio));
+            Assert.That(result.YearPublished, Is.EqualTo(game1.YearPublished));
+
+            Assert.NotNull(result.GenreSelectList);
+            Assert.NotNull(result.PlatformSelectList);
+            Assert.NotNull(result.RestrictionSelectList);
+            Assert.NotNull(result.GameTypes);
+
+            Assert.That(result.SelectedGenres.Count(), Is.EqualTo(1));
+            Assert.That(result.SelectedPlatforms.Count(), Is.EqualTo(1));
+            Assert.That(result.SelectedRestrictions.Count(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public async Task EditGameGetAsync_ShouldReturnNull_WhenGameDoesNotExistOrIsDeleted()
+        {
+            // Arrange
+            string nonExistentGameId = "00000000-0000-0000-0000-000000000004"; 
+            string moderatorId = _dbContext.Moderators.First().Id.ToString();
+            bool isAdmin = false;
+
+            // Act
+            GameInputViewModel result = await _gameService.EditGameGetAsync(nonExistentGameId, moderatorId, isAdmin);
+
+            // Assert
+            Assert.IsNull(result); 
+        }
+
+        [Test]
+        public async Task AddGamePostAsync_ShouldAddGameSuccessfully_WithAllDetails()
+        {
+            // Arrange
+            var inputModel = new GameInputViewModel
+            {
+                Title = "New Test Game",
+                Description = "This is a test game.",
+                PublishingStudio = "Test Studio",
+                YearPublished = 2023,
+                Price = 50.0m,
+                Image = "test-image-url",
+                QuantityInStock = 100,
+                Type = GameType.DigitalKey,
+                SelectedGenres = new List<Guid> { _dbContext.Genres.First().Id },
+                SelectedPlatforms = new List<Guid> { _dbContext.Platforms.First().Id },
+                SelectedRestrictions = new List<Guid> { _dbContext.Restrictions.First().Id }
+            };
+
+            DateTime createdOn = DateTime.UtcNow;
+            string moderatorId = _dbContext.Moderators.First().Id.ToString();
+
+            // Act
+            string result = await _gameService.AddGamePostAsync(inputModel, createdOn, moderatorId);
+
+            // Assert
+            Assert.NotNull(result);
+
+            var addedGame = await _dbContext.Games.FindAsync(Guid.Parse(result));
+            Assert.NotNull(addedGame);
+            Assert.That(addedGame.Title, Is.EqualTo("New Test Game"));
+            Assert.That(addedGame.Price, Is.EqualTo(50.0m));
+            Assert.That(addedGame.PublishingStudio, Is.EqualTo("Test Studio"));
+            Assert.That(addedGame.CreatedOn, Is.EqualTo(createdOn));
+
+            Assert.That(addedGame.GamesGenres.Count, Is.EqualTo(1));
+            Assert.That(addedGame.GamesPlatforms.Count, Is.EqualTo(1));
+            Assert.That(addedGame.GamesRestrictions.Count, Is.EqualTo(1));
+        }
+
+        [Test]
+        public async Task EditGamePostAsync_ShouldUpdateGameDetails_WhenModeratorHasAccess()
+        {
+            // Arrange
+            string gameId = "00000000-0000-0000-0000-000000000002"; 
+            string moderatorId = _dbContext.Moderators.First().Id.ToString();
+            DateTime createdOn = DateTime.UtcNow;
+
+            GameInputViewModel inputModel = new GameInputViewModel
+            {
+                Title = "Updated Test Game",
+                Description = "Updated description for the test game.",
+                PublishingStudio = "Updated Studio",
+                YearPublished = 2025,
+                Price = 60.0m,
+                Image = "updated-image-url",
+                QuantityInStock = 120,
+                Type = GameType.PhysicalCopy,
+                SelectedGenres = new List<Guid> { _dbContext.Genres.First().Id },
+                SelectedPlatforms = new List<Guid> { _dbContext.Platforms.First().Id },
+                SelectedRestrictions = new List<Guid> { _dbContext.Restrictions.First().Id }
+            };
+
+            // Act
+            string result = await _gameService.EditGamePostAsync(inputModel, createdOn, gameId, moderatorId, false);
+
+            // Assert
+            Assert.NotNull(result);
+
+            Game updatedGame = await _dbContext.Games.FindAsync(Guid.Parse(result));
+            Assert.NotNull(updatedGame);
+            Assert.That(updatedGame.Title, Is.EqualTo("Updated Test Game"));
+            Assert.That(updatedGame.Price, Is.EqualTo(60.0m));
+            Assert.That(updatedGame.PublishingStudio, Is.EqualTo("Updated Studio"));
+            Assert.AreEqual(2025, updatedGame.YearPublished);
+
+            // Verify associations
+            Assert.That(updatedGame.GamesGenres.Count(g => !g.IsDeleted), Is.EqualTo(1));
+            Assert.That(updatedGame.GamesPlatforms.Count(p => !p.IsDeleted), Is.EqualTo(1));
+            Assert.That(updatedGame.GamesRestrictions.Count(r => !r.IsDeleted), Is.EqualTo(1));
+        }
+
+
+        [Test]
+        public async Task EditGamePostAsync_ShouldUpdateGameDetails_WhenAdminHasAccess()
+        {
+            // Arrange
+            string gameId = "00000000-0000-0000-0000-000000000002";
+            string moderatorId = "not-a-real-id"; 
+            DateTime createdOn = DateTime.UtcNow;
+
+            GameInputViewModel inputModel = new GameInputViewModel
+            {
+                Title = "Admin Updated Game",
+                Description = "Admin updated description.",
+                PublishingStudio = "Admin Updated Studio",
+                YearPublished = 2026,
+                Price = 70.0m,
+                Image = "admin-updated-image-url",
+                QuantityInStock = 150,
+                Type = GameType.DigitalKey,
+                SelectedGenres = new List<Guid> { _dbContext.Genres.First().Id },
+                SelectedPlatforms = new List<Guid> { _dbContext.Platforms.First().Id },
+                SelectedRestrictions = new List<Guid> { _dbContext.Restrictions.First().Id }
+            };
+
+            // Act
+            string result = await _gameService.EditGamePostAsync(inputModel, createdOn, gameId, moderatorId, true);
+
+            // Assert
+            Assert.NotNull(result);
+
+            Game updatedGame = await _dbContext.Games.FindAsync(Guid.Parse(result));
+            Assert.NotNull(updatedGame);
+            Assert.That(updatedGame.Title, Is.EqualTo("Admin Updated Game"));
+            Assert.That(updatedGame.Price, Is.EqualTo(70.0m));
+            Assert.That(updatedGame.PublishingStudio, Is.EqualTo("Admin Updated Studio"));
+            Assert.That(updatedGame.YearPublished, Is.EqualTo(2026));
+        }
+
+        [Test]
+        public async Task EditGamePostAsync_ShouldUpdateGameAssociationsCorrectly()
+        {
+            // Arrange
+            string gameId = "00000000-0000-0000-0000-000000000002";
+            string moderatorId = _dbContext.Moderators.First().Id.ToString();
+            DateTime createdOn = DateTime.UtcNow;
+
+            var inputModel = new GameInputViewModel
+            {
+                Title = "Association Test Game",
+                Description = "Testing associations.",
+                PublishingStudio = "Test Studio",
+                YearPublished = 2024,
+                Price = 55.0m,
+                Image = "association-test-image-url",
+                QuantityInStock = 80,
+                Type = GameType.PhysicalCopy,
+                SelectedGenres = new List<Guid>(), // No genres
+                SelectedPlatforms = new List<Guid> { _dbContext.Platforms.First().Id },
+                SelectedRestrictions = new List<Guid>() // No restrictions
+            };
+
+            // Act
+            string result = await _gameService.EditGamePostAsync(inputModel, createdOn, gameId, moderatorId, false);
+
+            // Assert
+            Assert.NotNull(result);
+
+            Game updatedGame = await _dbContext.Games.FindAsync(Guid.Parse(result));
+            Assert.NotNull(updatedGame);
+
+            // Verify associations
+            Assert.That(updatedGame.GamesGenres.Count(g => !g.IsDeleted), Is.EqualTo(0)); // No genres
+            Assert.That(updatedGame.GamesPlatforms.Count(p => !p.IsDeleted), Is.EqualTo(1)); // One platform
+            Assert.That(updatedGame.GamesRestrictions.Count(r => !r.IsDeleted), Is.EqualTo(0));
+        }
+
 
     }
 }
