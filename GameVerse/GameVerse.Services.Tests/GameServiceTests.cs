@@ -501,5 +501,58 @@ namespace GameVerse.Services.Tests
             // Assert
             Assert.IsNull(result);
         }
+
+        [Test]
+        public async Task DeleteGamePostAsync_ShouldMarkGameAsDeleted_WhenModeratorIsPublisher()
+        {
+            // Arrange
+            string gameId = "00000000-0000-0000-0000-000000000002";
+            string moderatorId = _dbContext.Moderators.First().Id.ToString(); 
+            bool isAdmin = false;
+
+            // Act
+            await _gameService.DeleteGamePostAsync(gameId, moderatorId, isAdmin);
+
+            // Assert
+            Game game = await _gameRepository.FirstOrDefaultAsync(g => g.Id.ToString() == gameId);
+            Assert.NotNull(game);
+            Assert.IsTrue(game.IsDeleted);
+        }
+
+        [Test]
+        public async Task DeleteGamePostAsync_ShouldMarkGameAsDeleted_WhenUserIsAdmin()
+        {
+            // Arrange
+            string gameId = "00000000-0000-0000-0000-000000000002";
+            string moderatorId = "not-a-real-id"; 
+            bool isAdmin = true;
+
+            // Act
+            await _gameService.DeleteGamePostAsync(gameId, moderatorId, isAdmin);
+
+            // Assert
+            Game? game = await _gameRepository.FirstOrDefaultAsync(g => g.Id.ToString() == gameId);
+            Assert.NotNull(game);
+            Assert.IsTrue(game.IsDeleted);
+        }
+
+        [Test]
+        public async Task DeleteGamePostAsync_ShouldDoNothing_WhenGameDoesNotExist()
+        {
+            // Arrange
+            string nonExistentGameId = "00000000-0000-0000-0000-000000000003"; 
+            string moderatorId = _dbContext.Moderators.First().Id.ToString();
+            bool isAdmin = false;
+
+            // Act
+            await _gameService.DeleteGamePostAsync(nonExistentGameId, moderatorId, isAdmin);
+
+            // Assert
+            Game? game = await _gameRepository.FirstOrDefaultAsync(g => g.Id.ToString() == nonExistentGameId);
+            Assert.IsNull(game);
+        }
+
+
+
     }
 }
