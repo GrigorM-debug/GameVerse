@@ -208,6 +208,24 @@ namespace GameVerse.Services.Tests
             Assert.IsNull(result);
         }
 
+        [Test]
+        public async Task AddGameGetAsync_ShouldReturnPopulatedViewModel()
+        {
+            //Act
+            var result = await _gameService.AddGameGetAsync();
 
+            // Assert
+            Assert.NotNull(result);
+            Assert.NotNull(result.GenreSelectList);
+            Assert.NotNull(result.PlatformSelectList);
+            Assert.NotNull(result.RestrictionSelectList);
+            Assert.NotNull(result.GameTypes);
+
+            // Verify the data matches the seeded data
+            Assert.That(result.GenreSelectList.Count(), Is.EqualTo(1));
+            Assert.That(result.PlatformSelectList.Count(), Is.EqualTo(1));
+            Assert.That(result.RestrictionSelectList.Count(), Is.EqualTo(1));
+            Assert.IsNotEmpty(result.GameTypes);
+        }
     }
 }
