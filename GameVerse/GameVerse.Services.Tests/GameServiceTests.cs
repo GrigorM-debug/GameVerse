@@ -10,6 +10,7 @@ using GameVerse.Data.Models.Games.Restrictions;
 using GameVerse.Data.Repositories;
 using GameVerse.Data.Repositories.Interfaces;
 using GameVerse.Services.Interfaces;
+using GameVerse.Web.ViewModels.Game;
 using GameVerse.Web.ViewModels.Game.SelectLists;
 using Microsoft.EntityFrameworkCore;
 using SendGrid.Helpers.Mail;
@@ -388,6 +389,40 @@ namespace GameVerse.Services.Tests
             //Assert
             Game game = await _dbContext.Games.FirstAsync();
             Assert.That(game.QuantityInStock, Is.EqualTo(expectedQuantityInStock));
+        }
+
+        [Test]
+        public async Task GetLast3GamesAsync_ShouldReturnEmptyCollection_WhenNoGamesExist()
+        {
+            //Arrange
+            Game game = await _dbContext.Games.FirstAsync();
+            _dbContext.Games.Remove(game);
+            await _dbContext.SaveChangesAsync();
+
+            // Act
+            IEnumerable<GameIndexViewModel> result = await _gameService.GetLast3GamesAsync();
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.IsEmpty(result);
+        }
+
+        [Test]
+        public async Task GetLast3GamesAsync_ShouldReturnCorrectlyPopulatedViewModel_WhenGamesExist()
+        {
+            //Arrange 
+            Game game = await _dbContext.Games.FirstAsync();
+
+            //Act
+            IEnumerable<GameIndexViewModel> result = await _gameService.GetLast3GamesAsync();
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.That(result.Count(), Is.EqualTo(1));
+
+            List<GameIndexViewModel> resultList = result.ToList();
+
+            Assert.That(resultList[0].Title, Is.EqualTo(game.Title));
         }
     }
 }
