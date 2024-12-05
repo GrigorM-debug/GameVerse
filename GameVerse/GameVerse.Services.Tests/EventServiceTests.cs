@@ -190,6 +190,32 @@ namespace GameVerse.Services.Tests
             Assert.IsFalse(result);
         }
 
+        [Test]
+        public async Task EventExistById_ShouldReturnTrue_WhenEventExists()
+        {
+            // Arrange
+            Event e = await _dbContext.Events.FirstAsync();
+            string existingEventId = e.Id.ToString();
+
+            // Act
+            bool result = await _eventService.EventExistById(existingEventId);
+
+            // Assert
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        public async Task EventExistById_ShouldReturnFalse_WhenEventDoesNotExist()
+        {
+            // Arrange
+            string nonExistentEventId = Guid.NewGuid().ToString(); 
+
+            // Act
+            bool result = await _eventService.EventExistById(nonExistentEventId);
+
+            // Assert
+            Assert.IsFalse(result);
+        }
 
     }
 }
