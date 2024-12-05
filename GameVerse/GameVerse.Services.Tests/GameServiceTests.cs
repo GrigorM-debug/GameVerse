@@ -552,6 +552,138 @@ namespace GameVerse.Services.Tests
             Assert.IsNull(game);
         }
 
+        [Test]
+        public async Task GetAllGamesAsync_ShouldReturnPaginatedGames_WhenNoFiltersOrSorting()
+        {
+            // Arrange
+            int currentPage = 1;
+            int gamesPerPage = 2; // Retrieve 2 games per page
+            EntitySortOrder sortOrder = EntitySortOrder.Newest;
+            string? searchString = null;
+            GameType? gameSelectedGameTypeSortOrder = null;
+
+            // Act
+            IEnumerable<GameIndexViewModel> result = await _gameService.GetAllGamesAsync(currentPage, gamesPerPage, sortOrder, searchString, gameSelectedGameTypeSortOrder);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.That(result.Count(), Is.EqualTo(1)); 
+            Assert.That(result.First().Title, Is.EqualTo("Test Game")); 
+        }
+
+        [Test]
+        public async Task GetAllGamesAsync_ShouldFilterGames_BySearchString()
+        {
+            // Arrange
+            int currentPage = 1;
+            int gamesPerPage = 5;
+            var sortOrder = EntitySortOrder.Newest;
+            string searchString = "Test Game"; 
+            GameType? gameSelectedGameTypeSortOrder = null;
+
+            // Act
+            IEnumerable<GameIndexViewModel> result = await _gameService.GetAllGamesAsync(currentPage, gamesPerPage, sortOrder, searchString, gameSelectedGameTypeSortOrder);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.That(result.Count(), Is.EqualTo(1)); 
+            Assert.That(result.First().Title, Is.EqualTo("Test Game"));
+        }
+
+        [Test]
+        public async Task GetAllGamesAsync_ShouldFilterGames_ByGameType()
+        {
+            // Arrange
+            int currentPage = 1;
+            int gamesPerPage = 5;
+            var sortOrder = EntitySortOrder.Newest;
+            string? searchString = null;
+            GameType? gameSelectedGameTypeSortOrder = GameType.DigitalKey; 
+
+            // Act
+            IEnumerable<GameIndexViewModel> result = await _gameService.GetAllGamesAsync(currentPage, gamesPerPage, sortOrder, searchString, gameSelectedGameTypeSortOrder);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.That(result.Count(), Is.EqualTo(1)); 
+        }
+
+        [Test]
+        public async Task GetAllGamesAsync_ShouldReturnEmptyCollection_WhenNoGamesExist()
+        {
+            // Arrange
+            Game game = await _dbContext.Games.FirstAsync();
+            _dbContext.Remove(game);
+            await _dbContext.SaveChangesAsync();
+            int currentPage = 1;
+            int gamesPerPage = 5;
+            var sortOrder = EntitySortOrder.Newest;
+            string? searchString = null;
+            GameType? gameSelectedGameTypeSortOrder = null;
+
+            // Act
+            IEnumerable<GameIndexViewModel> result = await _gameService.GetAllGamesAsync(currentPage, gamesPerPage, sortOrder, searchString, gameSelectedGameTypeSortOrder);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.IsEmpty(result); // Ensure the result is empty
+        }
+
+
+        [Test]
+        public async Task GetAllGamesAsync_ShouldSortGames_ByNewestFirst()
+        {
+            // Arrange
+            int currentPage = 1;
+            int gamesPerPage = 5;
+            EntitySortOrder sortOrder = EntitySortOrder.Newest;
+            string? searchString = null;
+            GameType? gameSelectedGameTypeSortOrder = null;
+
+            // Act
+            IEnumerable<GameIndexViewModel> result = await _gameService.GetAllGamesAsync(currentPage, gamesPerPage, sortOrder, searchString, gameSelectedGameTypeSortOrder);
+
+            // Assert
+            Assert.NotNull(result);
+
+            List<GameIndexViewModel> resultList = result.ToList();
+
+            Assert.IsTrue(resultList.Count() == 1); // Ensure there is more than one result to test sorting
+            for (int i = 1; i < resultList.Count; i++)
+            {
+                Assert.IsTrue(
+                    DateTime.Parse(resultList[i - 1].CreatedOn) >= DateTime.Parse(resultList[i].CreatedOn)
+                );
+            }
+        }
+
+
+        [Test]
+        public async Task GetAllGamesAsync_ShouldSortGames_ByOldestFirst()
+        {
+            // Arrange
+            int currentPage = 1;
+            int gamesPerPage = 5;
+            var sortOrder = EntitySortOrder.Oldest;
+            string? searchString = null;
+            GameType? gameSelectedGameTypeSortOrder = null;
+
+            // Act
+            IEnumerable<GameIndexViewModel> result = await _gameService.GetAllGamesAsync(currentPage, gamesPerPage, sortOrder, searchString, gameSelectedGameTypeSortOrder);
+
+            // Assert
+            Assert.NotNull(result);
+
+            List<GameIndexViewModel> resultList = result.ToList();
+            Assert.IsTrue(resultList.Count == 1); 
+
+            for (int i = 1; i < resultList.Count; i++)
+            {
+                Assert.IsTrue(
+                    DateTime.Parse(resultList[i - 1].CreatedOn) <= DateTime.Parse(resultList[i].CreatedOn)
+                );
+            }
+        }
 
 
     }
