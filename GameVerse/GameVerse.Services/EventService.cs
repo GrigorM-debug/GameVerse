@@ -130,6 +130,11 @@ namespace GameVerse.Services
                 .AllAsReadOnly()
                 .FirstOrDefaultAsync(e => e.Id.ToString() == eventId && (e.PublisherId.ToString() == moderatorId || isAdmin) && e.IsDeleted == false);
 
+            if(e == null)
+            {
+                return null;
+            }
+
             EventInputViewModel model = new EventInputViewModel()
             {
                 Topic = e.Topic,

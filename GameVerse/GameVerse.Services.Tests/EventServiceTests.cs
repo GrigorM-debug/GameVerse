@@ -333,6 +333,45 @@ namespace GameVerse.Services.Tests
             Assert.IsTrue(deletedEvent.IsDeleted);
         }
 
+        [Test]
+        public async Task EditEventGetAsync_ShouldReturnEventInputViewModel_WhenEventExistsAndUserHasAccess()
+        {
+            // Arrange
+            Event e = await _dbContext.Events.FirstAsync();
+            string eventId = e.Id.ToString();
+            Moderator moderator = await _dbContext.Moderators.FirstAsync();
+            string moderatorId = moderator.Id.ToString();
+            bool isAdmin = false; 
+
+            // Act
+            EventInputViewModel? result = await _eventService.EditEventGetAsync(eventId, moderatorId, isAdmin);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.That(result.Topic, Is.EqualTo(e.Topic)); 
+            Assert.That(result.Description, Is.EqualTo(e.Description));
+            Assert.That(result.Latitude, Is.EqualTo(e.Latitude));
+            Assert.That(result.Longitude, Is.EqualTo(e.Longitude));
+            Assert.That(result.Seats, Is.EqualTo(e.Seats));
+            Assert.That(result.TicketPrice, Is.EqualTo(e.TicketPrice));
+            Assert.That(result.Image, Is.EqualTo(e.Image));
+        }
+
+        [Test]
+        public async Task EditEventGetAsync_ShouldReturnNull_WhenEventDoesNotExistOrUserLacksAccess()
+        {
+            // Arrange
+            string nonExistentEventId = Guid.NewGuid().ToString(); 
+            string invalidModeratorId = "invalid-moderator-id"; 
+            bool isAdmin = false; 
+
+            // Act
+            EventInputViewModel? result = await _eventService.EditEventGetAsync(nonExistentEventId, invalidModeratorId, isAdmin);
+
+            // Assert
+            Assert.IsNull(result);
+        }
+
 
 
         [Test]
