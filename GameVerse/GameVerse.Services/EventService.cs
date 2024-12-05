@@ -26,7 +26,7 @@ namespace GameVerse.Services
                 .GetWithIncludeAsync(e => e.Publisher.User)
                 .AsNoTracking()
                 .Where(e => e.IsDeleted == false)
-                .OrderByDescending(e => e.Id)
+                .OrderByDescending(e => e.StartDate)
                 .Take(3)
                 .Select(e => new EventIndexViewModel
                 {
@@ -241,9 +241,13 @@ namespace GameVerse.Services
 
             //If the sortOrder is Newest we Order the Events by Id Descending to get the newest added Events in the Database
             //If the sortOrder is Oldest we Order the Events by Id Ascending to get the oldest added Events in the Database
-            query = sortOrder == EntitySortOrder.Newest
+            /*query = sortOrder == EntitySortOrder.Newest
                 ? query.OrderByDescending(e => e.Id) 
-                : query.OrderBy(e => e.Id);
+                : query.OrderBy(e => e.Id);*/
+
+            query = sortOrder == EntitySortOrder.Newest
+                ? query.OrderByDescending(e => e.StartDate) 
+                : query.OrderBy(e => e.StartDate);
 
 
             IEnumerable<EventIndexViewModel> eventIndexViewModels = await query

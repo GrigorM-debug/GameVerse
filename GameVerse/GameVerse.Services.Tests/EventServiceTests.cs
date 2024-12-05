@@ -1,5 +1,6 @@
 ﻿
 
+using GameVerse.Common.Enums;
 using GameVerse.Data;
 using GameVerse.Data.Models.ApplicationUsers;
 using GameVerse.Data.Models.Events;
@@ -8,6 +9,7 @@ using GameVerse.Data.Repositories.Interfaces;
 using GameVerse.Services.Interfaces;
 using GameVerse.Web.ViewModels.Event;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.TestPlatform.PlatformAbstractions;
 using NUnit.Framework.Internal;
 
 namespace GameVerse.Services.Tests
@@ -449,6 +451,81 @@ namespace GameVerse.Services.Tests
             }
         }
 
+        [Test]
+        public async Task GetAllEventsAsync_ShouldReturnEmptyCollection_WhenNoEventsExist()
+        {
+            // Arrange
+            foreach (var eventItem in _dbContext.Events)
+            {
+                _dbContext.Events.Remove(eventItem);
+            }
+            await _dbContext.SaveChangesAsync();
+
+            int currentPage = 1;
+            int eventsPerPage = 2;
+            var sortOrder = EntitySortOrder.Newest;
+
+            // Act
+            IEnumerable<EventIndexViewModel> result = await _eventService.GetAllEventsAsync(currentPage, eventsPerPage, sortOrder);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.IsEmpty(result);
+        }
+
+
+        [Test]
+        public async Task GetAllEventsAsync_ShouldReturnPaginatedEventsWithSorting_WhenEventsExist()
+        {
+            // Arrange
+            Moderator moderator = await _dbContext.Moderators.FirstAsync();
+            Guid moderatorId = moderator.Id;
+            List<Event> events = new List<Event>
+            {
+                new Event
+                {
+                    Topic = "Event 1",
+                    Description = "First Event",
+                    StartDate = DateTime.UtcNow.AddDays(5),
+                    EndDate = DateTime.UtcNow.AddDays(5).AddHours(1),
+                    Seats = 50,
+                    TicketPrice = 10.0m,
+                    Image = "event1.jpg",
+                    PublisherId = moderatorId,
+                    IsDeleted = false
+                },
+                new Event
+                {
+                    Topic = "Event 2",
+                    Description = "Second Event",
+                    StartDate = DateTime.UtcNow.AddDays(1),
+                    EndDate = DateTime.UtcNow.AddDays(2),
+                    Seats = 100,
+                    TicketPrice = 15.0m,
+                    Image = "event2.jpg",
+                    PublisherId = moderatorId,
+                    IsDeleted = false
+                },
+            };
+
+            await _dbContext.Events.AddRangeAsync(events);
+            await _dbContext.SaveChangesAsync();
+
+            int currentPage = 1;
+            int eventsPerPage = 2;
+            EntitySortOrder sortOrder = EntitySortOrder.Oldest;
+
+            // Act
+            IEnumerable<EventIndexViewModel> result = await _eventService.GetAllEventsAsync(currentPage, eventsPerPage, sortOrder);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.That(result.Count(), Is.EqualTo(2)); 
+
+            List<EventIndexViewModel> resultList = result.ToList();
+            Assert.That(resultList[0].Topic, Is.EqualTo("Test Event"));
+            Assert.That(resultList[1].Topic, Is.EqualTo("Event 2")); 
+        }
 
 
         [Test]
@@ -462,8 +539,8 @@ namespace GameVerse.Services.Tests
                 {
                     Topic = "Event 1",
                     Description = "First Event",
-                    StartDate = DateTime.UtcNow.AddDays(-3),
-                    EndDate = DateTime.UtcNow.AddDays(-2),
+                    StartDate = DateTime.UtcNow.AddDays(5),
+                    EndDate = DateTime.UtcNow.AddDays(5).AddHours(1),
                     Latitude = 10.0,
                     Longitude = 20.0,
                     Seats = 50,
@@ -476,8 +553,8 @@ namespace GameVerse.Services.Tests
                 {
                     Topic = "Event 2",
                     Description = "Second Event",
-                    StartDate = DateTime.UtcNow.AddDays(-2),
-                    EndDate = DateTime.UtcNow.AddDays(-1),
+                    StartDate = DateTime.UtcNow.AddDays(1),
+                    EndDate = DateTime.UtcNow.AddDays(2),
                     Latitude = 15.0,
                     Longitude = 25.0,
                     Seats = 100,
@@ -499,10 +576,26 @@ namespace GameVerse.Services.Tests
             Assert.That(result.Count(), Is.EqualTo(3));
 
             var resultList = result.ToList();
-            Assert.That(resultList[0].Topic, Is.EqualTo("Event 2")); 
-            Assert.That(resultList[1].Topic, Is.EqualTo("Event 1"));
+            Assert.That(resultList[0].Topic, Is.EqualTo("Event 1")); 
+            Assert.That(resultList[1].Topic, Is.EqualTo("Event 2"));
             Assert.That(resultList[2].Topic, Is.EqualTo("Test Event"));
         }
 
+        [Test]
+        public async Task GetLatest3EventsAsync_ShouldReturnEmptyCollection_WhenEventsDoNotExist()
+        {
+            //Arrange
+            Event e = await _dbContext.Events.FirstAsync();
+            _dbContext.Events.Remove(e);
+            await _dbContext.SaveChangesAsync();
+
+            //Act
+            IEnumerable<EventIndexViewModel> result = await _eventService.GetLatest3EventsAsync();
+
+            //Assert
+            Assert.IsEmpty(result);
+        }
+
+        //TODO: Test HasPubliblisherWithIdMethod
     }
 }
