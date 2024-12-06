@@ -1128,5 +1128,33 @@ namespace GameVerse.Services.Tests
         }
 
         //TODO: HasPublisherWithIdAsync Test
+        [Test]
+        public async Task HasPublisherWithIdAsync_ShouldReturnTrue_WhenGameHasPublisherWithGivenModeratorId()
+        {
+            //Arrange
+            string gameId = "00000000-0000-0000-0000-000000000002";
+            Moderator moderator = await _dbContext.Moderators.FirstAsync();
+            string moderatorId = moderator.Id.ToString();
+
+            //Act
+            bool result = await _gameService.HasPublisherWithIdAsync(moderatorId, gameId);
+
+            //Assert
+            Assert.True(result);
+        }
+
+        [Test]
+        public async Task HasPublisherWithIdAsync_ShouldReturnFalse_WhenGameHasNotPublisherWithGivenModeratorId()
+        {
+            //Arrange
+            string gameId = "00000000-0000-0000-0000-000000000002";
+            string moderatorId = Guid.NewGuid().ToString();
+
+            //Act
+            bool result = await _gameService.HasPublisherWithIdAsync(moderatorId, gameId);
+
+            //Assert
+            Assert.False(result);
+        }
     }
 }
