@@ -105,22 +105,34 @@ namespace GameVerse.Web.Areas.Administrator.Services
             if (user != null)
             {
                 bool alreadyInRole = await _userManager.IsInRoleAsync(user, "Moderator");
-                bool moderatorExist = await _moderatorRepository.AllAsReadOnly()
-                    .AnyAsync(m => m.UserId.ToString() == userId);
+                Data.Models.ApplicationUsers.Moderator? moderator =
+                    await _moderatorRepository.FirstOrDefaultAsync(m => m.UserId.ToString() == userId);
 
-                if (!alreadyInRole && !moderatorExist)
+                if (!alreadyInRole)
                 {
                     await _userManager.AddToRoleAsync(user, "Moderator");
 
-                    Data.Models.ApplicationUsers.Moderator moderator = new Data.Models.ApplicationUsers.Moderator()
+                    if (moderator != null)
                     {
-                        UserId = Guid.Parse(userId),
-                        TotalEventsCreated = 0,
-                        TotalGamesCreated = 0
-                    };
+                        if (!moderator.IsActive)
+                        {
+                            moderator.IsActive = true;
+                            await _moderatorRepository.SaveChangesAsync();
+                        }
+                    }
+                    else
+                    {
+                        Data.Models.ApplicationUsers.Moderator newModerator = new Data.Models.ApplicationUsers.Moderator()
+                        {
+                            UserId = Guid.Parse(userId),
+                            TotalEventsCreated = 0,
+                            TotalGamesCreated = 0,
+                            IsActive = true
+                        };
 
-                    await _moderatorRepository.AddAsync(moderator);
-                    await _moderatorRepository.SaveChangesAsync();
+                        await _moderatorRepository.AddAsync(newModerator);
+                        await _moderatorRepository.SaveChangesAsync();
+                    }
                 }
             }
         }
@@ -139,11 +151,12 @@ namespace GameVerse.Web.Areas.Administrator.Services
                 await _userManager.RemoveFromRoleAsync(user, "Moderator");
 
                 Data.Models.ApplicationUsers.Moderator? moderator =
-                    await _moderatorRepository.FirstOrDefaultAsync(m => m.UserId.ToString() == userId);
+                    await _moderatorRepository.FirstOrDefaultAsync(m => m.UserId.ToString() == userId && m.IsActive == true);
 
                 if (moderator != null)
                 {
-                    await _moderatorRepository.DeleteAsync(moderator.Id);
+                    moderator.IsActive = false;
+                    await _moderatorRepository.SaveChangesAsync();
                 }
             }
         }
@@ -167,11 +180,12 @@ namespace GameVerse.Web.Areas.Administrator.Services
                 await _userManager.AddToRoleAsync(user, "Admin");
 
                 Data.Models.ApplicationUsers.Moderator? moderator =
-                    await _moderatorRepository.FirstOrDefaultAsync(m => m.UserId.ToString() == userId);
+                    await _moderatorRepository.FirstOrDefaultAsync(m => m.UserId.ToString() == userId && m.IsActive == true);
 
                 if (moderator != null)
                 {
-                    await _moderatorRepository.DeleteAsync(moderator.Id);
+                    moderator.IsActive = false;
+                    await _moderatorRepository.SaveChangesAsync();
                 }
             }
         }

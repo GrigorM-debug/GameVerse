@@ -120,7 +120,7 @@ namespace GameVerse.Services
         {
             Moderator? moderator = await _moderatorRepository
                 .AllAsReadOnly()
-                .FirstOrDefaultAsync(m => m.UserId.ToString() == userId);
+                .FirstOrDefaultAsync(m => m.UserId.ToString() == userId && m.IsActive == true);
 
             if (moderator == null)
             {
