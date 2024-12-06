@@ -57,6 +57,8 @@ namespace GameVerse.Data.Models.ApplicationUsers
         [Comment("Total Games Created by the Moderator")]
         public int TotalGamesCreated { get; set; }
 
+        public bool IsActive { get; set; }
+
         /// <summary>
         /// Gets or sets the collection of events owned by the moderator.
         /// </summary>

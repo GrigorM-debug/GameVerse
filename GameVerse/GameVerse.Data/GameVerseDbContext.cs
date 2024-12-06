@@ -103,6 +103,11 @@ namespace GameVerse.Data
                 .Property(gc => gc.IsDeleted)
                 .HasDefaultValue(false);
 
+            builder
+                .Entity<Moderator>()
+                .Property(m => m.IsActive)
+                .HasDefaultValue(true);
+
             base.OnModelCreating(builder);
         }
 
