@@ -597,6 +597,35 @@ namespace GameVerse.Services.Tests
             Assert.IsEmpty(result);
         }
 
-        //TODO: Test HasPubliblisherWithIdMethod
+        [Test]
+        public async Task HasPublisherWithIdAsync_ShouldReturnTrue_WhenEventHasPublisherWithGivenModeratorId()
+        {
+            //Arrange
+            Event e = await _dbContext.Events.FirstAsync();
+            string eventId = e.Id.ToString();
+            Moderator moderator = await _dbContext.Moderators.FirstAsync();
+            string moderatorId = moderator.Id.ToString();
+
+            //Act
+            bool result = await _eventService.HasPublisherWithIdAsync(moderatorId, eventId);
+
+            //Assert
+            Assert.True(result);
+        }
+
+        [Test]
+        public async Task HasPublisherWithIdAsync_ShouldReturnFalse_WhenEventHasNotPublisherWithGivenModeratorId()
+        {
+            //Arrange
+            Event e = await _dbContext.Events.FirstAsync();
+            string eventId = e.Id.ToString();
+            string moderatorId = Guid.NewGuid().ToString();
+
+            //Act
+            bool result = await _eventService.HasPublisherWithIdAsync(moderatorId, eventId);
+
+            //Assert
+            Assert.False(result);
+        }
     }
 }

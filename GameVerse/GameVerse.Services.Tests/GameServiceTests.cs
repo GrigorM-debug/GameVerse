@@ -1127,7 +1127,6 @@ namespace GameVerse.Services.Tests
             Assert.That(result.AverageRating, Is.EqualTo(0.0));
         }
 
-        //TODO: HasPublisherWithIdAsync Test
         [Test]
         public async Task HasPublisherWithIdAsync_ShouldReturnTrue_WhenGameHasPublisherWithGivenModeratorId()
         {
