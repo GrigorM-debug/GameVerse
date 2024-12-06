@@ -285,7 +285,7 @@ namespace GameVerse.Services.Tests
             //Arrange
             ApplicationUser user = await _dbContext.Users.FirstAsync();
             string userId = user.Id.ToString();
-            IEnumerable<Game> games = await _dbContext.Games.OrderByDescending(g => g.CreatedOn).ToListAsync();
+            List<Game> games = await _dbContext.Games.OrderByDescending(g => g.CreatedOn).ToListAsync();
 
             //Act
             IEnumerable<ModeratorGameIndexViewModel> result = await _moderatorService.GetLast5CreatedGamesAsync(userId);
@@ -296,12 +296,58 @@ namespace GameVerse.Services.Tests
 
             for(int i = 0; i < resultToList.Count(); i++)
             {
-                foreach (Game game in games)
+                for(int j =0; j < games.Count(); j++)
                 {
-                    Assert.That(resultToList[i].Id, Is.EqualTo(game.Id.ToString()));
-                    Assert.That(resultToList[i].Title, Is.EqualTo(game.Title));
-                    Assert.That(resultToList[i].Price, Is.EqualTo(game.Price.ToString("C")));
-                    Assert.That(resultToList[i].QuantityInStock, Is.EqualTo(game.QuantityInStock));
+                    Assert.That(resultToList[i].Id, Is.EqualTo(games[j].Id.ToString()));
+                    Assert.That(resultToList[i].Title, Is.EqualTo(games[j].Title));
+                    Assert.That(resultToList[i].Price, Is.EqualTo(games[j].Price.ToString("C")));
+                    Assert.That(resultToList[i].QuantityInStock, Is.EqualTo(games[j].QuantityInStock));
+
+                    i++;
+                }
+            }
+        }
+
+        [Test]
+        public async Task GetLast5CreatedEventsAsync_ShouldReturnEmptyCollection_WhenModeratorHasNotEvents()
+        {
+            //Arrange
+            ApplicationUser user = await _dbContext.Users.FirstAsync();
+            string userId = user.Id.ToString();
+            IEnumerable<Event> events = await _dbContext.Events.ToListAsync();  
+            _dbContext.RemoveRange(events);
+            await _dbContext.SaveChangesAsync();
+
+            //Act
+            IEnumerable<ModeratorEventIndexViewModel> result = await _moderatorService.GetLast5CreatedEventsAsync(userId);
+
+            //Assert
+            Assert.IsEmpty(result);
+        }
+
+        [Test]
+        public async Task GetLast5CreatedEventsAsync_ShouldReturnCorrectlyPopulatedViewModel_WhenModeratorHasEvents()
+        {
+            //Arrange
+            ApplicationUser user = await _dbContext.Users.FirstAsync();
+            string userId = user.Id.ToString();
+            List<Event> events = await _dbContext.Events.OrderByDescending(e => e.StartDate).ToListAsync();
+
+            //Act
+            IEnumerable<ModeratorEventIndexViewModel> result = await _moderatorService.GetLast5CreatedEventsAsync(userId);
+
+            //Assert
+            Assert.IsNotEmpty(result);
+            List<ModeratorEventIndexViewModel> resultToList = result.ToList();
+
+            for(int i = 0; i < resultToList.Count; i++)
+            {
+                for(int j = 0; j < events.Count; j++)
+                {
+                    Assert.That(resultToList[i].Id, Is.EqualTo(events[j].Id.ToString()));
+                    Assert.That(resultToList[i].Topic, Is.EqualTo(events[j].Topic));
+                    Assert.That(resultToList[i].TicketPrice, Is.EqualTo(events[j].TicketPrice.ToString("C")));
+                    Assert.That(resultToList[i].Seats, Is.EqualTo(events[j].Seats));
 
                     i++;
                 }

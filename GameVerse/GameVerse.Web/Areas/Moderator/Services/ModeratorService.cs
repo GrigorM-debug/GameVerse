@@ -33,7 +33,7 @@ namespace GameVerse.Web.Areas.Moderator.Services
                 .Include(m => m.OwnedEvents)
                 .SelectMany(m => m.OwnedEvents)
                 .Where(e => e.IsDeleted == false)
-                .OrderByDescending(e => e.Id)
+                .OrderByDescending(e => e.StartDate)
                 .Take(5)
                 .Select(e => new ModeratorEventIndexViewModel()
                 {
