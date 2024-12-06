@@ -13,6 +13,8 @@ using GameVerse.Web.Areas.Moderator.Services;
 using GameVerse.Web.Areas.Moderator.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using GameVerse.Data.Models.Events;
+using GameVerse.Web.Areas.Moderator.Models;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace GameVerse.Services.Tests
 {
@@ -259,6 +261,51 @@ namespace GameVerse.Services.Tests
 
             //Assert
             Assert.That(result, Is.EqualTo(expectedCount));
+        }
+
+        [Test]
+        public async Task GetLast5CreatedGamesAsync_ShouldReturnEmptyCollection_WhenModeratorHasNotGames()
+        {
+            //Arrange
+            ApplicationUser user = await _dbContext.Users.FirstAsync();
+            string userId = user.Id.ToString();
+            IEnumerable<Game> games = await _dbContext.Games.ToListAsync();
+            _dbContext.Games.RemoveRange(games);
+            await _dbContext.SaveChangesAsync();
+
+            //Act
+            IEnumerable<ModeratorGameIndexViewModel> result = await _moderatorService.GetLast5CreatedGamesAsync(userId);
+
+            Assert.IsEmpty(result);
+        }
+
+        [Test]
+        public async Task GetLast5CreatedGamesAsync_ShouldReturnCorrectlyPopulatedViewModel_WhenModeratorHasGames()
+        {
+            //Arrange
+            ApplicationUser user = await _dbContext.Users.FirstAsync();
+            string userId = user.Id.ToString();
+            IEnumerable<Game> games = await _dbContext.Games.OrderByDescending(g => g.CreatedOn).ToListAsync();
+
+            //Act
+            IEnumerable<ModeratorGameIndexViewModel> result = await _moderatorService.GetLast5CreatedGamesAsync(userId);
+
+            //Assert
+            Assert.IsNotEmpty(result);
+            List<ModeratorGameIndexViewModel> resultToList = result.ToList();
+
+            for(int i = 0; i < resultToList.Count(); i++)
+            {
+                foreach (Game game in games)
+                {
+                    Assert.That(resultToList[i].Id, Is.EqualTo(game.Id.ToString()));
+                    Assert.That(resultToList[i].Title, Is.EqualTo(game.Title));
+                    Assert.That(resultToList[i].Price, Is.EqualTo(game.Price.ToString("C")));
+                    Assert.That(resultToList[i].QuantityInStock, Is.EqualTo(game.QuantityInStock));
+
+                    i++;
+                }
+            }
         }
     }
 }
