@@ -227,5 +227,38 @@ namespace GameVerse.Services.Tests
             //Assert
             Assert.That(result, Is.EqualTo(0));
         }
+
+        [Test]
+        public async Task TotalGamesCreatedAsync_ShouldReturnTotalCreatedGamesCount_WhenModeratorHasGames()
+        {
+            //Arrange
+            ApplicationUser user = await _dbContext.Users.FirstAsync();
+            string userId = user.Id.ToString();
+            int expectedCount = 2;
+
+            //Act
+            int result = await _moderatorService.TotalGamesCreatedAsync(userId);
+
+            //Assert
+            Assert.That(result, Is.EqualTo(expectedCount));
+        }
+
+        [Test]
+        public async Task TotalGamesCreatedAsync_ShouldReturnZero_WhenModeratorHasNoTGames()
+        {
+            //Arrange
+            ApplicationUser user = await _dbContext.Users.FirstAsync();
+            string userId = user.Id.ToString();
+            Moderator moderator = await _dbContext.Moderators.FirstAsync();
+            moderator.TotalGamesCreated = 0;
+            await _dbContext.SaveChangesAsync();
+            int expectedCount = 0;
+
+            //Act
+            int result = await _moderatorService.TotalGamesCreatedAsync(userId);
+
+            //Assert
+            Assert.That(result, Is.EqualTo(expectedCount));
+        }
     }
 }
