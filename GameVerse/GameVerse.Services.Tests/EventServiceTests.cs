@@ -14,6 +14,7 @@ using NUnit.Framework.Internal;
 
 namespace GameVerse.Services.Tests
 {
+    [TestFixture]
     public class EventServiceTests
     {
         private DbContextOptions<GameVerseDbContext> _dbContextOptions;

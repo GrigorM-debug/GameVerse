@@ -11,6 +11,7 @@ using GameVerse.Data.Repositories;
 
 namespace GameVerse.Services.Tests
 {
+    [TestFixture]
     public class ModeratorServiceTests
     {
         private DbContextOptions<GameVerseDbContext> _dbContextOptions;

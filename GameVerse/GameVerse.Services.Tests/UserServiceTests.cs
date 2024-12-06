@@ -19,6 +19,7 @@ using System.Globalization;
 
 namespace GameVerse.Services.Tests
 {
+    [TestFixture]
     public class UserServiceTests
     {
         private DbContextOptions<GameVerseDbContext> _dbContextOptions;

@@ -19,6 +19,7 @@ using SendGrid.Helpers.Mail;
 
 namespace GameVerse.Services.Tests
 {
+    [TestFixture]
     public class GameServiceTests
     {
         private DbContextOptions<GameVerseDbContext> _dbContextOptions;

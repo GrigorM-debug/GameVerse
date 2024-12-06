@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GameVerse.Services\GameVerse.Services.csproj" />
+    <ProjectReference Include="..\GameVerse.Web\GameVerse.Web.csproj" />
   </ItemGroup>
 
   <ItemGroup>
