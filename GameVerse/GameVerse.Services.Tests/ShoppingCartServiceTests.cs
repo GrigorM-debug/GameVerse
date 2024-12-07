@@ -1243,5 +1243,130 @@ namespace GameVerse.Services.Tests
             Assert.That(updatedCart.TotalPrice, Is.EqualTo(20));
         }
 
+        [Test]
+        public async Task AddEventToCartAsync_ShouldAddNewEventToCart()
+        {
+            // Arrange
+            ApplicationUser user = await _dbContext.Users.FirstAsync();
+            Event e = await _dbContext.Events.FirstAsync();
+
+            Cart cart = new Cart { User = user, TotalPrice = 0 };
+            await _dbContext.Carts.AddAsync(cart);
+            await _dbContext.SaveChangesAsync();
+
+            // Act
+            await _shoppingCartService.AddEventToCartAsync(e.Id.ToString(), user.Id.ToString(), e);
+
+            // Assert
+            Cart updatedCart = await _dbContext.Carts
+                .Include(c => c.EventsCarts)
+                .FirstAsync(c => c.UserId == user.Id);
+
+            EventCart? eventCart = updatedCart.EventsCarts.FirstOrDefault(ec => ec.EventId == e.Id);
+
+            Assert.IsNotNull(updatedCart);
+            Assert.That(updatedCart.EventsCarts.Count, Is.EqualTo(1));
+            Assert.IsNotNull(eventCart);
+            Assert.That(eventCart.TicketQuantity, Is.EqualTo(1));
+            Assert.That(updatedCart.TotalPrice, Is.EqualTo(e.TicketPrice));
+        }
+
+        [Test]
+        public async Task AddEventToCartAsync_ShouldIncrementTicketQuantityForExistingEvent()
+        {
+            // Arrange
+            ApplicationUser user = await _dbContext.Users.FirstAsync();
+            Event e = await _dbContext.Events.FirstAsync();
+
+            Cart cart = new Cart { User = user, TotalPrice = e.TicketPrice };
+            cart.EventsCarts.Add(new EventCart
+            {
+                Event = e,
+                Cart = cart,
+                TicketQuantity = 1,
+                IsDeleted = false
+            });
+            await _dbContext.Carts.AddAsync(cart);
+            await _dbContext.SaveChangesAsync();
+
+            // Act
+            await _shoppingCartService.AddEventToCartAsync(e.Id.ToString(), user.Id.ToString(), e);
+
+            // Assert
+            Cart updatedCart = await _dbContext.Carts
+                .Include(c => c.EventsCarts)
+                .FirstAsync(c => c.UserId == user.Id);
+
+            EventCart? eventCart = updatedCart.EventsCarts.FirstOrDefault(ec => ec.EventId == e.Id);
+
+            Assert.IsNotNull(updatedCart);
+            Assert.That(updatedCart.EventsCarts.Count, Is.EqualTo(1));
+            Assert.That(eventCart.TicketQuantity, Is.EqualTo(2));
+            Assert.That(updatedCart.TotalPrice, Is.EqualTo(e.TicketPrice * 2));
+        }
+
+        [Test]
+        public async Task AddEventToCartAsync_ShouldReactivateDeletedEvent()
+        {
+            // Arrange
+            ApplicationUser user = await _dbContext.Users.FirstAsync();
+            Event e = await _dbContext.Events.FirstAsync();
+
+            Cart cart = new Cart { User = user, TotalPrice = 0 };
+            cart.EventsCarts.Add(new EventCart
+            {
+                Event = e,
+                Cart = cart,
+                TicketQuantity = 0,
+                IsDeleted = true
+            });
+            await _dbContext.Carts.AddAsync(cart);
+            await _dbContext.SaveChangesAsync();
+
+            // Act
+            await _shoppingCartService.AddEventToCartAsync(e.Id.ToString(), user.Id.ToString(), e);
+
+            // Assert
+            Cart updatedCart = await _dbContext.Carts
+                .Include(c => c.EventsCarts)
+                .FirstAsync(c => c.UserId == user.Id);
+
+            EventCart? eventCart = updatedCart.EventsCarts.FirstOrDefault(ec => ec.EventId == e.Id);
+
+            Assert.IsNotNull(updatedCart);
+            Assert.That(updatedCart.EventsCarts.Count, Is.EqualTo(1));
+            Assert.IsNotNull(eventCart);
+            Assert.IsFalse(eventCart.IsDeleted);
+            Assert.That(eventCart.TicketQuantity, Is.EqualTo(1));
+            Assert.That(updatedCart.TotalPrice, Is.EqualTo(e.TicketPrice));
+        }
+
+        [Test]
+        public async Task AddEventToCartAsync_ShouldAddMultipleEventsToCart()
+        {
+            // Arrange
+            ApplicationUser user = await _dbContext.Users.FirstAsync();
+            Event e1 = await _dbContext.Events.FirstAsync();
+            Event e2 = await _dbContext.Events.LastAsync();
+
+            Cart cart = new Cart { User = user, TotalPrice = 0 };
+            await _dbContext.Carts.AddAsync(cart);
+            await _dbContext.SaveChangesAsync();
+
+            // Act
+            await _shoppingCartService.AddEventToCartAsync(e1.Id.ToString(), user.Id.ToString(), e1);
+            await _shoppingCartService.AddEventToCartAsync(e2.Id.ToString(), user.Id.ToString(), e2);
+
+            // Assert
+            Cart updatedCart = await _dbContext.Carts
+                .Include(c => c.EventsCarts)
+                .FirstAsync(c => c.UserId == user.Id);
+
+            Assert.IsNotNull(updatedCart);
+            Assert.That(updatedCart.EventsCarts.Count, Is.EqualTo(2));
+            Assert.That(updatedCart.TotalPrice, Is.EqualTo(e1.TicketPrice + e2.TicketPrice));
+        }
+
+
     }
 }
