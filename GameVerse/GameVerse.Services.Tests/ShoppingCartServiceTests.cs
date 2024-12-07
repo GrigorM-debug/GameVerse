@@ -12,6 +12,7 @@ using GameVerse.Data.Models.Games.Restrictions;
 using GameVerse.Data.Repositories;
 using GameVerse.Data.Repositories.Interfaces;
 using GameVerse.Services.Interfaces;
+using GameVerse.Web.ViewModels.ShoppingCart;
 using Microsoft.EntityFrameworkCore;
 using static Azure.Core.HttpHeader;
 
@@ -1365,6 +1366,116 @@ namespace GameVerse.Services.Tests
             Assert.IsNotNull(updatedCart);
             Assert.That(updatedCart.EventsCarts.Count, Is.EqualTo(2));
             Assert.That(updatedCart.TotalPrice, Is.EqualTo(e1.TicketPrice + e2.TicketPrice));
+        }
+
+        [Test]
+        public async Task GetShoppingCartItemsAsync_ShouldReturnCartWithGamesAndEvents()
+        {
+            // Arrange
+            ApplicationUser user = await _dbContext.Users.FirstAsync();
+            Game game = await _dbContext.Games.FirstAsync();
+            Event e = await _dbContext.Events.FirstAsync();
+
+            Cart cart = new Cart { User = user, TotalPrice = 50 };
+            cart.GamesCarts.Add(new GameCart
+            {
+                Game = game,
+                Quantity = 1,
+                AddedOn = DateTime.Now,
+                IsDeleted = false
+            });
+            cart.EventsCarts.Add(new EventCart
+            {
+                Event = e,
+                TicketQuantity = 1,
+                AddedOn = DateTime.Now,
+                IsDeleted = false
+            });
+            await _dbContext.Carts.AddAsync(cart);
+            await _dbContext.SaveChangesAsync();
+
+            // Act
+            ShoppingCartViewModel result = await _shoppingCartService.GetShoppingCartItemsAsync(user.Id.ToString());
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.That(result.GameCartItems.Count(), Is.EqualTo(1));
+            Assert.That(result.EventCartItems.Count(), Is.EqualTo(1));
+            Assert.That(result.TotalPrice, Is.EqualTo("50,00 лв.")); 
+        }
+
+        [Test]
+        public async Task GetShoppingCartItemsAsync_ShouldReturnEmptyCartIfNoItems()
+        {
+            // Arrange
+            ApplicationUser user = await _dbContext.Users.FirstAsync();
+            Cart cart = new Cart { User = user, TotalPrice = 0 };
+            await _dbContext.Carts.AddAsync(cart);
+            await _dbContext.SaveChangesAsync();
+
+            // Act
+            ShoppingCartViewModel result = await _shoppingCartService.GetShoppingCartItemsAsync(user.Id.ToString());
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.That(result.GameCartItems.Count(), Is.EqualTo(0));
+            Assert.That(result.EventCartItems.Count(), Is.EqualTo(0));
+            Assert.That(result.TotalPrice, Is.EqualTo("0,00 лв.")); 
+        }
+
+        [Test]
+        public async Task GetShoppingCartItemsAsync_ShouldExcludeDeletedItems()
+        {
+            // Arrange
+            ApplicationUser user = await _dbContext.Users.FirstAsync();
+            Game game = await _dbContext.Games.FirstAsync();
+            Event e = await _dbContext.Events.FirstAsync();
+
+            Cart cart = new Cart { User = user, TotalPrice = 50 };
+            cart.GamesCarts.Add(new GameCart
+            {
+                Game = game,
+                Quantity = 1,
+                AddedOn = DateTime.Now,
+                IsDeleted = true 
+            });
+            cart.EventsCarts.Add(new EventCart
+            {
+                Event = e,
+                TicketQuantity = 1,
+                AddedOn = DateTime.Now,
+                IsDeleted = false
+            });
+            await _dbContext.Carts.AddAsync(cart);
+            await _dbContext.SaveChangesAsync();
+
+            // Act
+            ShoppingCartViewModel result = await _shoppingCartService.GetShoppingCartItemsAsync(user.Id.ToString());
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.That(result.GameCartItems.Count(), Is.EqualTo(0));
+            Assert.That(result.EventCartItems.Count(), Is.EqualTo(1));
+            Assert.That(result.TotalPrice, Is.EqualTo("50,00 лв.")); 
+        }
+
+        [Test]
+        public async Task GetShoppingCartItemsAsync_ShouldCreateCartIfNoneExists()
+        {
+            // Arrange
+            ApplicationUser user = await _dbContext.Users.FirstAsync();
+
+            // Act
+            ShoppingCartViewModel result = await _shoppingCartService.GetShoppingCartItemsAsync(user.Id.ToString());
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.That(result.GameCartItems.Count(), Is.EqualTo(0));
+            Assert.That(result.EventCartItems.Count(), Is.EqualTo(0));
+            Assert.That(result.TotalPrice, Is.EqualTo("0,00 лв.")); 
+
+            Cart? createdCart = await _dbContext.Carts.FirstOrDefaultAsync(c => c.UserId == user.Id);
+            Assert.IsNotNull(createdCart);
         }
 
 
