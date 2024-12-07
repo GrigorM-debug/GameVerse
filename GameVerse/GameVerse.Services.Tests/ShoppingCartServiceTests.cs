@@ -1200,6 +1200,48 @@ namespace GameVerse.Services.Tests
             Assert.That(updatedCart.TotalPrice, Is.EqualTo(20));
         }
 
+        [Test]
+        public async Task RemoveEventFromCartAsync_ShouldRemoveOnlySpecifiedEvent()
+        {
+            // Arrange
+            ApplicationUser user = await _dbContext.Users.FirstAsync();
+            Event e1 = await _dbContext.Events.FirstAsync();
+            Event e2 = await _dbContext.Events.LastAsync();
+
+            Cart cart = new Cart { User = user, TotalPrice = 40 };
+            cart.EventsCarts.Add(new EventCart
+            {
+                Event = e1,
+                Cart = cart,
+                TicketQuantity = 1,
+                IsDeleted = false
+            });
+            cart.EventsCarts.Add(new EventCart
+            {
+                Event = e2,
+                Cart = cart,
+                TicketQuantity = 1,
+                IsDeleted = false
+            });
+            await _dbContext.Carts.AddAsync(cart);
+            await _dbContext.SaveChangesAsync();
+
+            // Act
+            await _shoppingCartService.RemoveEventFromCartAsync(e1.Id.ToString(), user.Id.ToString(), e1.TicketPrice);
+
+            // Assert
+            Cart updatedCart = await _dbContext.Carts
+                .Include(c => c.EventsCarts)
+                .FirstAsync(c => c.UserId == user.Id);
+
+            EventCart removedEvent = updatedCart.EventsCarts.First(ec => ec.EventId == e1.Id);
+            EventCart remainingEvent = updatedCart.EventsCarts.First(ec => ec.EventId == e2.Id);
+
+            Assert.IsNotNull(updatedCart);
+            Assert.IsTrue(removedEvent.IsDeleted);
+            Assert.IsFalse(remainingEvent.IsDeleted);
+            Assert.That(updatedCart.TotalPrice, Is.EqualTo(20));
+        }
 
     }
 }
