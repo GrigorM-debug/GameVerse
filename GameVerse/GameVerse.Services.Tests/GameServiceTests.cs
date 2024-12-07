@@ -321,7 +321,7 @@ namespace GameVerse.Services.Tests
         public async Task GetTotalGamesCountAsync_ReturnsTotalGamesCount()
         {
             //Arrange
-            int totalGamesCountExpected = 1;
+            int totalGamesCountExpected = 2;
 
             //Act 
             int result = await _gameService.GetTotalGamesCountAsync();
@@ -455,7 +455,8 @@ namespace GameVerse.Services.Tests
         {
             //Arrange
             Game game = await _dbContext.Games.FirstAsync();
-            _dbContext.Games.Remove(game);
+            Game game2 = await _dbContext.Games.LastAsync();
+            _dbContext.Games.RemoveRange(game, game2);
             await _dbContext.SaveChangesAsync();
 
             // Act
@@ -471,17 +472,18 @@ namespace GameVerse.Services.Tests
         {
             //Arrange 
             Game game = await _dbContext.Games.FirstAsync();
-
+            Game game2 = await _dbContext.Games.LastAsync();
             //Act
             IEnumerable<GameIndexViewModel> result = await _gameService.GetLast3GamesAsync();
 
             // Assert
             Assert.NotNull(result);
-            Assert.That(result.Count(), Is.EqualTo(1));
+            Assert.That(result.Count(), Is.EqualTo(2));
 
             List<GameIndexViewModel> resultList = result.ToList();
 
-            Assert.That(resultList[0].Title, Is.EqualTo(game.Title));
+            Assert.That(resultList[0].Title, Is.EqualTo(game2.Title));
+            Assert.That(resultList[1].Title, Is.EqualTo(game.Title));
         }
 
         [Test]
@@ -599,7 +601,7 @@ namespace GameVerse.Services.Tests
         public async Task DeleteGamePostAsync_ShouldDoNothing_WhenGameDoesNotExist()
         {
             // Arrange
-            string nonExistentGameId = "00000000-0000-0000-0000-000000000003"; 
+            string nonExistentGameId = "00000000-0000-0000-0000-000000000013"; 
             string moderatorId = _dbContext.Moderators.First().Id.ToString();
             bool isAdmin = false;
 

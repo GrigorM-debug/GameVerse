@@ -526,7 +526,7 @@ namespace GameVerse.Services
             IEnumerable<GameIndexViewModel> last3Games = await _gameRepository
                 .GetWithIncludeAsync(g=> g.Publisher.User)
                 .Where(g => g.IsDeleted == false)
-                .OrderByDescending(g => g.Id)
+                .OrderByDescending(g => g.CreatedOn)
                 .Take(3)
                 .Select(g => new GameIndexViewModel()
                 {

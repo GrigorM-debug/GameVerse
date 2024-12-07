@@ -65,6 +65,7 @@ namespace GameVerse.Services.Tests
                 TotalGamesCreated = 0,
                 OwnedEvents = new HashSet<Event>(),
                 OwnedGames = new HashSet<Game>(),
+                IsActive = true
             };
 
             await _dbContext.Users.AddAsync(user);
@@ -295,7 +296,7 @@ namespace GameVerse.Services.Tests
         {
             //Arrange
             Moderator moderator = await _dbContext.Moderators.FirstAsync();
-            string userId = moderator.UserId.ToString();
+            string userId = moderator.User.Id.ToString();
 
             //Act 
             bool result = await _moderatorService.ModeratorExistByUserIdAsync(userId);
