@@ -1,8 +1,10 @@
-﻿using GameVerse.Data.Models.Events;
+﻿using System.Globalization;
+using GameVerse.Data.Models.Events;
 using GameVerse.Data.Repositories.Interfaces;
 using GameVerse.Web.Areas.Administrator.Models;
 using GameVerse.Web.Areas.Administrator.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using static GameVerse.Common.ApplicationConstants.EventConstants;
 
 namespace GameVerse.Web.Areas.Administrator.Services
 {
@@ -42,6 +44,26 @@ namespace GameVerse.Web.Areas.Administrator.Services
             }
 
             return true;
+        }
+
+        public async Task<UserEventRegistrationInfoViewModel> GetUserEventRegistrationInfo(DecodedDataViewModel qrCodeData)
+        {
+            UserEventRegistrationInfoViewModel? userEventRegistration = await _eventsRegistrationsRepository
+                .GetWithIncludeAsync(er => er.User, er => er.Event)
+                .Where(er => er.UserId.ToString() == qrCodeData.UserId && er.EventId.ToString() == qrCodeData.EventId)
+                .Select(er => new UserEventRegistrationInfoViewModel()
+                {
+                    UserName = er.User.UserName,
+                    FullName = $"{er.User.FirstName} {er.User.LastName}",
+                    EventTopic = er.Event.Topic,
+                    StartDate = er.Event.StartDate.ToString(EventDateTimeFormat, CultureInfo.InvariantCulture),
+                    EndDate = er.Event.EndDate.ToString(EventDateTimeFormat, CultureInfo.InvariantCulture),
+                    NumberOfTickets = er.TicketQuantity,
+                    PricePaid = (er.TicketQuantity * er.Event.TicketPrice).ToString("C"),
+                    RegistrationDate = er.RegistrationDate.ToString(EventDateTimeFormat, CultureInfo.InvariantCulture)
+                }).FirstOrDefaultAsync();
+
+            return userEventRegistration;
         }
     }
 }

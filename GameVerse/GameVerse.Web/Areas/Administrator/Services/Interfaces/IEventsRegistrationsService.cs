@@ -17,5 +17,7 @@ namespace GameVerse.Web.Areas.Administrator.Services.Interfaces
         Task<int> GetTotalEventsRegistrationsCountAsync();
 
         Task<bool> IsUserEventRegistrationValidAsync(DecodedDataViewModel qrCodeData);
+
+        Task<UserEventRegistrationInfoViewModel> GetUserEventRegistrationInfo(DecodedDataViewModel qrCodeData);
     }
 }
