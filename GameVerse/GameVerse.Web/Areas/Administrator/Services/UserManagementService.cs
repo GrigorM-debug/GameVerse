@@ -84,8 +84,12 @@ namespace GameVerse.Web.Areas.Administrator.Services
             ApplicationUser? user = await _userManager.FindByIdAsync(userId);
 
             bool isAlreadyInRole = await _userManager.IsInRoleAsync(user, "Admin");
+            if (user == null)
+            {
+                return false;
+            }
 
-            if (user == null && !isAlreadyInRole)
+            if (!isAlreadyInRole)
             {
                 return false;
             }
