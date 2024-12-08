@@ -1,5 +1,18 @@
-﻿<button id="scanButton">Стартирай QR Скенер</button>
+﻿<button id="scanButton">Start QR Code Scanner</button>
 <div id="reader" style="width: 300px; height: 300px; border: 1px solid black; display: none;"></div>
+
+<div id="ticketInfo" style="display: none; border: 1px solid black; padding: 10px; margin-top: 20px;">
+    <h3 class="text-center">Event Registration Information</h3>
+    <hr/>
+    <p><strong>UserName:</strong> <span id="userName"></span></p>
+    <p><strong>FullName: </strong> <span id="fullName"></span></p>
+    <p><strong>Event Topic:</strong> <span id="eventTopic"></span></p>
+    <p><strong>Duration:</strong> <span id="startDate"></span> <span id="endDate"></span></p>
+    <p><strong>Number of Tickets:</strong> <span id="numberOfTickets"></span></p>
+    <p><strong>Price paid:</strong> <span id="pricePaid"></span></p>
+    <p><strong>Registration Date:</strong> <span id="registrationDate"></span></p>
+</div>
+
 @Html.AntiForgeryToken()
 <script src="https://unpkg.com/html5-qrcode"></script>
 <script src="/js/qrCodeScanner.js"></script>
