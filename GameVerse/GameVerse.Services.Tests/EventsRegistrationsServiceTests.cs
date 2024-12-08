@@ -12,6 +12,7 @@ using GameVerse.Data.Repositories;
 using GameVerse.Web.Areas.Administrator.Services;
 using GameVerse.Data.Models.ApplicationUsers;
 using GameVerse.Services.Interfaces;
+using GameVerse.Web.Areas.Administrator.Models;
 
 namespace GameVerse.Services.Tests
 {
@@ -171,6 +172,46 @@ namespace GameVerse.Services.Tests
 
             //Assert
             Assert.That(result, Is.EqualTo(0));
+        }
+
+        [Test]
+        public async Task GetUserEventRegistrationInfo_ShouldReturnValidRegistrationInfo()
+        {
+            // Arrange
+            var qrCodeData = new DecodedDataViewModel
+            {
+                UserId = "00000000-0000-0000-0000-000000000001",
+                EventId = "10000000-0000-0000-0000-000000000001"
+            };
+
+            // Act
+            UserEventRegistrationInfoViewModel result = await _eventsRegistrationsService.GetUserEventRegistrationInfo(qrCodeData);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.That(result.UserName, Is.EqualTo("TestUser"));
+            Assert.That(result.FullName, Is.EqualTo("Test Testov"));
+            Assert.That(result.EventTopic, Is.EqualTo("Event 1"));
+            Assert.That(result.NumberOfTickets, Is.EqualTo(2));
+            Assert.That(result.PricePaid, Is.EqualTo("40,00 лв."));
+            Assert.IsFalse(string.IsNullOrEmpty(result.RegistrationDate));
+        }
+
+        [Test]
+        public async Task GetUserEventRegistrationInfo_ShouldReturnNullForInvalidQrCodeData()
+        {
+            // Arrange
+            var qrCodeData = new DecodedDataViewModel
+            {
+                UserId = "00000000-0000-0000-0000-000000000004", // Non-existent User ID
+                EventId = "10000000-0000-0000-0000-000000000001"
+            };
+
+            // Act
+            UserEventRegistrationInfoViewModel result = await _eventsRegistrationsService.GetUserEventRegistrationInfo(qrCodeData);
+
+            // Assert
+            Assert.IsNull(result);
         }
 
     }
