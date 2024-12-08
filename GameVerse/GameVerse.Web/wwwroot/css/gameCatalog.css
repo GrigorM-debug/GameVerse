@@ -1,4 +1,10 @@
-﻿.team-style1 {
+﻿@media screen and (max-width: 1000px) {
+    #filterButtons {
+        flex-direction: column;
+    }
+}
+
+.team-style1 {
     position: relative;
     display: block;
     overflow: hidden

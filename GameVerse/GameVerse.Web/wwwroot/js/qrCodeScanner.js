@@ -7,7 +7,7 @@
     }
 
     function onErrorCallback(errroMessage) {
-        console.error("Error while scanning", errorMessage);
+        alert("Error while scanning", errorMessage);
     }
 
     const config = { fps: 10, qrbox: { width: 250, height: 250 } };
@@ -39,13 +39,31 @@ async function validateTicket(qrData) {
     })
         .then(response => response.json())
         .then(data => {
+            if (data.error) {
+                alert(error);
+            }
+
             if (data.valid) {
+                document.getElementById('userName').textContent = data.userEventRegistrationData.userName;
+                document.getElementById('fullName').textContent = data.userEventRegistrationData.fullName;
+                document.getElementById('eventTopic').textContent = data.userEventRegistrationData.eventTopic;
+                document.getElementById('startDate').textContent = data.userEventRegistrationData.startDate;
+                document.getElementById('endDate').textContent = data.userEventRegistrationData.endDate;
+                document.getElementById('numberOfTickets').textContent = data.userEventRegistrationData.numberOfTickets;
+                document.getElementById('pricePaid').textContent = data.userEventRegistrationData.pricePaid;
+                document.getElementById('registrationDate').textContent = data.userEventRegistrationData.registrationDate;
+
+                document.getElementById('ticketInfo').style.display = 'block';
                 alert('Ticket is valid');
             } else {
+                document.getElementById('ticketInfo').style.display = 'none';
                 alert('Ticket is not valid');
             }
         })
-        .catch(error => console.error('Error occured while validating:', error));
+        .catch(error => {
+            document.getElementById('ticketInfo').style.display = 'none';
+            alert('Error occured while validating:', error)
+        });
 
 }
 

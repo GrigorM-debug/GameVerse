@@ -9,7 +9,7 @@
 <div class="container"></div>
 <div class="section-heading mb-4 d-flex justify-content-between">
     <h2 class="h1 mb-0">Our Game Store</h2>
-    <div class="d-flex justify-content-between mt-2">
+    <div id="filterButtons" class="d-flex justify-content-between mt-2">
         <div class="input-group mt-2">
             <div class="form-outline" data-mdb-input-init>
                 <form asp-area="" asp-controller="GameStore" asp-action="Index" asp-route-searchString="@Model.SearchString" method="get" class="d-flex justify-content-center align-items-center">
