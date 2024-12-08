@@ -33,6 +33,7 @@ namespace GameVerse.Web.ViewModels.Event
         public decimal TicketPrice { get; set; }
 
         [Required]
+        [RegularExpression("^https?:\\/\\/[^\\s]+?\\.(jpe?g|png|gif)(\\?[^\\s]*)?$", ErrorMessage = "Invalid image Url")]
         public string Image { get; set; } = string.Empty;
     }
 }
