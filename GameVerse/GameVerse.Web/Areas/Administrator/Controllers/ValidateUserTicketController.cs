@@ -5,12 +5,13 @@ using GameVerse.Web.Areas.Administrator.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace GameVerse.Web.Areas.Administrator.Controllers
 {
     [Area("Administrator")]
     [Authorize(Roles = "Admin")]
-    public class ValidateUserTicketController(IEventsRegistrationsService _eventsRegistrationsService) : Controller
+    public class ValidateUserTicketController(IEventsRegistrationsService _eventsRegistrationsService, ILogger<ValidateUserTicketController> _logger) : Controller
     {
         [HttpGet]
         public IActionResult Index()
@@ -56,19 +57,22 @@ namespace GameVerse.Web.Areas.Administrator.Controllers
                     Date = parsedDate
                 };
 
-                bool isUserRegisteredForTheEvent = await _eventsRegistrationsService.IsUserEventRegistrationValidAsync(decodedData);
+                //bool isUserRegisteredForTheEvent = await _eventsRegistrationsService.IsUserEventRegistrationValidAsync(decodedData);
 
-                if (!isUserRegisteredForTheEvent)
+                UserEventRegistrationInfoViewModel? userEventRegistrationInfoViewModel =
+                    await _eventsRegistrationsService.GetUserEventRegistrationInfo(decodedData);
+
+                if (userEventRegistrationInfoViewModel == null)
                 {
                     return Json(new { valid = false });
                 }
 
-                return Json(new { valid = true });
+                return Json(new { valid = true, userEventRegistrationData = userEventRegistrationInfoViewModel });
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
-                return Json(new { valid = false });
+                Log.Error("An error occured while validating User Event Registration in {Action} in {Controller} with Message: {Error}", nameof(ValidateTicket), nameof(ValidateUserTicketController), ex.Message);
+                return Json(new { error = "An error occured while validating User Event Registration" });
             }
         }
     }
