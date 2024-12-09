@@ -92,8 +92,9 @@ Admins have complete control over the platform and can perform the following tas
 
 #### QR Code Validation 📷
 - **Ticket Validation**:
+  - This logic is designed to simulate how QR code validation could be implemented in a real-world application. Currently, the system uses the laptop's camera for scanning. However, the logic can be adapted to utilize the back camera of a smartphone or even a dedicated scanner for enhanced functionality and practical use in live scenarios.
   - Navigate to the QR code scanner page.
-  - Use the front camera (optimized for laptops) to scan QR codes on event tickets.
+  - Use the front camera  to scan QR codes on event tickets.
   - Upon successful validation:
     - View detailed information about the user, event, purchase details.
   - For invalid tickets:
