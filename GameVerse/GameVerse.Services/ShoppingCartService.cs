@@ -27,14 +27,6 @@ namespace GameVerse.Services
         IQrCodeService _qrCodeService
         ) : BaseService, IShoppingCartService
     {
-
-        //private readonly IGenericRepository<Cart, Guid> _cartRepository = cartRepository;
-        //private readonly IGenericRepository<Game, Guid> _gameRepository = gameRespository;
-        //private readonly IGenericRepository<Event, Guid> _eventRepository = eventRepository;
-        //private readonly IGenericRepository<EventRegistration, object> _eventRegistrationRepository = eventRegistrationRepository;
-        //private readonly IGenericRepository<UserBoughtGame, object> _userBoughtGamesRepository = userBoughtGamesRepository;
-        //private readonly IQrCodeService _qrCodeService = qrCodeService;
-
         /// <summary>
         /// Retrieves the shopping cart items for the specified user.
         /// </summary>
