@@ -263,6 +263,50 @@ namespace GameVerse.Services.Tests
             Assert.That(result, Is.EqualTo(1));
         }
 
+        [Test]
+        public async Task GetTotalAdministratorsCountAsync_ShouldReturnsTotalAdminsCount_WhenAdminsExists()
+        {
+            var user = await _context.Users.LastAsync();
 
+            var userManagerMock = MockHelper.MockUserManager<ApplicationUser>();
+
+            userManagerMock
+                .Setup(um => um.AddToRoleAsync(user, "Admin"))
+                .ReturnsAsync(IdentityResult.Success);
+
+            userManagerMock.Setup(um => um.GetUsersInRoleAsync("Admin"))
+                .ReturnsAsync(new List<ApplicationUser> { user });
+
+            var service = new UserManagementService(
+                userManagerMock.Object,
+                _userRepository,
+                _moderatorRepository
+            );
+
+            int result = await service.GetTotalAdministratorsCountAsync();
+
+            Assert.That(result, Is.EqualTo(1));
+        }
+
+        [Test]
+        public async Task GetTotalAdministratorsCountAsync_ShouldReturnZero_WhenNoAdminsExists()
+        {
+            // Arrange
+            var userManagerMock = MockHelper.MockUserManager<ApplicationUser>();
+            userManagerMock.Setup(um => um.GetUsersInRoleAsync("Admin"))
+                .ReturnsAsync(new List<ApplicationUser>());
+
+            var service = new UserManagementService(
+                userManagerMock.Object,
+                _userRepository,
+                _moderatorRepository
+            );
+
+            // Act
+            int result = await service.GetTotalAdministratorsCountAsync();
+
+            // Assert
+            Assert.That(result, Is.EqualTo(0));
+        }
     }
 }
