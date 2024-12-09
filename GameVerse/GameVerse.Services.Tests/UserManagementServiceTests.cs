@@ -212,6 +212,57 @@ namespace GameVerse.Services.Tests
 
             //Act
             bool result = await service.AdministratorExistByIdAsync(user.Id.ToString());
+
+            Assert.IsFalse(result);
         }
+
+        [Test]
+        public async Task GetTotalModeratorsCountAsync_ReturnsZero_WhenNoModeratorsExist()
+        {
+            // Arrange
+            var userManagerMock = MockHelper.MockUserManager<ApplicationUser>();
+            userManagerMock.Setup(um => um.GetUsersInRoleAsync("Moderator"))
+                .ReturnsAsync(new List<ApplicationUser>());
+
+            var service = new UserManagementService(
+                userManagerMock.Object,
+                _userRepository,
+                _moderatorRepository
+            );
+
+            // Act
+            int result = await service.GetTotalModeratorsCountAsync();
+
+            // Assert
+            Assert.That(result, Is.EqualTo(0));
+        }
+
+
+        [Test]
+        public async Task GetTotalModeratorsCountAsync_ReturnsModeratorsCount_WhenModeratorsExists()
+        {
+            var user = await _context.Users.LastAsync();
+
+            var userManagerMock = MockHelper.MockUserManager<ApplicationUser>();
+
+            userManagerMock
+                .Setup(um => um.AddToRoleAsync(user, "Moderator"))
+                .ReturnsAsync(IdentityResult.Success);
+
+            userManagerMock.Setup(um => um.GetUsersInRoleAsync("Moderator"))
+                .ReturnsAsync(new List<ApplicationUser> { user });
+
+            var service = new UserManagementService(
+                userManagerMock.Object,
+                _userRepository,
+                _moderatorRepository
+            );
+
+            int result = await service.GetTotalModeratorsCountAsync();
+
+            Assert.That(result, Is.EqualTo(1));
+        }
+
+
     }
 }
