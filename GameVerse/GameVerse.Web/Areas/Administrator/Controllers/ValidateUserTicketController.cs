@@ -9,16 +9,28 @@ using Serilog;
 
 namespace GameVerse.Web.Areas.Administrator.Controllers
 {
+    /// <summary>
+    /// Controller for validating user tickets for events in the administrator area.
+    /// </summary>
     [Area("Administrator")]
     [Authorize(Roles = "Admin")]
     public class ValidateUserTicketController(IEventsRegistrationsService _eventsRegistrationsService, ILogger<ValidateUserTicketController> _logger) : Controller
     {
+        /// <summary>
+        /// Displays the ticket validation interface.
+        /// </summary>
+        /// <returns>The view for ticket validation.</returns>
         [HttpGet]
         public IActionResult Index()
         {
             return View();
         }
 
+        /// <summary>
+        /// Validates the provided ticket data by checking its registration details.
+        /// </summary>
+        /// <param name="request">The ticket data provided for validation.</param>
+        /// <returns>A JSON response indicating whether the ticket is valid or not, and any associated user registration data if valid.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ValidateTicket([FromBody] ValidateTicketRequestInputViewModel request)
