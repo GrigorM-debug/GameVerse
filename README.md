@@ -126,7 +126,7 @@ GameVerse is built using modern technologies to deliver a scalable, secure, and 
 | **HTML5-QRCode**           | Scanning QR codes                                           |
 | **SendGrid**               | Email delivery service for transactional emails                            |
 | **Rapid API NSFW Images**  | Moderation tool for detecting inappropriate content in uploaded images     |
-| **QRCode**                 | Generating unique QR codes for event tickets                              |
+| **QRCoder**                 | Generating unique QR codes for event tickets                              |
 
 ---
 
