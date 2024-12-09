@@ -16,8 +16,24 @@ namespace GameVerse.Web.Areas.Administrator.Services.Interfaces
         /// </returns>
         Task<int> GetTotalEventsRegistrationsCountAsync();
 
+        /// <summary>
+        /// Validates whether a user's event registration is valid based on the provided QR code data.
+        /// </summary>
+        /// <param name="qrCodeData">The decoded QR code data containing event and user details.</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation. The task result contains a boolean value indicating
+        /// whether the user's event registration is valid.
+        /// </returns>
         Task<bool> IsUserEventRegistrationValidAsync(DecodedDataViewModel qrCodeData);
 
+        /// <summary>
+        /// Retrieves detailed information about a user's event registration based on the provided QR code data.
+        /// </summary>
+        /// <param name="qrCodeData">The decoded QR code data containing event and user details.</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation. The task result contains a <see cref="UserEventRegistrationInfoViewModel"/>
+        /// with detailed user registration information for the event, or null if no valid registration is found.
+        /// </returns>
         Task<UserEventRegistrationInfoViewModel> GetUserEventRegistrationInfo(DecodedDataViewModel qrCodeData);
     }
 }
