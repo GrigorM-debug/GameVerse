@@ -95,7 +95,7 @@ Admins have complete control over the platform and can perform the following tas
   - Navigate to the QR code scanner page.
   - Use the front camera (optimized for laptops) to scan QR codes on event tickets.
   - Upon successful validation:
-    - View detailed information about the user, event, purchase details, and ticket status.
+    - View detailed information about the user, event, purchase details.
   - For invalid tickets:
     - Display an error message indicating "Ticket is invalid."
 
@@ -113,6 +113,7 @@ GameVerse is built using modern technologies to deliver a scalable, secure, and 
 | **C#**                     | Primary programming language                                                |
 | **.NET 8.0**               | Backend framework for web application logic                                |
 | **JavaScript**             | Enabling interactivity on the frontend                                     |
+| **AJAX**                   | Allows asynchronous web page updates by exchanging data with the server without reloading the page |
 | **HTML & CSS**             | Structuring and styling web pages                                          |
 | **Bootstrap**              | Responsive and visually appealing design                                   |
 | **ASP.NET Core MVC**       | MVC framework for creating a structured web application                    |
