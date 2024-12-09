@@ -211,7 +211,7 @@ namespace GameVerse.Services
         /// <returns><c>true</c> if an event with the topic exists and is not marked as deleted; otherwise, <c>false</c>.</returns>
         public async Task<bool> EventExistByTitle(string topic)
         {
-            Event? isExisting = await _eventRepository.AllAsReadOnly().FirstOrDefaultAsync(e => e.Topic == topic && e.IsDeleted == false);
+            Event? isExisting = await _eventRepository.AllAsReadOnly().FirstOrDefaultAsync(e => e.Topic.ToLower() == topic.ToLower() && e.IsDeleted == false);
 
             if (isExisting == null)
             {

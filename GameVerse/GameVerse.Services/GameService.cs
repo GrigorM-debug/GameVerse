@@ -460,7 +460,7 @@ namespace GameVerse.Services
         public async Task<bool> GameExistByTitleAndTypeAsync(string title, GameType type)
         {
             Game? game = await _gameRepository.AllAsReadOnly()
-                .FirstOrDefaultAsync(g => g.IsDeleted == false && g.Title == title && g.Type == type);
+                .FirstOrDefaultAsync(g => g.IsDeleted == false && g.Title.ToLower() == title.ToLower() && g.Type == type);
 
             if (game == null)
             {
@@ -488,7 +488,7 @@ namespace GameVerse.Services
 
             if (searchString != null)
             {
-                query = query.Where(g => g.Title.Contains(searchString));
+                query = query.Where(g => g.Title.ToLower().Contains(searchString.ToLower()));
             }
 
             if (gameSelectedGameTypeSortOrder != null)
