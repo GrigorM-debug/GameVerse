@@ -10,6 +10,9 @@ using Serilog;
 
 namespace GameVerse.Web.Areas.Administrator.Controllers
 {
+    /// <summary>
+    /// Controller responsible for managing user roles and permissions in the administrator area.
+    /// </summary>
     [Area("Administrator")]
     [Authorize(Roles = "Admin")]
     public class UserManagementController(
@@ -19,6 +22,10 @@ namespace GameVerse.Web.Areas.Administrator.Controllers
         IModeratorService _moderatorService)
         : Controller
     {
+        /// <summary>
+        /// Retrieves and displays a list of all users with their details.
+        /// </summary>
+        /// <returns>A view displaying the list of users.</returns>
         [HttpGet]
         public async Task<IActionResult> ManageUsers()
         {
@@ -27,6 +34,11 @@ namespace GameVerse.Web.Areas.Administrator.Controllers
             return View(userViewModels);
         }
 
+        /// <summary>
+        /// Promotes a user to a moderator role.
+        /// </summary>
+        /// <param name="userId">The ID of the user to promote.</param>
+        /// <returns>A redirection to the Manage Users view.</returns>
         [HttpPost]
         public async Task<IActionResult> PromoteUserToModerator(string userId)
         {
@@ -54,6 +66,11 @@ namespace GameVerse.Web.Areas.Administrator.Controllers
             return RedirectToAction(nameof(ManageUsers));
         }
 
+        /// <summary>
+        /// Demotes a moderator to a regular user role.
+        /// </summary>
+        /// <param name="userId">The ID of the moderator to demote.</param>
+        /// <returns>A redirection to the Manage Users view.</returns>
         [HttpPost]
         public async Task<IActionResult> DemoteModeratorToUser(string userId)
         {
@@ -80,6 +97,11 @@ namespace GameVerse.Web.Areas.Administrator.Controllers
             return RedirectToAction(nameof(ManageUsers));
         }
 
+        /// <summary>
+        /// Promotes a moderator to an administrator role.
+        /// </summary>
+        /// <param name="userId">The ID of the moderator to promote.</param>
+        /// <returns>A redirection to the Manage Users view.</returns>
         [HttpPost]
         public async Task<IActionResult> PromoteModeratorToAdministrator(string userId)
         {
