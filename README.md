@@ -121,7 +121,7 @@ GameVerse is built using modern technologies to deliver a scalable, secure, and 
 | **Serilog**                | Logging framework for tracking application behavior                        |
 | **Notyf**                  | Displaying user-friendly toaster notifications                            |
 | **Leaflet**                | Integrating interactive maps for event location display                    |
-| **HTML5-QRCode**           | Generating and scanning QR codes                                           |
+| **HTML5-QRCode**           | Scanning QR codes                                           |
 | **SendGrid**               | Email delivery service for transactional emails                            |
 | **Rapid API NSFW Images**  | Moderation tool for detecting inappropriate content in uploaded images     |
 | **QRCode**                 | Generating unique QR codes for event tickets                              |
