@@ -17,7 +17,7 @@ GameVerse offers an engaging user experience with the following capabilities:
 
 - **Purchase Games**:
   - Buy games with a simple checkout process.
-  - Don't worry we don't have payment methods and I will not take you money
+  - Don't worry I don't have payment methods and I will not take you money
 
 - **Review System**:
   - Submit reviews for games.
