@@ -127,6 +127,9 @@ GameVerse is built using modern technologies to deliver a scalable, secure, and 
 | **SendGrid**               | Email delivery service for transactional emails                            |
 | **Rapid API NSFW Images**  | Moderation tool for detecting inappropriate content in uploaded images     |
 | **QRCoder**                 | Generating unique QR codes for event tickets                              |
+| **NUnit**                       | Unit testing framework for validating application logic                    |
+| **EntityFrameworkCore.InMemory** | In-memory database provider for Entity Framework Core, used for testing purposes |
+| **Moq**                         | Mocking framework for creating test doubles in unit tests                 |
 
 ---
 
