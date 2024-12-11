@@ -32,6 +32,7 @@ namespace GameVerse.Services
             IEnumerable<UserBoughtGamesViewModel> userBoughtGamesViewModels = await _userBoughtGamesRepository
                 .GetWithIncludeAsync(g => g.Game)
                 .Where(u => u.UserId.ToString() == userId)
+                .OrderByDescending(g => g.BoughtOn)
                 .Select(g => new UserBoughtGamesViewModel()
                 {
                     GameId = g.GameId.ToString(),
@@ -60,6 +61,7 @@ namespace GameVerse.Services
                 await _eventRegistrationsRepository
                     .GetWithIncludeAsync(e => e.Event)
                     .Where(u => u.UserId.ToString() == userId)
+                    .OrderByDescending(e => e.RegistrationDate)
                     .Select(e => new UserEventRegistrationsViewModel()
                     {
                         EventId = e.EventId.ToString(),
