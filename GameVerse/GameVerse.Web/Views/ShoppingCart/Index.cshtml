@@ -8,6 +8,8 @@
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
+<link rel="stylesheet" href="~/css/shoppingCart.css">
+
 <div class="d-flex justify-content-between align-items-center mb-3" style="margin-top: 20px;">
     <h2>@ViewData["Title"]</h2>
 </div>
@@ -16,9 +18,6 @@
 <div class="container px-3 my-5 clearfix">
     <!-- Shopping cart table -->
     <div class="card">
-        @* <div class="card-header">
-            <h2>Shopping Cart</h2>
-        </div> *@
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-bordered m-0">
@@ -96,7 +95,7 @@
                                 </div>
                             </td>
                             <td class="text-right font-weight-semibold align-middle p-4">@eventCartItem.TicketPrice</td>
-                            <td>
+                            <td class="d-flex justify-content-between align-items-center">
                                 <form method="post" asp-area="" asp-action="DecreaseEventItemQuantity" asp-controller="ShoppingCart" asp-route-eventId="@eventCartItem.Id">
                                     <button type="submit" class="btn btn-outline-secondary decrement">
                                         <i class="fas fa-minus"></i>
@@ -142,7 +141,7 @@
     </div>
 </div>
 
-<style>
+@*<style>
 
     .game-image, .event-image {
         width: 70px; 
@@ -173,4 +172,4 @@
         box-shadow: 0 0 0 1px rgba(0,0,0,0.15) inset;
         vertical-align: middle;
     }
-</style>
+</style>*@
