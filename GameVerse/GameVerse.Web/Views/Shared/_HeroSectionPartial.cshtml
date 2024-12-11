@@ -1,18 +1,13 @@
 ﻿@* _HeroSection.cshtml *@
 <div class="hero-section">
-    @* <video autoplay loop muted playsinline class="background-video">
-        <source src="~/videos/HomeHeroSectionVideo.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-    </video> *@
-    
     <img src="images/heroImage2.jpg" class="background-video"/>
 
     <div class="overlay"></div>
 
     <div class="hero-content">
         <div>
-            <h2>Welcome to The World of Gaming</h2>
-            <p>Your gateway to the gaming universe! Browse and buy the latest console and PC games, find epic gaming events, and grab your tickets with ease. Play, explore, and connect like never before!</p>
+            <h1>Welcome to The World of Gaming</h1>
+            <p class="fs-5">Your gateway to the gaming universe! Browse and buy the latest console and PC games, find epic gaming events, and grab your tickets with ease. Play, explore, and connect like never before!</p>
             <a asp-area="" asp-controller="GameStore" asp-action="Index" class="btn btn-primary btn-lg mt-4">Explore Our Game Store</a>
             <a asp-area="" asp-controller="Event" asp-action="Index" class="btn btn-primary btn-lg mt-4">Explore Our Events</a>
         </div>
