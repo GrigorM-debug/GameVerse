@@ -42,14 +42,14 @@ namespace GameVerse.Web.Areas.Moderator.Controllers
                 return Unauthorized();
             }
 
-            bool isEventExisting = await _eventService.EventExistByTitle(inputModel.Topic);
+            /*bool isEventExisting = await _eventService.EventExistByTitle(inputModel.Topic);
 
             if (isEventExisting)
             {
                 _notyf.Warning("Event with this Topic already exist !");
 
                 return View(inputModel);
-            }
+            }*/
 
             if (DateTime.TryParseExact(inputModel.StartDate, EventDateTimeFormat, CultureInfo.InvariantCulture,
                     DateTimeStyles.None, out DateTime startDate) == false)
@@ -86,6 +86,14 @@ namespace GameVerse.Web.Areas.Moderator.Controllers
                 return View(inputModel);
             }
 
+            bool isEventExisting = await _eventService.EventExistByTitle(inputModel.Topic);
+
+            if (isEventExisting)
+            {
+                _notyf.Warning("Event with this Topic already exist !");
+
+                return View(inputModel);
+            }
 
             string eventId = await _eventService.AddEventAsync(inputModel, moderatorId!, startDate, endDate);
 

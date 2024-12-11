@@ -133,9 +133,6 @@
 }
 <div id="userReviewsCarousel" class="carousel slide" data-bs-ride="carousel">
      <div class="carousel-indicators">
-         @* <button type="button" data-bs-target="#userReviewsCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-         <button type="button" data-bs-target="#userReviewsCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-         <button type="button" data-bs-target="#userReviewsCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button> *@
         
         @for (int i = 0; i < reviewsCount; i++)
         {
@@ -149,10 +146,7 @@
             <div class="carousel-item @(@i == 0 ? "active" : "")">
                 <div class="row text-center justify-content-center">
                     <div class="col-md-4 mb-5 mb-md-0">
-                         @* <div class="d-flex justify-content-center mb-4">
-                             <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(1).webp"
-                                  class="rounded-circle shadow-1-strong" width="100" height="100" /> <!-- Smaller Image -->
-                         </div> *@
+                         
                         <h5 class="mb-3">@reviews[i].Reviewer</h5>
                         <h6 class="mb-3">Created On: @reviews[i].CreatedOn</h6>
                         <p class="px-xl-3">
@@ -177,14 +171,6 @@
         }
 
     </div>
-
-    @* <div class="carousel-indicators">
-        <button type="button" data-bs-target="#userReviewsCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-         <button type="button" data-bs-target="#userReviewsCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-         <button type="button" data-bs-target="#userReviewsCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button> 
-        
-        
-    </div> *@
 
     <!-- Carousel controls -->
     <button class="carousel-control-prev" type="button" data-bs-target="#userReviewsCarousel" data-bs-slide="prev">
