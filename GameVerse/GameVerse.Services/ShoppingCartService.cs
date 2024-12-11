@@ -382,7 +382,7 @@ namespace GameVerse.Services
 
                     if (e == null || e.Seats < eventCartItem.TicketQuantity || e.Seats == 0)
                     {
-                        throw new InvalidOperationException("Not enough empty seats for event" + eventCartItem.EventId);
+                        throw new InvalidOperationException("Not enough empty seats for event: " + eventCartItem.Event.Topic);
                     }
 
                     string qrCodeData = $"EventId:{e.Id.ToString()};UserId:{userId};Date:{DateTime.Now}";
