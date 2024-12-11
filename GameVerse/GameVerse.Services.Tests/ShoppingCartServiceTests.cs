@@ -1610,7 +1610,7 @@ namespace GameVerse.Services.Tests
                 async () => await _shoppingCartService.PurchaseItemsInShoppingCart(user.Id.ToString())
             );
 
-            Assert.That(ex.Message, Is.EqualTo($"Not enough empty seats for event{e.Id}"));
+            Assert.That(ex.Message, Is.EqualTo($"Not enough empty seats for event: {e.Topic}"));
         }
 
         [Test]
