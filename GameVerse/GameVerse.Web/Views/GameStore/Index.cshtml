@@ -54,7 +54,16 @@
                 <img src="@game.Image" class="border-radius-5" alt="Game Picture">
                 <div class="team-info">
                     <h3 class="text-primary mb-1 h4">@game.Title</h3>
-                    <span class="font-weight-600 text-secondary"><b>Price: </b>@game.Price</span>
+                    <span class="font-weight-600 text-secondary"><b>Price: </b>@game.Price</span> <br/>
+                    @if (game.QuantityInStock == 0)
+                    {
+                        <span class="badge rounded-pill bg-danger">Out of stock</span>
+                    }
+                    else
+                    {
+                        <span class="font-weight-600 text-secondary"><b>Quantity In Stock: </b>@game.QuantityInStock</span>
+                    }
+                    
                 </div>
                 <div class="team-overlay">
                     <div class="d-table h-100 w-100">
