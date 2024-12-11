@@ -35,6 +35,15 @@
                     <h5>@games[i].Title</h5>
                     <p><b>Created On: </b>@games[i].CreatedOn</p>
                     <p><b>Published By: </b>@games[i].Publisher</p>
+                    @if (games[i].QuantityInStock == 0)
+                    {
+                        <span class="badge rounded-pill bg-danger">Out of stock</span>
+                    }
+                    else
+                    {
+                        <p><b>Quantity In Stock: </b>@games[i].QuantityInStock</p>
+                    }
+                    <p><b>Price: </b>@games[i].Price</p>
                     <a asp-area="" asp-controller="GameStore" asp-action="Details" asp-route-id="@games[i].Id" type="button" class="btn btn-primary">Details</a>
                 </div>
             </div>
