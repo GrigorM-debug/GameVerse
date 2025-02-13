@@ -18,7 +18,11 @@ jobs:
         uses: szenius/set-timezone@v2.0
         with:
           timezoneLinux: Europe/Sofia
-          locale: bg_BG.UTF-8
+      - name: Set Locale to Bulgarian
+        run: |
+          sudo locale-gen bg_BG.UTF-8
+          sudo update-locale LANG=bg_BG.UTF-8
+          export LANG=bg_BG.UTF-8
       - name: Verify Settings
         run: |
           echo "Current Time Zone:"
