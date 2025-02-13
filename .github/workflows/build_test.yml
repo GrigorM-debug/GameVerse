@@ -14,6 +14,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Set Locale to Bulgarian
+        run: |
+          sudo locale-gen bg_BG.UTF-8
+          sudo update-locale LANG=bg_BG.UTF-8
+      - name: Verify Settings
+        run: |
+          echo "Current Time Zone:"
+          timedatectl
+          echo "Current Locale:"
+          locale
       - name: Checkout repo on the runner
         uses: actions/checkout@v4
       - name: Setup .NET
