@@ -5,31 +5,32 @@ name: .NET
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repo on the runner
-      uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Unit Tests
-      run: dotnet test --logger "trx;LogFileName=test-results.trx"
-    - name: Upload Unit Tests results
-      uses: actions/upload-artifact@v4
-      with: 
-        name: test-results.trx
-        path: '**/test-results.trx'
-        
+      - name: Checkout repo on the runner
+        uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore dependencies
+        run: dotnet restore
+        working-directory: GameVerse
+      - name: Build
+        run: dotnet build --no-restore
+        working-directory: GameVerse
+      - name: Unit Tests
+        run: dotnet test --logger "trx;LogFileName=test-results.trx"
+        working-directory: GameVerse/GameVerse.Services.Tests
+      - name: Upload Unit Tests results
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results.trx
+          path: "**/test-results.trx"
